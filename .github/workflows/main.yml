@@ -1,0 +1,83 @@
+# To debug a workflow see: https://docs.github.com/en/actions/configuring-and-managing-workflows/managing-a-workflow-run#enabling-debug-logging
+
+name: C++ CI
+
+on: [ push ]
+
+jobs:
+  build-cpp-unix:
+
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Ubuntu GCC 10
+            os: ubuntu-20.04
+            c-compiler: gcc-10
+            cxx-compiler: g++-10
+          - name: Ubuntu Clang 11
+            os: ubuntu-20.04
+            c-compiler: clang-11
+            cxx-compiler: clang++-11
+          - name: macOS 10.15
+            os: macOS-10.15
+            
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+      - name: install
+        run: |
+          sudo apt update && sudo apt install -y clang-11 libc++-11-dev libc++abi-11-dev
+        if: matrix.c-compiler == 'clang-11' && runner.os == 'Linux'
+      - name: configure
+        run: |
+          echo "Configure on $(uname -a)"
+          cd cpp && mkdir build && cd build && CC=${{matrix.c-compiler}} CXX=${{matrix.cxx-compiler}} cmake ..
+      - name: build
+        run: cd cpp && cmake --build build
+      - name: test
+        run: cd cpp/build && ctest
+
+  build-cpp-windows:
+
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ windows-latest ]
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+      - name: configure
+        run: cd cpp && mkdir build && cd build && cmake ..
+      - name: build
+        run: cd cpp && cmake --build build --config Debug
+      - name: test
+        run: cd cpp/build && ctest -C Debug
+
+  build-rs:
+
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Ubuntu GCC 10
+            os: ubuntu-20.04
+          - name: macOS 10.15
+            os: macOS-10.15
+          - name: Windows
+            os: windows-latest
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+      - name: build
+        run: cd rs && cargo build --tests
+      - name: test
+        run: cd rs/build && cargo test
