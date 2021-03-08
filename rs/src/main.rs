@@ -2,7 +2,10 @@ fn main() {
     println!("This is demo project")
 }
 
+#[cfg(test)]
 mod tests {
-    #[cfg(test)]
-    fn test() {}
+    #[test]
+    fn test() {
+        
+    }
 }

@@ -4,5 +4,9 @@ version = "0.1.0"
 authors = ["Pascal HAVÉ <hpwxf@haveneer.com>"]
 edition = "2018"
 
+[dependencies]
+strum = { version = "0.20", features = ["derive"] }
+auto_ops = "0.3.0"
+
 [workspace]
 members = ["hello"]

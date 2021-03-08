@@ -41,6 +41,6 @@ fn test3() {
 
 #[test]
 fn test4() {
-    let s = concat!("test", 10, 'b', true); // only for litterals
+    let s = concat!("test", 10, 'b', true); // only for literals
     assert_eq!(s, "test10btrue");
 }
