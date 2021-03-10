@@ -5,6 +5,7 @@ authors = ["Pascal HAVÉ <hpwxf@haveneer.com>"]
 edition = "2018"
 
 [dependencies]
+lazy_static = "1.4.0"
 strum = { version = "0.20", features = ["derive"] }
 auto_ops = "0.3.0"
 procedural_macro = { path = "procedural_macro" }

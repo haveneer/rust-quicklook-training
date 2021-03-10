@@ -3,21 +3,20 @@ mod tests {
     use std::fmt::Formatter;
     use std::ops::Add;
 
-    const SIZE: usize = 8; // for generic size, see tiny_vector_generics.rs
-
     // Add Clone/Copy
     // #[derive(Clone, Copy)] // Generated case (done by hand below)
     struct TinyVector {
         // Only 'Copy' field
-        name: [u8; 64], // how to not repeat this constant ?
+        name: [u8; Self::MAX_NAME_SIZE],
         name_size: usize,
-        data: [f64; SIZE],
+        data: [f64; Self::SIZE], // for generic size, see tiny_vector_generics.rs
     }
 
     impl TinyVector {
         const MAX_NAME_SIZE: usize = 64;
+        const SIZE: usize = 8;
 
-        pub fn new(str_name: String, data: [f64; SIZE]) -> Self {
+        pub fn new(str_name: String, data: [f64; Self::SIZE]) -> Self {
             println!("New {}", str_name);
             let (name, name_size) = Self::string_to_bytes(str_name);
             Self {
@@ -28,7 +27,7 @@ mod tests {
         }
 
         pub fn constant(name: &str, v: f64) -> Self {
-            Self::new(name.into(), [v; SIZE])
+            Self::new(name.into(), [v; Self::SIZE])
         }
 
         fn string_to_bytes(str: String) -> ([u8; Self::MAX_NAME_SIZE], usize) {
@@ -87,7 +86,7 @@ mod tests {
     // macro to implement all combinaison ref|move
     auto_ops::impl_op_ex!(+ |a: &TinyVector, b: &TinyVector| -> TinyVector {
         let mut data = a.data; // no clone: data moved
-        for i in 0..SIZE {
+        for i in 0..TinyVector::SIZE {
             data[i] += b.data[i];
         }
         TinyVector::new(format!("({} + {})", a.name(), b.name()), data)

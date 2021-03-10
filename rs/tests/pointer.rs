@@ -15,7 +15,7 @@ fn main() {
 
     println!("GLOBAL:    {:p}", &GLOBAL as *const i32);
     println!("local_str: {:p}", local_str as *const str);
-    println!("local_int: {:p}", &local_int as *const i32);
+    println!("local_int: {:p}", &local_int as *const _); // using _ as type will place the right type 
     println!("boxed_int: {:p}", Box::into_raw(boxed_int));
     println!("boxed_str: {:p}", Box::into_raw(boxed_str));
     println!("fn_int:    {:p}", fn_int);

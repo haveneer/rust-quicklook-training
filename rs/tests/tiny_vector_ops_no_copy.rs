@@ -3,25 +3,25 @@ mod tests {
     use std::fmt::Formatter;
     use std::ops::{Add, Sub};
 
-    const SIZE: usize = 8; // for generic size, see tiny_vector_generics.rs
-
     // No Clone/Copy by default
     struct TinyVector {
         name: String,
-        data: [f64; SIZE],
+        data: [f64; Self::SIZE], // for generic size, see tiny_vector_generics.rs
     }
 
     // Copy is just a marker (nothing to implement); it means memcpy aware (i.e. raw data compatible)
     // TinyVector Cannot be marked as Copy
     // impl Copy for TinyVector {} // and String is not 'Copy'
     impl TinyVector {
-        pub fn new(name: String, data: [f64; SIZE]) -> Self {
+        const SIZE: usize = 8;
+
+        pub fn new(name: String, data: [f64; Self::SIZE]) -> Self {
             println!("New {}", name);
             Self { name, data }
         }
 
         pub fn constant(name: &str, v: f64) -> Self {
-            Self::new(name.into(), [v; SIZE])
+            Self::new(name.into(), [v; Self::SIZE])
         }
     }
 
@@ -50,7 +50,7 @@ mod tests {
 
         fn add(self, rhs: Self) -> Self::Output {
             let mut data = self.data; // [f64;8] implements copy
-            for i in 0..SIZE {
+            for i in 0..Self::SIZE {
                 data[i] += rhs.data[i];
             }
             Self::new(format!("({} + {})", self.name, rhs.name), data)
@@ -84,7 +84,7 @@ mod tests {
         fn sub(self, rhs: &'b TinyVector) -> Self::Output {
             // self is already a ref
             let mut data = self.data.clone();
-            for i in 0..SIZE {
+            for i in 0..TinyVector::SIZE {
                 data[i] -= rhs.data[i];
             }
             Self::Output::new(format!("({} - {})", self.name, rhs.name), data)
