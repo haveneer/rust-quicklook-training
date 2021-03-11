@@ -28,7 +28,9 @@ macro_rules! max_name_size { // Loop recursively
 fn get_type_string<T>(_t: &T) -> &'static str {
     std::any::type_name::<T>()
 }
-fn get_type_size<T>(_t: &T) -> usize { std::mem::size_of::<T>() }
+fn get_type_size<T>(_t: &T) -> usize {
+    std::mem::size_of::<T>()
+}
 
 #[test]
 fn test_debug() {

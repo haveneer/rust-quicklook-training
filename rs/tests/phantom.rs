@@ -23,7 +23,7 @@ mod tests {
     fn test() {
         let x = X::<i64>::new();
         let y = X::<i32>::new();
-        
+
         let z = y.phantom;
     }
 }

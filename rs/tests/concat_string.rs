@@ -4,7 +4,7 @@ fn test0() {
     let s2 = "world".to_string();
     let s3 = "folks";
 
-    let s = s1+&s2+s3; // String + &String + &str
+    let s = s1 + &s2 + s3; // String + &String + &str
     println!("{}", s);
 }
 

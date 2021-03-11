@@ -9,6 +9,7 @@ lazy_static = "1.4.0"
 strum = { version = "0.20", features = ["derive"] }
 auto_ops = "0.3.0"
 procedural_macro = { path = "procedural_macro" }
+futures = "0.3"
 
 [workspace]
 members = ["hello", "procedural_macro"]

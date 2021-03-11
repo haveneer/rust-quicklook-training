@@ -14,7 +14,7 @@ fn sample_tree() -> BinaryTree {
     //      +----(4)---+
     //      |          |
     //   +-(2)-+      [5]
-    //   |     |   
+    //   |     |
     //  [1]   [3]
     //
     BinaryTree::Node(n2, 4, l5)

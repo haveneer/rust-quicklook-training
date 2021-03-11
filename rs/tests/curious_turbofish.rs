@@ -7,7 +7,7 @@ fn test() {
 
     let mut x = Vec::<i32>::new(); // turbo fish without outer < >
     x.push(1);
-    
+
     let mut x = <Vec<i32>>::new(); // no turbo fish but outer < >
     x.push(1);
 

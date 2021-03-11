@@ -2,7 +2,6 @@ fn print_type<T>(_t: &T) {
     println!("{}", std::any::type_name::<T>());
 }
 
-
 #[test]
 fn test() {
     print_type(&1);

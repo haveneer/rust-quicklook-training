@@ -28,8 +28,7 @@ pub fn derive_answer_fn(input: TokenStream) -> TokenStream {
     let (impl_generics, ty_generics, where_clause) = input.generics.split_for_impl();
 
     // Dig into input data
-    let count = 
-    match input.data {
+    let count = match input.data {
         Data::Enum(ref data) => data.variants.len(),
         Data::Struct(ref data) => match data.fields {
             Fields::Named(ref fields) => fields.named.len(),

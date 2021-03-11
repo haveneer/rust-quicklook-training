@@ -43,7 +43,7 @@ mod tests {
 
         let x = impl_out2018();
         x.foo();
-        
+
         let f = returns_closure2015();
         let y = f(0);
 

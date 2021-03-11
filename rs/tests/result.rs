@@ -31,14 +31,12 @@ mod tests {
         ComplexError { param1: &'static str, param2: usize },
     }
 
-    impl fmt::Display for MyError2 { // Pretty display to render optimized Error type
+    impl fmt::Display for MyError2 {
+        // Pretty display to render optimized Error type
         fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
             match *self {
                 MyError2::EasyError => write!(f, "Easy Error"),
-                MyError2::ComplexError {
-                    param1,
-                    param2,
-                } => write!(f, "{}  {}", param1, param2),
+                MyError2::ComplexError { param1, param2 } => write!(f, "{}  {}", param1, param2),
             }
         }
     }
@@ -55,8 +53,8 @@ mod tests {
 
     // Runtime defined Error type
     fn f4(n: Option<i64>) -> Result<i64, Box<dyn error::Error>> {
-        n.ok_or_else(|| MyError2::EasyError.into() )
-        .and_then(|n| Ok(n))
+        n.ok_or_else(|| MyError2::EasyError.into())
+            .and_then(|n| Ok(n))
     }
 
     fn show<E: std::fmt::Debug>(r: Result<i64, E>) {

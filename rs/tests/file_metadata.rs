@@ -10,11 +10,7 @@ fn main() {
     for entry in entries {
         let path = entry.unwrap().path();
         let meta = fs::metadata(&path).unwrap();
-        let prefix = if meta.is_dir() {
-            "(dir)"
-        } else {
-            "     "
-        };
+        let prefix = if meta.is_dir() { "(dir)" } else { "     " };
         match path.to_str() {
             Some(s) => println!("{} {}", prefix, s),
             None => println!("{} {:?} (invalid utf-8)", prefix, path),

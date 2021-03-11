@@ -40,8 +40,8 @@ fn max2<'a>(x: &'a i32, y: &'a i32) -> &'a i32 {
 
 #[test]
 fn lifetime2() {
-// On usage of reference:
-// https://stackoverflow.com/questions/36335342/meaning-of-the-ampersand-and-star-symbols-in-rust
+    // On usage of reference:
+    // https://stackoverflow.com/questions/36335342/meaning-of-the-ampersand-and-star-symbols-in-rust
 
     let r: &i32;
     let a: i32 = 4;
@@ -92,14 +92,14 @@ fn lifetime3() {
 #[test]
 fn lifetime4() {
     // Good idea but unstable : https://github.com/rust-lang/rust/issues/48594
-//    // This is subtyping
-//    let val1 = 42;
-//    let val2 = 24;
-//    'x: {
-//        let ref1 : &'x i32 = val1;
-//        'y: {
-//            let mut ref2 : &'y mut i32= val2;
-//            ref2 = ref1;
-//        }
-//    }
+    //    // This is subtyping
+    //    let val1 = 42;
+    //    let val2 = 24;
+    //    'x: {
+    //        let ref1 : &'x i32 = val1;
+    //        'y: {
+    //            let mut ref2 : &'y mut i32= val2;
+    //            ref2 = ref1;
+    //        }
+    //    }
 }
