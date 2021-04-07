@@ -5,6 +5,31 @@
   * sequential : https://doc.rust-lang.org/book/ch15-00-smart-pointers.html
   * concurrent : 
   * https://manishearth.github.io/blog/2015/05/27/wrapper-types-in-rust-choosing-your-guarantees/
+  * ```
+    Box<T> is for single ownership.
+    Rc<T> is for multiple ownership.
+    Arc<T> is for multiple ownership, but threadsafe.
+    Cell<T> is for “interior mutability” for Copy types; that is, when you need to mutate something behind a &T.
+    
+    Cell<T> and RefCell<T> are for single-threaded scenarios. Consider using RwLock<T> or Mutex<T> if you need shared mutability in a multi-threaded situation. 
+    ```
+  * compare the different "interior mutability" types
+    * Cell
+      * &self let's you set() the contents.
+      * No references to the contents allowed. Only copying and taking.
+      * Never Sync.
+    * RefCell
+      * &self let's you get &mut of the contents.
+      * Never Sync.
+    * RwLock
+      * &self let's you get &mut of the contents.
+      * Sync if the contents are Send + Sync.
+    * Mutex
+      * &self let's you get &mut of the contents.
+      * Shared references to the interior also take the lock, so only one can exist at a time.
+      * Sync if the contents are Send.
+
+  * https://manishearth.github.io/blog/2015/05/27/wrapper-types-in-rust-choosing-your-guarantees/
 * Phantom: 
 * Rust + CXX : https://github.com/dtolnay/cxx
 * Rust + Python3
@@ -17,12 +42,13 @@
 * traits inheritance (super traits): https://doc.rust-lang.org/rust-by-example/trait/supertraits.html
 * async book: https://rust-lang.github.io/async-book
 * Écriture fonctionnelle (C++ range like)
-
+* autres usage de ? et From::from : https://doc.rust-lang.org/beta/rust-by-example/error/multiple_error_types/reenter_question_mark.html
 
 Bads :/
 * interior mutability: 
     * https://stackoverflow.com/questions/66566058/why-mutable-reference-on-const-is-not-an-error?noredirect=1#comment117674607_66566058
     * https://github.com/rust-lang/rust/issues/55721#issuecomment-643454340
+    * let mut x = &mut 1; *x += 1; (ident with const)
 * Do not add Copy trait if you want to avoid copies (if available, it will become the default behavior)  
 
 
@@ -33,4 +59,17 @@ Meilleurs default que C++:
 
 # Good questions
 * https://stackoverflow.com/questions/44743409/why-can-i-use-ok-and-err-directly-without-the-result-prefix
-* use xxx as _ : https://doc.rust-lang.org/std/keyword.use.html 
+* use xxx as _ : https://doc.rust-lang.org/std/keyword.use.html
+
+
+# Must visit
+* https://github.com/firecracker-microvm/firecracker
+* https://github.com/dtolnay/thiserror
+* https://github.com/CookieCoder15/pipes-rs
+* https://github.com/rust-lang/rustlings
+* https://blog.logrocket.com/parsing-in-rust-with-nom/
+## GUI
+* https://dev.to/davidedelpapa/rust-gui-introduction-a-k-a-the-state-of-rust-gui-libraries-as-of-january-2021-40gl
+* https://github.com/hecrj/iced
+* https://github.com/linebender/druid
+* https://github.com/tauri-apps/tauri
