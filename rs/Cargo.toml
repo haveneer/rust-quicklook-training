@@ -1,4 +1,4 @@
-[package]
+﻿[package]
 name = "rs"
 version = "0.1.0"
 authors = ["Pascal HAVÉ <hpwxf@haveneer.com>"]
@@ -12,4 +12,4 @@ procedural_macro = { path = "procedural_macro" }
 futures = "0.3"
 
 [workspace]
-members = ["hello", "procedural_macro"]
+members = ["hello", "procedural_macro", "full-tree", "full-tree/libs/mylib1"]
