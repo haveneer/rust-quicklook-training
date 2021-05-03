@@ -41,17 +41,28 @@ impl<I, B, F> Iterator for SubFold<I, B, F>
     type Item = B;
 
     fn next(&mut self) -> Option<Self::Item> {
-        let mut acc = None;
-        for _ in 0..self.n {
-            if let Some(val) = self.iter.next() {
-                acc = acc
-                    .or(Some(self.init.clone()))
-                    .map(|acc| (&self.f)(acc, val));
-            } else {
-                break;
-            }
+        // let mut acc = None;
+        // for _ in 0..self.n {
+        //     if let Some(val) = self.iter.next() {
+        //         acc = acc
+        //             .or(Some(self.init.clone()))
+        //             .map(|acc| (&self.f)(acc, val));
+        //     } else {
+        //         break;
+        //     }
+        // }
+        // acc
+
+        // More functional style
+        let mut subiter =
+            self.iter.by_ref()
+                .take(self.n)
+                .peekable();
+        if subiter.peek().is_some() {
+            Some(subiter.fold(self.init.clone(), &self.f))
+        } else {
+            None
         }
-        acc
     }
 }
 
