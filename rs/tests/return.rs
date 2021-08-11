@@ -1,11 +1,11 @@
 #[cfg(test)]
 mod tests {
     fn f1() -> i8 {
-        let f = || return 1;
+        let f = || return 1;;
         f();
         0
     }
-    
+
     fn f2() -> i8 {
         return 1;
         0

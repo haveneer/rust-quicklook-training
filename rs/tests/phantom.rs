@@ -25,5 +25,8 @@ mod tests {
         let y = X::<i32>::new();
 
         let z = y.phantom;
+        
+        // Phantom data does not change size
+        assert_eq!(std::mem::size_of::<X::<i64>>(), std::mem::size_of::<i64>()); 
     }
 }

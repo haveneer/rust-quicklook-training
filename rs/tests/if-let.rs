@@ -1,3 +1,5 @@
+// See also while let
+
 #[cfg(test)]
 mod tests {
     #[test]
@@ -27,7 +29,8 @@ mod tests {
     }
 
     #[test]
-    fn test_mixed1() { // result -> option
+    fn test_mixed1() {
+        // result -> option
         let result: Result<i8, ()> = Ok(1);
         let f = || {
             if let Some(_i) = result.ok() {
@@ -40,7 +43,8 @@ mod tests {
     }
 
     #[test]
-    fn test_mixed2() { // option -> result
+    fn test_mixed2() {
+        // option -> result
         let option = Some(1);
         let f = || {
             if let Ok(_i) = option.ok_or(()) {

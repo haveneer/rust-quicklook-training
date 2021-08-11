@@ -1,4 +1,4 @@
-use std::sync::{RwLock, Mutex};
+use std::sync::{Mutex, RwLock};
 
 #[test]
 fn test_rwlock() {
@@ -39,6 +39,4 @@ fn test_mutex() {
         *w += 1;
         assert_eq!(*w, 6);
     } // write lock is dropped here
-    
-    
 }

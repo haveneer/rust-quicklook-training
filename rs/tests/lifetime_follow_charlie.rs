@@ -1,6 +1,6 @@
 #[cfg(test)]
 mod tests1 {
-    type Charlie = Vec::<u8>;
+    type Charlie = Vec<u8>;
 
     struct A {
         #[allow(dead_code)]
@@ -8,7 +8,7 @@ mod tests1 {
     }
 
     struct B<'a> {
-        charlie: &'a A
+        charlie: &'a A,
     }
 
     #[allow(dead_code)]
@@ -23,9 +23,9 @@ mod tests1 {
         let a = A { charlie };
         let b = B { charlie: &a };
         // let c = C { a, b}; // forbidden
-        //                    // there is no way to build C if b referenced the same embedded a 
+        //                    // there is no way to build C if b referenced the same embedded a
         let f = move || {
-            // let x = a;  // you can use ONLY ONE 
+            // let x = a;  // you can use ONLY ONE
             let x = b; // but not both
             x.charlie;
         };
@@ -37,14 +37,14 @@ mod tests1 {
 mod tests2 {
     use std::rc::Rc;
 
-    type Charlie = Vec::<u8>;
+    type Charlie = Vec<u8>;
 
     struct A {
         charlie: Charlie,
     }
 
     struct B {
-        charlie: Rc<A>
+        charlie: Rc<A>,
     }
 
     #[allow(dead_code)]
@@ -58,13 +58,13 @@ mod tests2 {
         let charlie = Charlie::new();
         let a = Rc::new(A { charlie });
         let b = B { charlie: a.clone() };
-        
+
         // Both c and f solutions are OK but not in the same time; b is still moved
         // let c = C { a: a.clone(), b }; // OK
-        // //                             // there is no way to build C if b referenced the same embedded a 
+        // //                             // there is no way to build C if b referenced the same embedded a
 
         let f = move || {
-            let xa = a; // both OK 
+            let xa = a; // both OK
             let xb = b;
             &xa.charlie; // ref required since Charlie does not implement the `Copy` trait
             xb.charlie;
