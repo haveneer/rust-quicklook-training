@@ -116,7 +116,7 @@ void types_20() {
 #ifdef _MSC_VER // cf _MSC_FULL_VER
 #pragma message("was not supported in MSVC 19.28")
 #else
-  cout << typeid(bit_cast<double>(0));
+  cout << typeid(bit_cast<double>(0l)).name();
 #endif
 #else
 #pragma message("undefined __cpp_lib_bit_cast")
@@ -124,7 +124,7 @@ void types_20() {
 }
 
 void dynamic_memory_20() {
-#if __cpp_lib_shared_ptr_arrays
+#if my_cpp_lib_shared_ptr_arrays // seems to be wrong in clang-13
   /// Shared array
   /// [make_shared](https://en.cppreference.com/w/cpp/memory/shared_ptr/make_shared)
   auto a = make_shared<int[10]>();
@@ -296,10 +296,10 @@ static_assert(_inc2(1) == 2);
   [convertible_to](https://en.cppreference.com/w/cpp/concepts/convertible_to)
  */
 
-#if !defined(__clang__) || (__clang_major__ > 11) || (__clang_major__ == 11 && __clang_minor__ > 0)
+#if !defined(__clang__) || (__clang_major__ > 12) || (__clang_major__ == 12 && __clang_minor__ > 0)
 template <typename T> concept compound_requirements = requires(T x) {
   { x + 1 }
-  ->convertible_to<bool>; // not supported by clang 11.0
+  ->convertible_to<bool>; // not supported by clang 12.0
   { x * 2 }
   ->same_as<int>;
 };

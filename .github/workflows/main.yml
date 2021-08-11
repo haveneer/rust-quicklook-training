@@ -12,37 +12,53 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - name: Ubuntu GCC 10
+          - name: Linux GCC 11
             os: ubuntu-20.04
-            c-compiler: gcc-10
-            cxx-compiler: g++-10
-          - name: Ubuntu Clang 11
+            c-compiler: gcc-11
+            cxx-compiler: g++-11
+          - name: Linux Clang 12
             os: ubuntu-20.04
-            c-compiler: clang-11
-            cxx-compiler: clang++-11
+            c-compiler: clang-12
+            cxx-compiler: clang++-12
           - name: macOS 10.15
             os: macOS-10.15
-            
+
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
         with:
           submodules: true
-      - name: install
+      - name: install GCC-11
         run: |
-          sudo apt update && sudo apt install -y clang-11 libc++-11-dev libc++abi-11-dev
-        if: matrix.c-compiler == 'clang-11' && runner.os == 'Linux'
+          sudo apt install -qy software-properties-common
+          sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+          sudo apt install -qy gcc-11 g++-11
+        if: matrix.c-compiler == 'gcc-11' && runner.os == 'Linux'
+      - name: install Clang-12
+        run: |
+          # for sources, see https://apt.llvm.org
+          curl -Ls https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
+          sudo apt-add-repository 'deb http://apt.llvm.org/focal/ llvm-toolchain-focal-12 main'
+          sudo apt update && sudo apt install -qy clang-12 libc++-12-dev libc++abi-12-dev
+        if: matrix.c-compiler == 'clang-12' && runner.os == 'Linux'
+      - name: install additional tools and libs
+        run: |
+          if [ "${{runner.os}}" == "Linux" ]; then
+            sudo apt install -y ninja-build
+          fi
+          if [ "${{runner.os}}" == "macOS" ]; then
+            brew install ninja
+          fi        
       - name: configure
         run: |
           echo "Configure on $(uname -a)"
-          cd cpp && mkdir build && cd build && CC=${{matrix.c-compiler}} CXX=${{matrix.cxx-compiler}} cmake ..
+          cd cpp && mkdir build && cd build && CC=${{matrix.c-compiler}} CXX=${{matrix.cxx-compiler}} cmake .. -G Ninja 
       - name: build
         run: cd cpp && cmake --build build
       - name: test
         run: cd cpp/build && ctest
 
   build-cpp-windows:
-
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -60,15 +76,14 @@ jobs:
         run: cd cpp/build && ctest -C Debug
 
   build-rs:
-
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         include:
-          - name: Ubuntu GCC 10
+          - name: Linux
             os: ubuntu-20.04
-          - name: macOS 10.15
+          - name: macOS
             os: macOS-10.15
           - name: Windows
             os: windows-latest

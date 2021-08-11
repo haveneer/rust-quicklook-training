@@ -23,15 +23,6 @@ endif ()
 
 #------------------------------------------------------
 
-add_executable(manage_test_crash tools/manage_test_crash.c)
-
-message(STATUS "Detect file to compile using globbing")
-file(GLOB SRCS1 RELATIVE "${CMAKE_SOURCE_DIR}" "src/*.cpp")
-file(GLOB SRCS2 RELATIVE "${CMAKE_SOURCE_DIR}" "extras/*.cpp")
-set(SRCS ${SRCS1} ${SRCS2})
-
-include_directories(include)
-
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -Wall -Wextra -pedantic")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused -Wno-unused-parameter")
@@ -50,11 +41,37 @@ elseif (CMAKE_CXX_COMPILER_ID MATCHES "PGI")
     set(CMAKE_CXX_STANDARD 17) # C++20 requires an updated compiler (not yet available) 
 endif ()
 
+#------------------------------------------------------
+
 if (NOT WIN32)
     set(THREADS_PREFER_PTHREAD_FLAG ON)
     find_package(Threads REQUIRED)
     link_libraries(Threads::Threads)
-endif()
+endif ()
+
+#------------------------------------------------------
+# Check compiler support (when __cpp_* feature is not available)
+include(CheckCXXSourceCompiles)
+
+# https://en.cppreference.com/w/cpp/memory/shared_ptr/make_shared (in 4-Notes)
+check_cxx_source_compiles("#include <memory>\n int main() { auto a = std::make_shared<int[10]>(); }"
+        HAS_CXX_FEATURE_SHARED_PTR_ARRAYS)
+if (HAS_CXX_FEATURE_SHARED_PTR_ARRAYS)
+    ADD_COMPILE_DEFINITIONS(my_cpp_lib_shared_ptr_arrays)
+endif ()
+
+#------------------------------------------------------
+
+add_executable(manage_test_crash tools/manage_test_crash.c)
+
+message(STATUS "Detect file to compile using globbing")
+file(GLOB SRCS1 RELATIVE "${CMAKE_SOURCE_DIR}" "src/*.cpp")
+file(GLOB SRCS2 RELATIVE "${CMAKE_SOURCE_DIR}" "extras/*.cpp")
+set(SRCS ${SRCS1} ${SRCS2})
+
+include_directories(include)
+
+#------------------------------------------------------
 
 set(EXCLUDED)
 if (MSVC)
@@ -69,8 +86,9 @@ if (PGI)
     list(APPEND EXCLUDED)
     # runtime errors
     list(APPEND EXCLUDED)
-endif()
+endif ()
 
+#------------------------------------------------------
 
 enable_testing()
 foreach (SRC ${SRCS})
