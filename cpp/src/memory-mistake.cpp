@@ -3,8 +3,8 @@
 #include <exception>
 #include <iostream>
 #include <memory>
-#include <string>
 #include <stdexcept>
+#include <string>
 using namespace std::string_literals;
 //#endregion
 
@@ -45,7 +45,7 @@ int main(int argc, char *argv[]) {
     do_something(conn);
   } catch (std::exception &e) {
     std::cout << "An exception has been thrown\n";
-    conn.dispose();
+    conn.dispose(); // may be an illegal free
   }
 
   std::cout << "connection after = " << conn << std::endl; // CWE416 ?

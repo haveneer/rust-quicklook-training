@@ -23,7 +23,7 @@ mod tests {
     }
 
     #[test]
-    // Exlusive mut borrowing
+    // Exclusive mut borrowing
     fn test9() {
         let mut str = String::from("Hello");
         let r1 = &mut str;
@@ -34,7 +34,7 @@ mod tests {
     }
 
     #[test]
-    // Exlusive mut borrowing
+    // Exclusive mut borrowing
     fn test10() {
         // We change the order of the operations
         let mut str = String::from("Hello");
@@ -52,7 +52,7 @@ mod tests {
     }
 
     #[test]
-    // Exlusive mut borrowing
+    // Exclusive mut borrowing
     fn test11() {
         let mut str = String::from("Hello");
         let r1 = &mut str;
