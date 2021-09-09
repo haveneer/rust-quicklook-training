@@ -96,6 +96,9 @@ jobs:
       - uses: actions/checkout@v2
         with:
           submodules: true
+      #- name: add additional dev tools # require for using compiletest_rs
+      #  shell: bash
+      #  run: rustup component add rustc-dev --toolchain nightly
       - name: build
         run: cd rs && cargo build --tests
       - name: test

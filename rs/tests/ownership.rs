@@ -1,7 +1,5 @@
 #[cfg(test)]
 mod tests {
-    use compiler_test;
-
     #[test]
     fn implicit_move() {
         let numbers = vec![1, 2, 3, 4, 5];
@@ -81,6 +79,10 @@ mod tests {
         }
     }
 
+    #[cfg(feature = "compiletest")]
+    use compiler_test;
+
+    #[cfg(feature = "compiletest")]
     #[test]
     fn ownership_failures() {
         compiler_test::run_mode("compile-fail", Some("ownership_failures"),
