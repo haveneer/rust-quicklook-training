@@ -6,7 +6,7 @@ macro_rules! debug {
         println!("{:=^width$}", [" ",$msg," "].concat(), width=width);
         $(
             println!("{:width1$} = {:width2$} : {:width3$} ({})",
-                     std::stringify!($x),$x, get_type_string(&$x), get_type_size(&$x),
+                     std::stringify!($x),$x, get_type_string(&$x), std::mem::size_of_val(&$x),
                      width1=name_width, width2=value_width, width3=type_width);
         )*
     }};
@@ -18,7 +18,7 @@ macro_rules! debug {
 macro_rules! max_name_size { // Loop recursively
     () => { 0 };
     ($head:expr) => {
-        (std::stringify!($head).len()-1, ($head).to_string().len(), get_type_string($head).len(), get_type_size($head).to_string().len())
+        (std::stringify!($head).len()-1, ($head).to_string().len(), get_type_string($head).len(), std::mem::size_of_val($head).to_string().len())
     };
     ($head:expr; $($tail:expr);*) => {
         std::cmp::max(max_name_size!($head), max_name_size!($($tail);*))
@@ -27,9 +27,6 @@ macro_rules! max_name_size { // Loop recursively
 
 fn get_type_string<T>(_t: &T) -> &'static str {
     std::any::type_name::<T>()
-}
-fn get_type_size<T>(_t: &T) -> usize {
-    std::mem::size_of::<T>()
 }
 
 #[test]

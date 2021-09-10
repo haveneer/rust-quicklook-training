@@ -1,3 +1,5 @@
+* New custom derive implementation
+* 
 * multi crates / modules
 * ajouter un exemple de super:: et self:: dans full_tree (alternative aux chemins complets et pouvant retirer une ambiguïté en particulier pour self::)
 * visibilité (pub, pub(crate), pub(super)) = https://doc.rust-lang.org/beta/rust-by-example/mod/visibility.html
