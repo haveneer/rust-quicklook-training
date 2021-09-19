@@ -22,4 +22,4 @@ rstest = "0.11.0"
 mockall = "0.10.2"
 
 [workspace]
-members = ["hello", "procedural_macro", "full-tree", "full-tree/libs/mylib1"]
+members = ["hello", "procedural_macro", "full-tree", "full-tree/libs/mylib1", "demos/quick-hash"]
