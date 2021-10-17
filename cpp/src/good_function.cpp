@@ -1,4 +1,6 @@
+//#region [Collapse all]
 #include <string>
+//#endregion
 
 struct Object {
   explicit Object(std::string s) noexcept : attr(std::move(s)) {}
