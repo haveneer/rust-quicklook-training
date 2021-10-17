@@ -78,28 +78,3 @@ jobs:
         run: cd cpp && cmake --build build --config Debug
       - name: test
         run: cd cpp/build && ctest -C Debug
-
-  build-rs:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - name: Linux
-            os: ubuntu-20.04
-          - name: macOS
-            os: macOS-10.15
-          - name: Windows
-            os: windows-latest
-    steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
-        with:
-          submodules: true
-      #- name: add additional dev tools # require for using compiletest_rs
-      #  shell: bash
-      #  run: rustup component add rustc-dev --toolchain nightly
-      - name: build
-        run: cd rs && cargo build --tests
-      - name: test
-        run: cd rs && cargo test

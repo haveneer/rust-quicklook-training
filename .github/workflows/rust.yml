@@ -1,0 +1,34 @@
+# To debug a workflow see: https://docs.github.com/en/actions/configuring-and-managing-workflows/managing-a-workflow-run#enabling-debug-logging
+
+name: Rust CI
+
+on:
+  push:
+  schedule:
+    - cron: '0 2 * * SAT'
+
+jobs:
+  build-rs:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Linux
+            os: ubuntu-20.04
+          - name: macOS
+            os: macOS-10.15
+          - name: Windows
+            os: windows-latest
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+      #- name: add additional dev tools # require for using compiletest_rs
+      #  shell: bash
+      #  run: rustup component add rustc-dev --toolchain nightly
+      - name: build
+        run: cd rs && cargo build --tests
+      - name: test
+        run: cd rs && cargo test
