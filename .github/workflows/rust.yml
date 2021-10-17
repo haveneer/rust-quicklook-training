@@ -29,6 +29,8 @@ jobs:
       #  shell: bash
       #  run: rustup component add rustc-dev --toolchain nightly
       - name: build
-        run: cd rs && cargo build --tests
+        run: cd rs && cargo build
       - name: test
         run: cd rs && cargo test
+      - name: bencmarks
+        run: cd rs && cargo bench
