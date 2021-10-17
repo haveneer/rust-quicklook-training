@@ -33,9 +33,9 @@ mod tests {
         #[test]
         fn move_and_functions() {
             let numbers = vec![1, 2, 3, 4, 5];
-            consume(numbers);  // Gives ownership to `consume`
+            consume(numbers); // Gives ownership to `consume`
 
-            let produced_numbers = produce();  // Takes ownership
+            let produced_numbers = produce(); // Takes ownership
             println!("{:?}", produced_numbers);
             // produced_numbers gets out of scope -> free memory
         }
@@ -48,8 +48,10 @@ mod tests {
 
         fn produce() -> Vec<i32> {
             let mut numbers: Vec<i32> = Vec::new();
-            for i in 0..4 { numbers.push(i); }
-            numbers  // Gives ownership to caller : NO COPY
+            for i in 0..4 {
+                numbers.push(i);
+            }
+            numbers // Gives ownership to caller : NO COPY
         }
     }
 
@@ -58,10 +60,14 @@ mod tests {
         fn borrow_and_functions() {
             let mut numbers = vec![1, 2, 3, 4, 5];
 
-            println!("The sum is {}",    // Passes reference, 
-                     consume(&numbers)); // keeps ownership
-            println!("The sum is {}",                // Mutable reference,
-                     add_and_consume(&mut numbers)); // keeps ownership
+            println!(
+                "The sum is {}", // Passes reference,
+                consume(&numbers)
+            ); // keeps ownership
+            println!(
+                "The sum is {}", // Mutable reference,
+                add_and_consume(&mut numbers)
+            ); // keeps ownership
 
             println!("{:?}", numbers);
         }
@@ -85,12 +91,15 @@ mod tests {
     #[cfg(feature = "compiletest")]
     #[test]
     fn ownership_failures() {
-        compiler_test::run_mode("compile-fail", Some("ownership_failures"),
-                                vec![
-                                    "implicit_move",
-                                    "explicit_clone",
-                                    "borrow_and_functions",
-                                    // "in_async", // compiletest_rs seems not able to load crates
-                                ]);
+        compiler_test::run_mode(
+            "compile-fail",
+            Some("ownership_failures"),
+            vec![
+                "implicit_move",
+                "explicit_clone",
+                "borrow_and_functions",
+                // "in_async", // compiletest_rs seems not able to load crates
+            ],
+        );
     }
 }

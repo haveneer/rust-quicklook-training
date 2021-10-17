@@ -3,7 +3,8 @@ fn main() {
     let mut v = Vec::new(); // here, v is not yet fully typed
     let mut var;            // here, val is not yet fully typed
 
-    // do things without using `var`
+    // ... do things without using `var` and `v`
+    
     v.push(3);  // now v is a vector of i32
     var = 3.14; // now var is a f64
 
