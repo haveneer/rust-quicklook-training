@@ -32,5 +32,15 @@ jobs:
         run: cd rs && cargo build
       - name: test
         run: cd rs && cargo test
+      - name: demos
+        run: |
+          cd rs
+          cargo run --bin quick-hash --manifest-path demos/quick-hash/Cargo.toml
+          cargo run --bin cxx-interface --manifest-path demos/cxx-interface/Cargo.toml
+      - name: examples
+        run: |
+          cd rs
+          cargo run --example julia
+          cargo run --example quick_julia
       - name: bencmarks
         run: cd rs && cargo bench

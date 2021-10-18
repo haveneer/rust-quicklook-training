@@ -28,6 +28,8 @@ cargo build [--release]
 cargo test
 cargo bench
 cargo run --example julia
+cargo run --release --color=always --bin quick-hash --manifest-path demos/quick-hash/Cargo.toml
+cargo run --release --color=always --bin cxx-interface --manifest-path demos/cxx-interface/Cargo.toml
 ```
 
 ## C++ part
