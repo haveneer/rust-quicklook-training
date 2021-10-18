@@ -29,7 +29,7 @@ fn main() {
 
     let mut results = vec![0; 32];
 
-    let max_seed_power = 30;
+    let max_seed_power = 20;
     let seed_bar_step = 1 << 8;
     let bar = ProgressBar::new((1 << max_seed_power) / seed_bar_step);
     for seed in 0..1 << max_seed_power { // TODO use functional style
