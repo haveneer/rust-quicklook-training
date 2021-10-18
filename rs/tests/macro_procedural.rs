@@ -2,7 +2,7 @@ extern crate procedural_macro; // cf produral_macro local crate
 use procedural_macro::make_answer;
 use procedural_macro::CountFields;
 
-make_answer!(); // create an answer function
+make_answer!(); // create an answer1 function
 
 #[cfg(test)]
 mod tests {

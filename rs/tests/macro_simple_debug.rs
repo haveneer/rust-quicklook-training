@@ -37,8 +37,7 @@ macro_rules! debug {
     }};
 }
 
-#[test]
-fn test_debug() {
+fn main() {
     let var = 1;
     let something_else = "string";
     debug!(var);
@@ -62,3 +61,6 @@ impl std::fmt::Display for Struct {
         write!(f, "{:?}", &self)
     }
 }
+
+#[test]
+fn test() { main(); }
