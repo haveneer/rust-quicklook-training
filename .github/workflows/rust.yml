@@ -44,3 +44,12 @@ jobs:
           cargo run --example quick_julia
       - name: bencmarks
         run: cd rs && cargo bench
+      - name: Python binding
+        shell: bash
+        run: |
+          cd demos/pyrs_feature
+          python3 -m venv venv
+          source ./venv/bin/activate
+          pip3 install maturin pytest
+          maturin develop
+          ./venv/bin/pytest
