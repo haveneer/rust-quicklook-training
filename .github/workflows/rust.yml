@@ -56,7 +56,7 @@ jobs:
         shell: bash
         run: |
           cd rs/demos/pyrs-feature
-          python3 -m venv venv
+          python -m venv venv
           pushd .
           cd venv/Scripts
           . activate
