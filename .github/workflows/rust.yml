@@ -47,7 +47,7 @@ jobs:
       - name: Python binding
         shell: bash
         run: |
-          cd demos/pyrs_feature
+          cd rs/demos/pyrs_feature
           python3 -m venv venv
           source ./venv/bin/activate
           pip3 install maturin pytest
