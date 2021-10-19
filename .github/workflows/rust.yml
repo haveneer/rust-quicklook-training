@@ -65,6 +65,7 @@ jobs:
           maturin develop
           ./venv/Scripts/pytest.exe
         if: runner.os == 'Windows'
-      - name: bencmarks
-        run: cd rs && cargo bench
+      # Disable since it is too expensive  
+      # - name: bencmarks
+      #  run: cd rs && cargo bench
         

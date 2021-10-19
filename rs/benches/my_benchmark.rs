@@ -12,15 +12,28 @@ fn fibonacci(n: u64) -> u64 {
 }
 
 pub fn criterion_benchmark(c: &mut Criterion) {
-    c.bench_function("fib 20", |b| b.iter(|| fibonacci(black_box(20))));
+    c.bench_function("fib 15", |b| b.iter(|| fibonacci(black_box(15))));
 }
 
 pub fn sort_benchmark(c: &mut Criterion) {
     let mut rng = rand::thread_rng();
     let range = Uniform::new(0., 1.);
-    let v: Vec<f64> = (0..10_000_000).map(|_| rng.sample(&range)).collect();
+    let v: Vec<f64> = (0..1_000_000).map(|_| rng.sample(&range)).collect();
 
-    c.bench_function("sort 10", |b| {
+    c.bench_function("sort", |b| {
+        b.iter(|| {
+            let mut w = v.clone();
+            w.sort_by(|a, b| a.partial_cmp(b).unwrap());
+        })
+    });
+}
+
+pub fn par_sort_benchmark(c: &mut Criterion) {
+    let mut rng = rand::thread_rng();
+    let range = Uniform::new(0., 1.);
+    let v: Vec<f64> = (0..1_000_000).map(|_| rng.sample(&range)).collect();
+
+    c.bench_function("par_sort", |b| {
         b.iter(|| {
             let mut w = v.clone();
             w.par_sort_by(|a, b| a.partial_cmp(b).unwrap());
@@ -28,5 +41,5 @@ pub fn sort_benchmark(c: &mut Criterion) {
     });
 }
 
-criterion_group!(benches, criterion_benchmark, sort_benchmark);
+criterion_group!(benches, criterion_benchmark, sort_benchmark, par_sort_benchmark);
 criterion_main!(benches);
