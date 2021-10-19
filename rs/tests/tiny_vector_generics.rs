@@ -11,8 +11,10 @@ impl<const SIZE: usize> TinyVector<SIZE> {
     }
 }
 
-#[test]
-fn test() {
+fn main() {
     let v1 = TinyVector::<4>::zero();
     let v2 = TinyVector::<4>::constant(1.);
 }
+
+#[test]
+fn test() { main() }

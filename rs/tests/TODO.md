@@ -54,11 +54,6 @@ Bads :/
     * let mut x = &mut 1; *x += 1; (ident with const)
 * Do not add Copy trait if you want to avoid copies (if available, it will become the default behavior)
 
-Meilleurs default que C++:
-
-* no copy by default
-* même le code de la std:: est lisible ! (pas un gros bazar comme la STL)
-
 # Good questions
 
 * https://stackoverflow.com/questions/44743409/why-can-i-use-ok-and-err-directly-without-the-result-prefix

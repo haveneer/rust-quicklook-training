@@ -8,8 +8,8 @@ pub trait Compare<T: ?Sized = Self> {
 
 // Default implementation (nightly only)
 impl<T> Compare<T> for T
-where
-    Self: core::cmp::PartialEq<T>,
+    where
+        Self: core::cmp::PartialEq<T>,
 {
     default fn equal(&self, other: &T) -> bool {
         print!("Compare default Self with T");
@@ -44,10 +44,14 @@ impl Compare<i32> for Foo {
     }
 }
 
-#[test]
-fn test() {
+fn main() {
     println!(" = {}", 1.0f32.equal(&1.0f32));
     println!(" = {}", 1.0f32.equal(&2i32));
     println!(" = {}", Foo(1i32).equal(&2i32));
     println!(" = {}", 1i32.equal(&2i32));
+}
+
+#[test]
+fn test() {
+    main();
 }
