@@ -7,4 +7,5 @@ edition = "2021"
 
 [dependencies]
 sha2 = "0.9.8"
-indicatif = "0.16.2"
+indicatif = { version = "0.16", features = ["rayon"] }
+rayon = "1.5"
