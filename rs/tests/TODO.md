@@ -34,8 +34,6 @@
 
     * https://manishearth.github.io/blog/2015/05/27/wrapper-types-in-rust-choosing-your-guarantees/
 * Phantom:
-* Rust + CXX : https://github.com/dtolnay/cxx
-* Rust + Python3
 * const fn
 * closures + move
 * Generics
