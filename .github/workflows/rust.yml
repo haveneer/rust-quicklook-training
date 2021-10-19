@@ -42,9 +42,7 @@ jobs:
           cd rs
           cargo run --example julia
           cargo run --example quick_julia
-      - name: bencmarks
-        run: cd rs && cargo bench
-      - name: Python binding
+      - name: Python binding Unix
         shell: bash
         run: |
           cd rs/demos/pyrs-feature
@@ -53,3 +51,20 @@ jobs:
           pip3 install maturin pytest
           maturin develop
           ./venv/bin/pytest
+        if: runner.os != 'Windows'
+      - name: Python binding Windows
+        shell: bash
+        run: |
+          cd rs/demos/pyrs-feature
+          python3 -m venv venv
+          pushd .
+          cd venv/Scripts
+          . activate
+          popd
+          pip3 install maturin pytest
+          maturin develop
+          ./venv/Scripts/pytest.exe
+        if: runner.os == 'Windows'
+      - name: bencmarks
+        run: cd rs && cargo bench
+        
