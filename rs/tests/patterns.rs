@@ -24,7 +24,7 @@ fn trivial_match_enum() {
     fn match_enum() {
         // strum requires the Default's trait on subfield (here u8)
         #[derive(Debug, strum::EnumIter)]
-        enum Enum {
+        enum MyEnum {
             A,
             B,
             C(u8),
@@ -32,28 +32,28 @@ fn trivial_match_enum() {
         ;
 
         use strum::IntoEnumIterator;
-        for e in Enum::iter() {
+        for e in MyEnum::iter() {
             match e {
-                Enum::A => println!("A = {:?}", e),
-                Enum::B => println!("B = {:?}", e),
-                Enum::C(x) => println!("C{} = {:?}", x, e),
+                MyEnum::A => println!("A = {:?}", e),
+                MyEnum::B => println!("B = {:?}", e),
+                MyEnum::C(x) => println!("C{} = {:?}", x, e),
                 // all case required or not compile
             }
         }
 
         println!("{:-<20}", "");
 
-        for e in Enum::iter() {
+        for e in MyEnum::iter() {
             match e {
-                Enum::A => println!("A = {:?}", e),
-                Enum::B => println!("B = {:?}", e),
+                MyEnum::A => println!("A = {:?}", e),
+                MyEnum::B => println!("B = {:?}", e),
                 _ => println!("Other = {:?}", e), // catch all other cases
             }
         }
 
         println!("{:-<20}", "");
 
-        for e in Enum::iter() {
+        for e in MyEnum::iter() {
             match e {
                 A => println!("/!\\ A = {:?}", A),
                 B => println!("/!\\ B = {:?}", B),
@@ -63,13 +63,13 @@ fn trivial_match_enum() {
 
         println!("{:-<20}", "");
 
-        for e in Enum::iter() {
+        for e in MyEnum::iter() {
             match e {
-                a @ Enum::A => println!("A = {:?}", a),
-                b @ Enum::B => println!("B = {:?}", b),
-                c @ Enum::C(0) => println!("C(0) = {:?}", c),
-                Enum::C(x) if x == 1 => println!("C(x=1) = {:?}", e),
-                // c @ Enum::C(x) => println!("C(x=1) = {:?}", c), // mixing binding and @ is unstable (https://github.com/rust-lang/rust/issues/65490)
+                MyEnum::A => println!("A"),
+                b @ MyEnum::B => println!("B = {:?}", b),
+                c @ MyEnum::C(0) => println!("C(0) = {:?}", c),
+                MyEnum::C(x) if x == 1 => println!("C(x=1) = {:?}", e),
+                // c @ MyEnum::C(x) => println!("C(x=1) = {:?}", c), // mixing binding and @ is unstable (https://github.com/rust-lang/rust/issues/65490)
                 x @ _ => println!("Other = {:?}", x),
                 // x @ _ => println!("/!\\ Other = {:?}", e), // cannot use borrowed e -> x
             }
@@ -79,23 +79,23 @@ fn trivial_match_enum() {
     #[test]
     fn match_struct() {
         #[derive(Debug)]
-        struct Struct {
+        struct MyStruct {
             a: bool,
             b: bool,
         }
 
         let mut data = [
-            Struct { a: true, b: false },
-            Struct { a: false, b: false },
-            Struct { a: true, b: true },
-            Struct { a: false, b: true },
+            MyStruct { a: true, b: false },
+            MyStruct { a: false, b: false },
+            MyStruct { a: true, b: true },
+            MyStruct { a: false, b: true },
         ];
 
         for s in data.iter() {
             match s {
-                Struct { a: x, b: true } => println!("Case 1: {:?}", s),
+                MyStruct { a: x, b: true } => println!("Case 1: {:?}", s),
                 // clever match: can see b: false is missing
-                Struct { a: true, b: false } => println!("Case 2: {:?}", s),
+                MyStruct { a: true, b: false } => println!("Case 2: {:?}", s),
                 x @ _ => println!("Other case : {:?}", x),
             }
         }
@@ -104,8 +104,8 @@ fn trivial_match_enum() {
 
         for s in data.iter_mut() {
             match s {
-                Struct { a: x, b: true } => *x = true,
-                Struct { b: false, .. } => {} // only b field is useful; the others don't matter
+                MyStruct { a: x, b: true } => *x = true,
+                MyStruct { b: false, .. } => {} // only b field is useful; the others don't matter
             }
         }
         for s in data.iter() {

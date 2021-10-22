@@ -62,26 +62,26 @@ mod tests {
 
             println!(
                 "The sum is {}", // Passes reference,
-                consume(&numbers)
+                borrow(&numbers)
             ); // keeps ownership
             println!(
                 "The sum is {}", // Mutable reference,
-                add_and_consume(&mut numbers)
+                borrow_and_mut(&mut numbers)
             ); // keeps ownership
 
             println!("{:?}", numbers);
         }
 
-        fn consume(numbers: &Vec<i32>) -> i32 {
+        fn borrow(numbers: &Vec<i32>) -> i32 {
             // numbers is READ-ONLY, cannot be mutated
             // numbers.push(42);  // error: does NOT COMPILE
             let sum: i32 = numbers.iter().sum();
             sum
         }
 
-        fn add_and_consume(numbers: &mut Vec<i32>) -> i32 {
+        fn borrow_and_mut(numbers: &mut Vec<i32>) -> i32 {
             numbers.push(42);
-            consume(numbers)
+            borrow(numbers)
         }
     }
 

@@ -2,17 +2,17 @@
 mod tests {
 
     #[derive(Default)]
-    struct Struct {
+    struct MyStruct {
         a: i8,
         b: i8,
     }
 
-    fn f() -> Struct {
-        Struct::default()
+    fn f() -> MyStruct {
+        MyStruct::default()
     }
 
     #[test]
     fn test() {
-        let Struct { a, b } = f();
+        let MyStruct { a, b } = f();
     }
 }

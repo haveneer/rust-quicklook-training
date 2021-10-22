@@ -37,7 +37,7 @@ fn test_debug() {
     debug!(var; something_else);
     debug!(1+2; something_else);
 
-    let str = Struct { field: 42 };
+    let str = MyStruct { field: 42 };
     debug!(msg:"Hello" var; str );
 
     println!("\nOk not moved : {}", str);
@@ -45,11 +45,11 @@ fn test_debug() {
 
 // Not copiable structure
 #[derive(Debug)]
-struct Struct {
+struct MyStruct {
     field: i64,
 }
 
-impl std::fmt::Display for Struct {
+impl std::fmt::Display for MyStruct {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{:?}", &self)
     }

@@ -6,5 +6,8 @@ fn main() {
     foo("Hello");
 }
 
+// Solution au moins pour foo(1)
+// fn foo<T: std::ops::Add<i32, Output=T>>(arg: T) -> T { return arg + 1; }
+
 #[test]
 fn test_main() { main() }
