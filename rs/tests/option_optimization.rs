@@ -9,7 +9,12 @@ macro_rules! show_size {
     )
 }
 
+enum SimpleEnum { A, B, C }
+
+enum ComplexEnum { A, B(i32), C { x: f64 } }
+
 fn main() {
+    // Show non-nullable pointer optimization inside an Option
     show_size!(header);
     show_size!(i32);
     show_size!(&i32);
@@ -17,6 +22,8 @@ fn main() {
     show_size!(&[i32]);
     show_size!(Vec<i32>);
     show_size!(Result<(), Box<i32>>);
+    show_size!(SimpleEnum);
+    show_size!(ComplexEnum);
 }
 
 #[test]
