@@ -1,23 +1,23 @@
 #[cfg(test)]
 mod tests {
-    trait F {
-        fn f(&self) {}
+    trait Moon {
+        fn moon(&self); // no default behaviour
     }
 
     struct A {}
 
     struct B {}
 
-    impl F for A {
-        fn f(&self) {}
+    impl Moon for A {
+        fn moon(&self) { /* ... */ }
     }
 
-    impl F for B {
-        fn f(&self) {}
+    impl Moon for B {
+        fn moon(&self) { /* ... */}
     }
     
-    impl F for f64 {
-        fn f(&self) {}
+    impl Moon for f64 {
+        fn moon(&self) { /* ... */ }
     }
 
     #[test]
@@ -25,13 +25,13 @@ mod tests {
         let a = A {};
         let b = B {};
 
-        a.f();
-        A::f(&a);
+        a.moon();
+        A::moon(&a);
         
-        b.f();
-        B::f(&b);
+        b.moon();
+        B::moon(&b);
         
-        3.14.f();
-        f64::f(&3.14);
+        3.14.moon();
+        f64::moon(&3.14);
     }
 }

@@ -29,7 +29,7 @@ pub fn add(a: i32, b: i32) -> i32 {
 /// # Arguments
 ///
 /// * `a`, `b` - inputs
-/// 
+///
 /// # Panics
 ///
 /// The function panics if the second argument is zero.
@@ -51,7 +51,11 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test() {
-        assert_eq!(div(3,2), 1);
+    fn test1() {
+        assert_eq!(div(3, 2), 1);
     }
+
+    #[test]
+    #[should_panic]
+    fn test2() { div(3, 0); }
 }
