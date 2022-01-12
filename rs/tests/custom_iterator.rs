@@ -101,16 +101,19 @@ mod tests {
         let result =
             RandomGenerator::new()
                 .map(|x| (x % 256) as u8 as char)
+                // .inspect(|x| println!("char: {}", x)) // show generated chars in flow 
                 .filter(|x| x.is_ascii_hexdigit())
                 .take(15)
                 .subfold(3, String::new(), |acc, x| acc + &x.to_string())
-                .fold(String::new(), |acc, x| {
+                .fold(String::new(), |acc, s|
                     if acc.is_empty() {
-                        x.to_string()
+                        s.to_string()
                     } else {
-                        acc + "-" + &x.to_string()
-                    }
-                });
+                        acc + "-" + &s.to_string()
+                    })
+            // .collect::<Vec<String>>().join("-") // Rust 1.56 stable with intermediate allocation
+            // .intersperse("-".into()).collect::<String>() // Rust nightly 
+            ;
         println!(">> {}", result);
     }
 }
