@@ -26,7 +26,7 @@ rstest = "0.11.0"
 mockall = "0.10.2"
 
 [workspace]
-members = ["hello", "procedural_macro", "full-tree", "full-tree/libs/mylib1", "demos/quick-hash", "demos/cxx-interface", "demos/pyrs-feature"]
+members = ["hello", "procedural_macro", "full-tree", "full-tree/libs/mylib1", "demos/quick-hash", "demos/cxx-interface", "demos/pyrs-feature", "doclib"]
 
 [[bench]]
 name = "my_benchmark"
