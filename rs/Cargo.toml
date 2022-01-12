@@ -17,7 +17,7 @@ num-complex = "0.4.0"
 palette = "0.5.0"
 rayon = "1.5"
 chrono = "0.4"
-criterion = "0.3.5" # benchmark !
+criterion = { version = "0.3.5", features = ["html_reports"] } # benchmark !
 # TODO replace compiler-test using trybuild ? (cf https://github.com/dtolnay/trybuild)
 #compiler-test = { path = "./compiler-test" } # compiletest_rs does not compiler for rustc > 1.53.0-nightly
 
@@ -29,5 +29,13 @@ mockall = "0.10.2"
 members = ["hello", "procedural_macro", "full-tree", "full-tree/libs/mylib1", "demos/quick-hash", "demos/cxx-interface", "demos/pyrs-feature", "doclib"]
 
 [[bench]]
-name = "my_benchmark"
+name = "sort"
+harness = false
+
+[[bench]]
+name = "fibonacci"
+harness = false
+
+[[bench]]
+name = "factorial"
 harness = false
