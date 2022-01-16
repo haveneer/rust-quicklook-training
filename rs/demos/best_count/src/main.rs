@@ -2,42 +2,16 @@ mod operator;
 mod stack;
 mod custom_operators;
 
-use std::collections::{HashMap, HashSet};
+use std::collections::HashSet;
 use std::rc::Rc;
 use clap::Parser;
-use crate::operator::Kind;
 use crate::operator::Operator;
 use crate::stack::Stack;
 use crate::custom_operators::*;
 
-// 
-// trait OperatorClone {
-//     fn clone_boxed(&self) -> Box<dyn Operator>;
-// }
-// 
-// impl<T> OperatorClone for T
-//     where T: 'static + Operator + Clone {
-//     fn clone_boxed(&self) -> Box<dyn Operator> {
-//         Box::new(self.clone())
-//     }
-// }
-// 
-// impl Clone for Box<dyn Operator> {
-//     fn clone(&self) -> Box<dyn Operator> {
-//         self.clone_boxed()
-//     }
-// }
-
-
 
 fn compute(target: u64, operators: Vec<Rc<dyn Operator>>) -> HashSet<String> {
-    let mut stack = Stack {
-        data: vec![],
-        old_data: vec![],
-        stacked_data: 0,
-        stacked_operators: vec![],
-        operator_usage: HashMap::new(),
-    };
+    let mut stack = Stack::new();
 
     let mut solutions = HashSet::new();
 
@@ -57,18 +31,18 @@ fn compute(target: u64, operators: Vec<Rc<dyn Operator>>) -> HashSet<String> {
 
         // std::println!("{}", stack.to_string());
 
-        let is_valid = stack.data.len() == 1 && stack.value() == target; // should be more constrained
+        let is_valid = stack.len() == 1 && stack.value() == target; // should be more constrained
         if is_valid {
             // println!("Solution found");
             solutions.insert(stack.to_string());
         }
 
-        if stack.data.len() > 0 {
+        if stack.len() > 0 {
             loop {
                 let old_op = stack.back_replay();
                 // std::println!("Backreplay : {} [{} -> out]", stack.to_string(), old_op.symbol());
                 next_op = operators.get(old_op.index() + 1);
-                if next_op.is_some() || stack.data.len() == 0
+                if next_op.is_some() || stack.len() == 0
                 { break; }
             }
         }

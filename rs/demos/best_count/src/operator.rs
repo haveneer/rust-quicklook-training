@@ -1,7 +1,7 @@
 use crate::stack::Stack;
 
 #[derive(PartialEq)]
-pub enum Kind { Data, Unary, Binary, Function }
+pub enum Kind { Data, Operator }
 
 pub trait Operator /* : OperatorClone */ {
     fn cardinality(&self) -> u8;

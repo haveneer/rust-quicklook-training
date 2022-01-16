@@ -28,7 +28,7 @@ impl Operator for UniqueDataOperator {
         !stack.is_used(self)
     }
 
-    fn eval_on_stack(&self, stack: &Stack) -> (u64, bool) {
+    fn eval_on_stack(&self, _stack: &Stack) -> (u64, bool) {
         (self.value, true)
     }
 

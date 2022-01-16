@@ -20,11 +20,11 @@ impl Operator for AddOperator {
     }
 
     fn kind(&self) -> Kind {
-        Kind::Binary
+        Kind::Operator
     }
 
     fn check_stack(&self, stack: &Stack) -> bool {
-        stack.data.len() >= self.cardinality().into()
+        stack.len() >= self.cardinality().into()
     }
 
     fn eval_on_stack(&self, stack: &Stack) -> (u64, bool) {

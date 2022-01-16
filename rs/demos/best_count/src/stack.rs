@@ -4,22 +4,35 @@ use crate::operator::Kind;
 use crate::operator::Operator;
 
 pub struct Stack {
-    pub data: Vec<(u64, bool)>,
-    pub old_data: Vec<(u64, bool)>,
-    pub stacked_data: u8,
-    // operators: Vec<Box<dyn Operator>>,
-    pub stacked_operators: Vec<Rc<dyn Operator>>,
-    pub operator_usage: HashMap<usize, usize>,
+    data: Vec<(u64, bool)>,
+    old_data: Vec<(u64, bool)>,
+    stacked_data: u8,
+    stacked_operators: Vec<Rc<dyn Operator>>,
+    operator_usage: HashMap<usize, usize>,
 }
 
 impl Stack {
+    pub fn new() -> Self {
+        Stack {
+            data: vec![],
+            old_data: vec![],
+            stacked_data: 0,
+            stacked_operators: vec![],
+            operator_usage: HashMap::new(),
+        }
+    }
+    
+    pub fn len(&self) -> usize {
+        self.data.len()
+    }
+    
     pub fn back_replay(&mut self) -> Rc<dyn Operator> {
         let back_op = self.stacked_operators.pop().unwrap();
         self.data.pop();
         if back_op.kind() == Kind::Data {
             self.stacked_data -= 1;
         } else {
-            for i in 0..back_op.cardinality() {
+            for _ in 0..back_op.cardinality() {
                 self.data.push(self.old_data.pop().unwrap()); // check_stack has been done before
             }
         }
@@ -34,7 +47,7 @@ impl Stack {
         // println!("Apply operator {}", op.symbol());
         let new_value = op.eval_on_stack(&self);
 
-        for i in 0..op.cardinality() {
+        for _ in 0..op.cardinality() {
             self.old_data.push(self.data.pop().unwrap()); // check_stack has been done before
         }
         if op.kind() == Kind::Data {
@@ -46,10 +59,6 @@ impl Stack {
             Some(v) => *v += 1,
             None => { self.operator_usage.insert(op.index(), 1); }
         }
-    }
-
-    fn get_operator(&self) -> Option<&Rc<dyn Operator>> {
-        self.stacked_operators.last()
     }
 
     pub fn value(&self) -> u64 {
