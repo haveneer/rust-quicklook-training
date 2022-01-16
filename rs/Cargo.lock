@@ -56,6 +56,13 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cdb031dd78e28731d87d56cc8ffef4a8f36ca26c38fe2de700543e627f8a464a"
 
 [[package]]
+name = "best_count"
+version = "0.1.0"
+dependencies = [
+ "clap 3.0.7",
+]
+
+[[package]]
 name = "bitflags"
 version = "1.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1404,7 +1411,6 @@ version = "0.1.0"
 dependencies = [
  "auto_ops",
  "chrono",
- "clap 3.0.7",
  "criterion",
  "futures",
  "image",

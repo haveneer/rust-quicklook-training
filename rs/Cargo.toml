@@ -20,14 +20,13 @@ chrono = "0.4"
 criterion = { version = "0.3.5", features = ["html_reports"] } # benchmark !
 # TODO replace compiler-test using trybuild ? (cf https://github.com/dtolnay/trybuild)
 #compiler-test = { path = "./compiler-test" } # compiletest_rs does not compiler for rustc > 1.53.0-nightly
-clap = { version = "3.0.6", features = [ "derive" ] }
 
 [dev-dependencies]
 rstest = "0.11.0"
 mockall = "0.10.2"
 
 [workspace]
-members = ["hello", "procedural_macro", "full-tree", "full-tree/libs/mylib1", "demos/quick-hash", "demos/cxx-interface", "demos/pyrs-feature", "doclib"]
+members = ["hello", "procedural_macro", "full-tree", "full-tree/libs/mylib1", "demos/quick-hash", "demos/cxx-interface", "demos/pyrs-feature", "demos/best_count", "doclib"]
 
 [[bench]]
 name = "sort"

@@ -1,8 +1,6 @@
 use std::collections::{HashMap, HashSet};
 use std::rc::Rc;
 use clap::Parser;
-use futures::StreamExt;
-use palette::chromatic_adaptation::AdaptInto;
 
 #[derive(PartialEq)]
 enum Kind { Data, Unary, Binary, Function }
