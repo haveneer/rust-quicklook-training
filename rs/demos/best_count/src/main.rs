@@ -12,39 +12,32 @@ use crate::custom_operators::*;
 
 fn compute(target: u64, operators: Vec<Rc<dyn Operator>>) -> HashSet<String> {
     let mut stack = Stack::new();
-
     let mut solutions = HashSet::new();
 
     let mut next_op: Option<&Rc<dyn Operator>> = operators.first();
     while next_op.is_some() {
-        loop {
-            if next_op.unwrap().check_stack(&stack) {
-                stack.apply_operator(&next_op.unwrap());
-                next_op = operators.first();
+        while let Some(op) = next_op {
+            next_op = if op.check_stack(&stack) {
+                stack.apply_operator(&op);
+                operators.first()
             } else {
-                next_op = operators.get(next_op.unwrap().index() + 1);
-                if next_op.is_none() {
-                    break;
-                }
+                operators.get(op.index() + 1)
             }
         }
 
         // std::println!("{}", stack.to_string());
-
-        let is_valid = stack.len() == 1 && stack.value() == target; // should be more constrained
+        let is_valid = // should be more constrained
+            stack.len() == 1
+                && stack.value() == target;
         if is_valid {
             // println!("Solution found");
             solutions.insert(stack.to_string());
         }
 
-        if stack.len() > 0 {
-            loop {
-                let old_op = stack.back_replay();
-                // std::println!("Backreplay : {} [{} -> out]", stack.to_string(), old_op.symbol());
-                next_op = operators.get(old_op.index() + 1);
-                if next_op.is_some() || stack.len() == 0
-                { break; }
-            }
+        while stack.len() > 0 && next_op.is_none() {
+            let old_op = stack.back_replay();
+            // std::println!("Backreplay : {} [{} -> out]", stack.to_string(), old_op.symbol());
+            next_op = operators.get(old_op.index() + 1);
         }
     }
     solutions

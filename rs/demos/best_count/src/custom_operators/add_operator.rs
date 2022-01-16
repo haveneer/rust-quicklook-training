@@ -28,8 +28,8 @@ impl Operator for AddOperator {
     }
 
     fn eval_on_stack(&self, stack: &Stack) -> (u64, bool) {
-        let b = stack.get_data(0);
-        let a = stack.get_data(1);
+        let b = stack.get_data(0).unwrap();
+        let a = stack.get_data(1).unwrap();
         (a + b, false)
     }
 

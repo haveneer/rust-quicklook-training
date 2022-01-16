@@ -21,11 +21,11 @@ impl Stack {
             operator_usage: HashMap::new(),
         }
     }
-    
+
     pub fn len(&self) -> usize {
         self.data.len()
     }
-    
+
     pub fn back_replay(&mut self) -> Rc<dyn Operator> {
         let back_op = self.stacked_operators.pop().unwrap();
         self.data.pop();
@@ -62,23 +62,20 @@ impl Stack {
     }
 
     pub fn value(&self) -> u64 {
-        if let Some(data) = self.data.last() {
-            data.0
-        } else {
-            0
-        }
+        self.data
+            .last()
+            .map_or(0, |v| v.0)
     }
 
     pub fn is_used(&self, op: &dyn Operator) -> bool {
-        if let Some(&v) = self.operator_usage.get(&op.index()) {
-            v != 0
-        } else {
-            false
-        }
+        self.operator_usage
+            .get(&op.index())
+            // .map(|&v| v != 0).unwrap_or(false)
+            .map_or(false, |&v| v != 0)
     }
 
-    pub fn get_data(&self, pos: usize) -> u64 {
-        self.data.get(self.data.len() - pos - 1).unwrap().0
+    pub fn get_data(&self, pos: usize) -> Option<u64> {
+        self.data.get(self.data.len() - pos - 1).map(|v| v.0)
     }
 }
 
