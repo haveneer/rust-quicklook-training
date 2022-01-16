@@ -34,7 +34,7 @@
 
     * https://manishearth.github.io/blog/2015/05/27/wrapper-types-in-rust-choosing-your-guarantees/
 * Phantom:
-* const fn
+* const fn (Rust ≥ 1.51)
 * closures + move
 * Generics
     * https://doc.rust-lang.org/rust-by-example/generics.html
@@ -66,6 +66,8 @@ Bads :/
 * https://github.com/CookieCoder15/pipes-rs
 * https://github.com/rust-lang/rustlings
 * https://blog.logrocket.com/parsing-in-rust-with-nom/
+* Compare functional languages (Rust / OCaml / Haskell) : https://pure.uva.nl/ws/files/2217922/167003_rust_for_functional_programmers.pdf
+* TODO: solana blockchain rust smart contract
 
 ## Error management
 
@@ -80,3 +82,6 @@ Bads :/
 * https://github.com/hecrj/iced
 * https://github.com/linebender/druid
 * https://github.com/tauri-apps/tauri
+
+# Cours
+* https://www.di.ens.fr/~pouzet/cours/parallele_et_reactif/graphe.html
