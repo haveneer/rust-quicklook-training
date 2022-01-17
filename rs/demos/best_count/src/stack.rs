@@ -4,10 +4,10 @@ use crate::operator::Kind;
 use crate::operator::Operator;
 
 pub struct Stack {
-    data: Vec<(u64, bool)>,
+    pub data: Vec<(u64, bool)>,
     old_data: Vec<(u64, bool)>,
     stacked_data: u8,
-    stacked_operators: Vec<Rc<dyn Operator>>,
+    pub stacked_operators: Vec<Rc<dyn Operator>>,
     operator_usage: HashMap<usize, usize>,
 }
 
@@ -44,6 +44,7 @@ impl Stack {
     }
 
     pub fn apply_operator(&mut self, op: &Rc<dyn Operator>) {
+        // println!("BEFORE AFTER => {:?}", self.data);
         // println!("Apply operator {}", op.symbol());
         let new_value = op.eval_on_stack(&self);
 
@@ -59,6 +60,7 @@ impl Stack {
             Some(v) => *v += 1,
             None => { self.operator_usage.insert(op.index(), 1); }
         }
+        // println!("DATA AFTER => {:?}\n", self.data);
     }
 
     pub fn value(&self) -> u64 {
@@ -81,17 +83,16 @@ impl Stack {
 
 impl ToString for Stack {
     fn to_string(&self) -> String {
-        let mut string_stack = Vec::<String>::new();
+        let mut string_stack = Vec::<(String, Rc<dyn Operator>)>::new();
         for op in self.stacked_operators.iter() {
-            op.string_on_stack(&mut string_stack);
+            op.clone().string_on_stack(&mut string_stack);
         }
-        let stack_summary = string_stack
+        
+        string_stack
             .into_iter()
             .rev()
-            .map(|s| s.to_string())
+            .map(|s| s.0.to_string())
             .collect::<Vec<String>>()
-            .join("; ");
-        std::format!("{} = {}", self.value(), stack_summary)
+            .join("; ")
     }
 }
-

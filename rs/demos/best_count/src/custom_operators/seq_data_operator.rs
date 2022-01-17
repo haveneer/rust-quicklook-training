@@ -1,14 +1,16 @@
+use std::borrow::Borrow;
 use std::rc::Rc;
 use crate::operator::*;
 use crate::stack::*;
 
 #[derive(Clone)]
-pub struct UniqueDataOperator {
+pub struct SeqDataOperator {
     pub value: u64,
+    pub prev: Option<Rc<dyn Operator>>,
     pub index: usize,
 }
 
-impl Operator for UniqueDataOperator {
+impl Operator for SeqDataOperator {
     fn cardinality(&self) -> u8 {
         0
     }
@@ -26,7 +28,8 @@ impl Operator for UniqueDataOperator {
     }
 
     fn check_stack(&self, stack: &Stack) -> bool {
-        !stack.is_used(self)
+        let previous_value_is_used = self.prev.as_ref().map(|x| stack.is_used(x.borrow())).unwrap_or(true);
+        previous_value_is_used && !stack.is_used(self)
     }
 
     fn eval_on_stack(&self, _stack: &Stack) -> (u64, bool) {
