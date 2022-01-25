@@ -7,6 +7,8 @@ pub mod mult_operator;
 pub mod div_operator;
 pub mod pow_operator;
 pub mod factorial_operator;
+pub mod concat_operator;
+pub mod sub_operator;
 
 pub use unique_data_operator::UniqueDataOperator;
 pub use seq_data_operator::SeqDataOperator;

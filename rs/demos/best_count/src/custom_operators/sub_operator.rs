@@ -3,21 +3,21 @@ use crate::operator::*;
 use crate::stack::*;
 
 #[derive(Clone)]
-pub struct DivOperator {
+pub struct SubOperator {
     pub index: usize,
 }
 
-impl Operator for DivOperator {
+impl Operator for SubOperator {
     fn cardinality(&self) -> u8 {
         2
     }
 
     fn priority(&self) -> u8 {
-        8
+        10
     }
 
     fn symbol(&self) -> String {
-        "*".into()
+        "-".into()
     }
 
     fn kind(&self) -> Kind {
@@ -25,18 +25,14 @@ impl Operator for DivOperator {
     }
 
     fn check_stack(&self, stack: &Stack) -> bool {
-        if stack.len() < self.cardinality().into()
-        { false } else {
-            let b = stack.get_data(0).unwrap();
-            let a = stack.get_data(1).unwrap();
-            b != 0 && (a % b == 0)
-        }
+        stack.len() >= self.cardinality().into()
+            && stack.get_data(1).unwrap() >= stack.get_data(0).unwrap()
     }
 
     fn eval_on_stack(&self, stack: &Stack) -> (u64, bool) {
         let b = stack.get_data(0).unwrap();
         let a = stack.get_data(1).unwrap();
-        (a / b, false)
+        (a - b, false)
     }
 
     fn index(&self) -> usize {
@@ -46,6 +42,6 @@ impl Operator for DivOperator {
     fn string_on_stack(self: Rc<Self>, stack: &mut Vec<(String, Rc<dyn Operator>)>) {
         let b = stack.pop().unwrap();
         let a = stack.pop().unwrap();
-        stack.push((std::format!("{}/{}", self.prepare(a), self.prepare_extended(b)), self));
+        stack.push((std::format!("{}-{}", self.prepare(a), self.prepare_extended(b)), self.clone()));
     }
 }

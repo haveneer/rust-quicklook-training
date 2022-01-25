@@ -1,5 +1,5 @@
 mod operator;
-mod stack;
+pub mod stack;
 mod custom_operators;
 
 use std::collections::HashSet;
@@ -24,14 +24,15 @@ pub fn compute(target: u64, operators: Vec<Rc<dyn Operator>>, test: impl Fn(&Sta
         };
 
         // std::println!("{}", stack.to_string());
-        let is_valid = stack.len() == 1 && stack.value() == target;
-        if is_valid && test(&stack) { // should be more constrained using test
-            let solution_as_string = stack.to_string();
-            if solutions.insert(solution_as_string.clone()) {
-                println!("Solution[{}] {}", solutions.len(), solution_as_string);
+        if let Some(result) = stack.result() {
+            if *result.value == target && test(&stack) {
+                let solution_as_string = result.to_string();
+                if solutions.insert(solution_as_string.clone()) {
+                    println!("Solution[{}] {}", solutions.len(), solution_as_string);
+                }
             }
         }
-
+        
         while stack.len() > 0 && next_op.is_none() {
             let old_op = stack.back_replay();
             // std::println!("Backreplay : {} [{} -> out]", stack.to_string(), old_op.symbol());

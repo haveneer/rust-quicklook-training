@@ -4,10 +4,10 @@ use crate::operator::Kind;
 use crate::operator::Operator;
 
 pub struct Stack {
-    pub data: Vec<(u64, bool)>,
+    data: Vec<(u64, bool)>,
     old_data: Vec<(u64, bool)>,
     stacked_data: u8,
-    pub stacked_operators: Vec<Rc<dyn Operator>>,
+    stacked_operators: Vec<Rc<dyn Operator>>,
     operator_usage: HashMap<usize, usize>,
 }
 
@@ -63,10 +63,17 @@ impl Stack {
         // println!("DATA AFTER => {:?}\n", self.data);
     }
 
-    pub fn value(&self) -> u64 {
-        self.data
-            .last()
-            .map_or(0, |v| v.0)
+    pub fn result(&self) -> Option<StackResult> {
+        if self.len() != 1 {
+            None
+        } else if let Some(value) = self.data.last() {
+            Some(StackResult {
+                operators: &self.stacked_operators,
+                value: &value.0,
+            })
+        } else {
+            None
+        }
     }
 
     pub fn is_used(&self, op: &dyn Operator) -> bool {
@@ -76,15 +83,26 @@ impl Stack {
             .map_or(false, |&v| v != 0)
     }
 
+    pub fn get_last_operator(&self) -> Option<&Rc<dyn Operator>> {
+        self.stacked_operators.last()
+    }
+
     pub fn get_data(&self, pos: usize) -> Option<u64> {
         self.data.get(self.data.len() - pos - 1).map(|v| v.0)
     }
 }
 
-impl ToString for Stack {
+
+pub struct StackResult<'a> {
+    pub operators: &'a Vec<Rc<dyn Operator>>,
+    pub value: &'a u64,
+}
+
+
+impl<'a> ToString for StackResult<'a> {
     fn to_string(&self) -> String {
         let mut string_stack = Vec::<(String, Rc<dyn Operator>)>::new();
-        for op in self.stacked_operators.iter() {
+        for op in self.operators.iter() {
             op.clone().string_on_stack(&mut string_stack);
         }
 
