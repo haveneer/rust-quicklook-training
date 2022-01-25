@@ -87,7 +87,7 @@ impl ToString for Stack {
         for op in self.stacked_operators.iter() {
             op.clone().string_on_stack(&mut string_stack);
         }
-        
+
         string_stack
             .into_iter()
             .rev()

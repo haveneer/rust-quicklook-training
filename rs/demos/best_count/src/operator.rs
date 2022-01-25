@@ -4,7 +4,7 @@ use crate::stack::Stack;
 #[derive(PartialEq)]
 pub enum Kind { Data, Operator }
 
-pub trait Operator /* : OperatorClone */ {
+pub trait Operator {
     fn cardinality(&self) -> u8;
     fn priority(&self) -> u8;
     fn symbol(&self) -> String;

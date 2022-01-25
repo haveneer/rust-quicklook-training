@@ -61,7 +61,7 @@ mod tests {
     use super::*;
     
     #[test]
-    fn test_eval() {
+    fn evaluation() {
         assert_eq!(FactorialOperator::eval(0), 1);
         assert_eq!(FactorialOperator::eval(1), 1);
         assert_eq!(FactorialOperator::eval(2), 2);
