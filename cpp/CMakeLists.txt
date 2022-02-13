@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.12)
-project(cpp-advanced-training)
+project(rust-quicklook)
 option(ENABLE_STATIC_ANALYSIS "Enable static analysis" OFF)
 set(CPP_TRAINING_SOURCE_DIR ${PROJECT_SOURCE_DIR}) # to locate main root source in sub-projects
 
