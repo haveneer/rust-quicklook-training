@@ -13,8 +13,8 @@ pub fn criterion_benchmark(c: &mut Criterion) {
     c.bench_function("fib 15", |b| b.iter(|| fibonacci(black_box(15))));
 }
 
-criterion_group!(fibonacci, 
+criterion_group!(benchmark, 
     criterion_benchmark, 
 );
 
-criterion_main!(fibonacci);
+criterion_main!(benchmark);

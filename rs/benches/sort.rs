@@ -23,7 +23,7 @@ pub fn par_sort_benchmark(c: &mut Criterion) {
     c.bench_function("par_sort", |b| {
         b.iter(|| {
             let mut w = v.clone();
-            w.par_sort_by(|a, b| a.partial_cmp(b).unwrap());
+            black_box(w.par_sort_by(|a, b| a.partial_cmp(b).unwrap()));
         })
     });
 }
