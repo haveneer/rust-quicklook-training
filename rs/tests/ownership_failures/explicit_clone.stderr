@@ -1,0 +1,13 @@
+error[E0382]: borrow of moved value: `numbers`
+  --> tests/ownership_failures/explicit_clone.rs:11:22
+   |
+3  |     let numbers = vec![1, 2, 3, 4, 5];
+   |         ------- move occurs because `numbers` has type `Vec<i32>`, which does not implement the `Copy` trait
+...
+7  |     let other_numbers = numbers;
+   |                         ------- value moved here
+...
+11 |     println!("{:?}", numbers); //~ error: borrow of moved value
+   |                      ^^^^^^^ value borrowed here after move
+   |
+   = note: this error originates in the macro `$crate::format_args_nl` (in Nightly builds, run with -Z macro-backtrace for more info)

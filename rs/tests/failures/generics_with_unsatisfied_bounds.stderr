@@ -1,0 +1,5 @@
+error[E0599]: no method named `pet` found for type parameter `T` in the current scope
+  --> tests/failures/generics_with_unsatisfied_bounds.rs:18:7
+   |
+18 |     a.pet();  // error[E0599]: no method named `pet` found for type `T` in the current scope
+   |       ^^^ method not found in `T`

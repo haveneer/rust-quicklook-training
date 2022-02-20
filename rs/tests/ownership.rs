@@ -85,21 +85,12 @@ mod tests {
         }
     }
 
-    #[cfg(feature = "compiletest")]
-    use compiler_test;
-
-    #[cfg(feature = "compiletest")]
     #[test]
     fn ownership_failures() {
-        compiler_test::run_mode(
-            "compile-fail",
-            Some("ownership_failures"),
-            vec![
-                "implicit_move",
-                "explicit_clone",
-                "borrow_and_functions",
-                // "in_async", // compiletest_rs seems not able to load crates
-            ],
-        );
+        let t = trybuild::TestCases::new();
+        t.compile_fail("tests/ownership_failures/borrow_and_functions.rs");
+        t.compile_fail("tests/ownership_failures/explicit_clone.rs");
+        t.compile_fail("tests/ownership_failures/implicit_move.rs");
+        t.compile_fail("tests/ownership_failures/in_async.rs");
     }
 }
