@@ -29,7 +29,8 @@ fn test_refcell1() {
     }
 
     {
-        println!("{:?}", *x.borrow())
+        let my_ref = x.borrow(); 
+        println!("{:?}", *my_ref);
     }
 }
 
