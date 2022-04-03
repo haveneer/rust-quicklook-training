@@ -1,4 +1,3 @@
-use std::rc::Rc;
 use crate::operator::*;
 use crate::stack::*;
 
@@ -42,9 +41,9 @@ impl Operator for FactorialOperator {
         self.index
     }
 
-    fn string_on_stack(self: Rc<Self>, stack: &mut Vec<(String, Rc<dyn Operator>)>) {
+    fn string_on_stack(&self, stack: &mut Vec<(String, &dyn Operator)>) {
         let n = stack.pop().unwrap();
-        stack.push((std::format!("{}!", self.prepare(n)), self.clone()));
+        // stack.push((std::format!("{}!", self.prepare(n)), self.clone()));
     }
 }
 

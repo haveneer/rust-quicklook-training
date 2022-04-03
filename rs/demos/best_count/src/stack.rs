@@ -1,24 +1,22 @@
-use std::collections::HashMap;
-use std::rc::Rc;
 use crate::operator::Kind;
 use crate::operator::Operator;
 
-pub struct Stack {
+pub struct Stack<'a> {
     data: Vec<(u64, bool)>,
     old_data: Vec<(u64, bool)>,
     stacked_data: u8,
-    stacked_operators: Vec<Rc<dyn Operator>>,
-    operator_usage: HashMap<usize, usize>,
+    stacked_operators: Vec<&'a dyn Operator>,
+    operator_usage: Vec<usize>,
 }
 
-impl Stack {
-    pub fn new() -> Self {
+impl<'a> Stack<'a> {
+    pub fn new(len: usize) -> Self {
         Stack {
             data: vec![],
             old_data: vec![],
             stacked_data: 0,
             stacked_operators: vec![],
-            operator_usage: HashMap::new(),
+            operator_usage: vec![0; len],
         }
     }
 
@@ -26,7 +24,7 @@ impl Stack {
         self.data.len()
     }
 
-    pub fn back_replay(&mut self) -> Rc<dyn Operator> {
+    pub fn back_replay(&mut self) -> &'a dyn Operator {
         let back_op = self.stacked_operators.pop().unwrap();
         self.data.pop();
         if back_op.kind() == Kind::Data {
@@ -36,14 +34,11 @@ impl Stack {
                 self.data.push(self.old_data.pop().unwrap()); // check_stack has been done before
             }
         }
-        match self.operator_usage.get_mut(&back_op.index()) {
-            Some(v) => *v -= 1,
-            None => panic!("Should exist in back_replay")
-        }
+        self.operator_usage[back_op.index()] -= 1;
         back_op
     }
 
-    pub fn apply_operator(&mut self, op: &Rc<dyn Operator>) {
+    pub fn apply_operator(&mut self, op: &'a dyn Operator) {
         // println!("BEFORE AFTER => {:?}", self.data);
         // println!("Apply operator {}", op.symbol());
         let new_value = op.eval_on_stack(&self);
@@ -55,55 +50,51 @@ impl Stack {
             self.stacked_data += 1;
         }
         self.data.push(new_value);
-        self.stacked_operators.push(op.clone());
-        match self.operator_usage.get_mut(&op.index()) {
-            Some(v) => *v += 1,
-            None => { self.operator_usage.insert(op.index(), 1); }
-        }
+        self.stacked_operators.push(op);
+        self.operator_usage[op.index()] += 1;
         // println!("DATA AFTER => {:?}\n", self.data);
     }
 
     pub fn result(&self) -> Option<StackResult> {
         if self.len() != 1 {
             None
-        } else if let Some(value) = self.data.last() {
-            Some(StackResult {
-                operators: &self.stacked_operators,
-                value: &value.0,
-            })
         } else {
-            None
+            self.data.last().map(|&x| StackResult {
+                operators: &self.stacked_operators,
+                value: x.0,
+            })
         }
     }
 
     pub fn is_used(&self, op: &dyn Operator) -> bool {
-        self.operator_usage
-            .get(&op.index())
-            // .map(|&v| v != 0).unwrap_or(false)
-            .map_or(false, |&v| v != 0)
+        self.operator_usage[op.index()] != 0
     }
 
-    pub fn get_last_operator(&self) -> Option<&Rc<dyn Operator>> {
-        self.stacked_operators.last()
-    }
-
+    // pub fn get_last_operator(&self) -> Option<&'a (dyn Operator + 'a)> {
+    //     self.stacked_operators.last()
+    // }
+    // 
     pub fn get_data(&self, pos: usize) -> Option<u64> {
         self.data.get(self.data.len() - pos - 1).map(|v| v.0)
+    }
+
+    pub fn data_count(&self) -> u8 {
+        self.stacked_data
     }
 }
 
 
 pub struct StackResult<'a> {
-    pub operators: &'a Vec<Rc<dyn Operator>>,
-    pub value: &'a u64,
+    pub operators: &'a Vec<&'a dyn Operator>,
+    pub value: u64,
 }
 
 
 impl<'a> ToString for StackResult<'a> {
     fn to_string(&self) -> String {
-        let mut string_stack = Vec::<(String, Rc<dyn Operator>)>::new();
-        for op in self.operators.iter() {
-            op.clone().string_on_stack(&mut string_stack);
+        let mut string_stack = Vec::<(String, &'a dyn Operator)>::new();
+        for &op in self.operators.iter() {
+            op.string_on_stack(&mut string_stack);
         }
 
         string_stack

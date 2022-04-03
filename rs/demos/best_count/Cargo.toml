@@ -15,3 +15,7 @@ path = "src/lib.rs"
 [[bin]]
 name = "best_count"
 path = "src/main.rs"
+
+[profile.release]
+debug = true
+lto = true

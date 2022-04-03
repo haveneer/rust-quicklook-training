@@ -1,16 +1,16 @@
 use std::borrow::Borrow;
-use std::rc::Rc;
+use crate::operator;
 use crate::operator::*;
 use crate::stack::*;
 
 #[derive(Clone)]
-pub struct SeqDataOperator {
+pub struct SeqDataOperator<'a> {
     pub value: u64,
-    pub prev: Option<Rc<dyn Operator>>,
+    pub prev: Option<&'a dyn Operator>,
     pub index: usize,
 }
 
-impl Operator for SeqDataOperator {
+impl<'a> Operator for SeqDataOperator<'a> {
     fn cardinality(&self) -> u8 {
         0
     }
@@ -40,8 +40,9 @@ impl Operator for SeqDataOperator {
         self.index
     }
 
-    fn string_on_stack(self: Rc<Self>, stack: &mut Vec<(String, Rc<dyn Operator>)>) {
-        stack.push((self.value.to_string(), self.clone()));
+    fn string_on_stack(&self, stack: &mut Vec<(String, &dyn Operator)>) {
+        unimplemented!()
+        // stack.push((self.value.to_string(), self.as_operator()));
     }
 }
 

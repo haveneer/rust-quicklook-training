@@ -1,4 +1,3 @@
-use std::rc::Rc;
 use crate::operator::*;
 use crate::stack::*;
 
@@ -37,8 +36,8 @@ impl Operator for UniqueDataOperator {
         self.index
     }
 
-    fn string_on_stack(self: Rc<Self>, stack: &mut Vec<(String, Rc<dyn Operator>)>) {
-        stack.push((self.value.to_string(), self.clone()));
+    fn string_on_stack(&self, stack: &mut Vec<(String, &dyn Operator)>) {
+        // stack.push((self.value.to_string(), self));
     }
 }
 

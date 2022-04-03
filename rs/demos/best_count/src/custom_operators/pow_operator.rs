@@ -1,4 +1,3 @@
-use std::rc::Rc;
 use crate::operator::*;
 use crate::stack::*;
 use crate::custom_operators::log2::*;
@@ -45,10 +44,10 @@ impl Operator for PowOperator {
         self.index
     }
 
-    fn string_on_stack(self: Rc<Self>, stack: &mut Vec<(String, Rc<dyn Operator>)>) {
+    fn string_on_stack(&self, stack: &mut Vec<(String, &dyn Operator)>) {
         let b = stack.pop().unwrap();
         let a = stack.pop().unwrap();
-        stack.push((std::format!("{}^{}", self.prepare(a), self.prepare(b)), self.clone()));
+        // stack.push((std::format!("{}^{}", self.prepare(a), self.prepare(b)), self.clone()));
     }
 }
 

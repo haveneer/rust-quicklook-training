@@ -1,6 +1,4 @@
-use std::rc::Rc;
 use clap::Parser;
-use std::borrow::Borrow;
 use best_count::*;
 
 #[derive(Parser, Debug)]
@@ -15,27 +13,32 @@ fn main() {
 
     println!("Target = {}", args.target);
 
-    let mut operators = Vec::<Rc<dyn Operator>>::new();
-    // operators.push(Rc::new(UniqueDataOperator { value: 1, index: operators.len() }));
-    // operators.push(Rc::new(UniqueDataOperator { value: 2, index: operators.len() }));
-    // operators.push(Rc::new(UniqueDataOperator { value: 3, index: operators.len() }));
-
-    let mut prev: Option<Rc<dyn Operator>> = None;
-    for i in 1..=8 {
-        let next = Rc::new(SeqDataOperator { value: i, prev: prev.map(|o| o.clone()), index: operators.len() });
-        operators.push(next.clone());
-        prev = Some(next);
+    let mut operators = Vec::<Box<dyn Operator>>::new();
+    // Pour utiliser les nombres dans un ordre quelconque
+    let mut maxdigit = 0;
+    for i in 1..=5 {
+        operators.push(Box::new(UniqueDataOperator { value: i, index: operators.len() }));
+        maxdigit += 1;
     }
-    operators.push(Rc::new(AddOperator { index: operators.len() }));
-    operators.push(Rc::new(MultOperator { index: operators.len() }));
-    operators.push(Rc::new(DivOperator { index: operators.len() }));
-    operators.push(Rc::new(PowOperator { index: operators.len() }));
-    operators.push(Rc::new(FactorialOperator { index: operators.len() }));
+
+    // let mut prev: Option<&dyn Operator> = None;
+    // for i in 1..=8 {
+    //     operators.push(Box::new(SeqDataOperator { value: i, prev, index: operators.len() }));
+    //     prev = operators
+    //         .last()
+    //         .map(|x| x.as_ref());
+    // }
+    operators.push(Box::new(AddOperator { index: operators.len() }));
+    operators.push(Box::new(MultOperator { index: operators.len() }));
+    operators.push(Box::new(DivOperator { index: operators.len() }));
+    operators.push(Box::new(PowOperator { index: operators.len() }));
+    operators.push(Box::new(FactorialOperator { index: operators.len() }));
 
     let test = {
-        let op = prev.unwrap();
+        // let op = prev.unwrap();
         move |s: &Stack| {
-            s.is_used(op.borrow())
+            // s.is_used(op.borrow())
+            maxdigit == s.data_count()
         }
     };
     let results = compute(args.target, operators, test);

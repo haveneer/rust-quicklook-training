@@ -1,4 +1,3 @@
-use std::rc::Rc;
 use crate::stack::Stack;
 
 #[derive(PartialEq)]
@@ -12,9 +11,12 @@ pub trait Operator {
     fn check_stack(&self, stack: &Stack) -> bool;
     fn eval_on_stack(&self, stack: &Stack) -> (u64, bool);
     fn index(&self) -> usize;
-    fn string_on_stack(self: Rc<Self>, stack: &mut Vec<(String, Rc<dyn Operator>)>);
-    
-    fn prepare(&self, x: (String, Rc<dyn Operator>)) -> String {
+    fn string_on_stack(&self, stack: &mut Vec<(String, &dyn Operator)>);
+
+    fn as_operator(&self) -> &dyn Operator where Self: Sized {
+        self
+    }
+    fn prepare(&self, x: (String, &dyn Operator)) -> String {
         let protect = x.1.priority() > self.priority();
         if protect {
             format!("({})", x.0)
@@ -23,7 +25,7 @@ pub trait Operator {
         }
     }
 
-    fn prepare_extended(&self, x: (String, Rc<dyn Operator>)) -> String {
+    fn prepare_extended(&self, x: (String, &dyn Operator)) -> String {
         let protect = x.1.priority() >= self.priority();
         if protect {
             format!("({})", x.0)
