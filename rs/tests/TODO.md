@@ -1,5 +1,9 @@
+* rustup doc
+
 * New custom derive implementation
-* 
+* More about errors:
+  * https://www.lpalmieri.com/posts/error-handling-rust/
+  * https://www.youtube.com/watch?v=jpVzSse7oJ4
 * multi crates / modules
 * ajouter un exemple de super:: et self:: dans full_tree (alternative aux chemins complets et pouvant retirer une ambiguïté en particulier pour self::)
 * visibilité (pub, pub(crate), pub(super)) = https://doc.rust-lang.org/beta/rust-by-example/mod/visibility.html
@@ -85,3 +89,10 @@ Bads :/
 
 # Cours
 * https://www.di.ens.fr/~pouzet/cours/parallele_et_reactif/graphe.html
+
+# Critiques:
+* https://matklad.github.io/2020/09/20/why-not-rust.html
+
+# OpenCL
+* installed by default on recent macos
+* `brew install clinfo` to check OpenCL available features
