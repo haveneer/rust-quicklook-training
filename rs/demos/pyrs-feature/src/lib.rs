@@ -10,7 +10,9 @@ fn feature(a: usize, b: usize) -> PyResult<String> {
 /// the `lib.name` setting in the `Cargo.toml`, else Python will not be able to
 /// import the module.
 #[pymodule]
-fn pyrs_feature(_py: Python, m: &PyModule) -> PyResult<()> {
+fn pyrs_feature(py: Python, m: &PyModule) -> PyResult<()> {
+    let np = py.import("numpy")?;
+    println!("{:?}", np.dict());
     m.add_function(wrap_pyfunction!(feature, m)?)?;
     Ok(())
 }
