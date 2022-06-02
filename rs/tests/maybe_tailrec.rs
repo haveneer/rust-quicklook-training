@@ -24,7 +24,6 @@ fn main() {
     // If they were not optimized, these tests should blow up stack
     println!("{}", maybe_tailrec1(10000, 0));
     println!("{}", maybe_tailrec2(10000));
-    foo();
 }
 
 #[test]
