@@ -28,6 +28,15 @@ jobs:
       #- name: add additional dev tools # require for using compiletest_rs
       #  shell: bash
       #  run: rustup component add rustc-dev --toolchain nightly
+      - name: Configure Python venv path
+        shell: bash
+        run: |
+          if [ "${{ runner.os }}" == "Windows" ]; then
+            BIN_VENV=./venv/Scripts
+          else
+            BIN_VENV=./venv/bin
+          fi
+          echo "BIN_VENV=${BIN_VENV}" >> $GITHUB_ENV
       - name: build
         run: cd rs && cargo build
       - name: test
@@ -47,24 +56,10 @@ jobs:
         run: |
           cd rs/demos/pyrs-feature
           python3 -m venv venv
-          source ./venv/bin/activate
-          pip3 install maturin pytest
+          . ${BIN_VENV}/activate
+          pip3 install -r requirements.txt
           maturin develop
-          ./venv/bin/pytest
-        if: runner.os != 'Windows'
-      - name: Python binding Windows
-        shell: bash
-        run: |
-          cd rs/demos/pyrs-feature
-          python -m venv venv
-          pushd .
-          cd venv/Scripts
-          . activate
-          popd
-          pip3 install maturin pytest
-          maturin develop
-          ./venv/Scripts/pytest.exe
-        if: runner.os == 'Windows'
+          ${BIN_VENV}/pytest
       # Disable since it is too expensive  
       # - name: bencmarks
       #  run: cd rs && cargo bench
