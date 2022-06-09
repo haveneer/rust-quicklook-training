@@ -1,4 +1,6 @@
-# this directory is a new crate which has to be add into members of root Cargo.toml
+# This directory is a new crate which has to be add into members of root Cargo.toml
+# If full-tree project was not already a 'members' of the root Cargo.toml, 
+# this directory have been added as 'members' in full-tree/Cargo.toml  
 
 [package]
 name = "mylib1"

@@ -8,3 +8,8 @@ edition = "2018"
 
 [dependencies]
 mylib1 = { path = "libs/mylib1" }
+
+# If full-tree was not already inside root project 
+# its sub-packages should have been declared here like this
+# [workspace]
+# members = [ "libs/mylib1" ]
