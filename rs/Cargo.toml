@@ -40,3 +40,7 @@ harness = false
 [[bench]]
 name = "factorial"
 harness = false
+
+[features]
+default = []
+nightly-features = []
