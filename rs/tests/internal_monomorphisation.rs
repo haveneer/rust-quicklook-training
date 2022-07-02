@@ -46,4 +46,6 @@ fn main() {
 }
 
 #[test]
-fn test() { main() }
+fn test() {
+    main()
+}

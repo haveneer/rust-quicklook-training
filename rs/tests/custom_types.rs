@@ -10,7 +10,10 @@ mod tests {
             date: Date<Utc>,
         }
 
-        let _epoch = Birthday { person: Person("Unix Time"), date: Utc.ymd(1970, 1, 1) };
+        let _epoch = Birthday {
+            person: Person("Unix Time"),
+            date: Utc.ymd(1970, 1, 1),
+        };
 
         struct CardType(&'static str);
 

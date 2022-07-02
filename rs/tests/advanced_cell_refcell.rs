@@ -29,7 +29,7 @@ fn test_refcell1() {
     }
 
     {
-        let my_ref = x.borrow(); 
+        let my_ref = x.borrow();
         println!("{:?}", *my_ref);
     }
 }

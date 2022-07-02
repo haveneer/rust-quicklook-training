@@ -9,15 +9,18 @@ mod tests {
     struct B {}
 
     impl Moon for A {
-        fn moon(&self) { /* ... */ }
+        fn moon(&self) { /* ... */
+        }
     }
 
     impl Moon for B {
-        fn moon(&self) { /* ... */}
+        fn moon(&self) { /* ... */
+        }
     }
-    
+
     impl Moon for f64 {
-        fn moon(&self) { /* ... */ }
+        fn moon(&self) { /* ... */
+        }
     }
 
     #[test]
@@ -27,10 +30,10 @@ mod tests {
 
         a.moon();
         A::moon(&a);
-        
+
         b.moon();
         B::moon(&b);
-        
+
         3.14.moon();
         f64::moon(&3.14);
     }

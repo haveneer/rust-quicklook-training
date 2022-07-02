@@ -4,9 +4,8 @@
 // * https://crates.io/crates/owning_ref
 // * https://crates.io/crates/ouroboros
 
-
-use std::pin::Pin;
 use std::marker::PhantomPinned;
+use std::pin::Pin;
 use std::ptr::NonNull;
 
 // This is a self-referential struct because the slice field points to the data field.
@@ -44,7 +43,6 @@ impl Unmovable {
     }
 }
 
-
 fn main() {
     let unmoved = Unmovable::new("hello".to_string());
     // The pointer should point to the correct location,
@@ -59,4 +57,6 @@ fn main() {
 }
 
 #[test]
-fn test() { main() }
+fn test() {
+    main()
+}

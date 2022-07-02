@@ -22,7 +22,11 @@ fn get_continuous_color(iteration_count: i32, z: &Complex<f32>) -> Rgb<u8> {
 
     let quick_convert = |value| (value * 255.) as u8;
 
-    Rgb([quick_convert(color.red), quick_convert(color.green), quick_convert(color.blue)])
+    Rgb([
+        quick_convert(color.red),
+        quick_convert(color.green),
+        quick_convert(color.blue),
+    ])
 }
 
 #[allow(dead_code)]
@@ -33,7 +37,6 @@ fn get_indexed_color(iteration_count: i32) -> Rgb<u8> {
     let b = (iteration_count << 4) as u8;
     Rgb([r, g, b])
 }
-
 
 fn main() {
     let width = 1200;

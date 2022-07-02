@@ -1,6 +1,6 @@
-use std::rc::Rc;
 use crate::operator::*;
 use crate::stack::*;
+use std::rc::Rc;
 
 #[derive(Clone)]
 pub struct SubOperator {
@@ -42,6 +42,9 @@ impl Operator for SubOperator {
     fn string_on_stack(self: Rc<Self>, stack: &mut Vec<(String, Rc<dyn Operator>)>) {
         let b = stack.pop().unwrap();
         let a = stack.pop().unwrap();
-        stack.push((std::format!("{}-{}", self.prepare(a), self.prepare_extended(b)), self.clone()));
+        stack.push((
+            std::format!("{}-{}", self.prepare(a), self.prepare_extended(b)),
+            self.clone(),
+        ));
     }
 }

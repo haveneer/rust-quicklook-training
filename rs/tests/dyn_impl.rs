@@ -61,7 +61,7 @@ mod tests {
             i.foo();
         }
     }
-    
+
     #[test]
     fn size_of_vec_of_impl() {
         let v_impl: [i64; 4] = [1, 2, 3, 4];

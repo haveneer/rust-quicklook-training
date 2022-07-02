@@ -16,4 +16,3 @@ fn pyrs_feature(py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(feature, m)?)?;
     Ok(())
 }
-

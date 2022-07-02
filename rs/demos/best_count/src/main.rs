@@ -1,7 +1,7 @@
-use std::rc::Rc;
+use best_count::*;
 use clap::Parser;
 use std::borrow::Borrow;
-use best_count::*;
+use std::rc::Rc;
 
 #[derive(Parser, Debug)]
 struct Args {
@@ -22,21 +22,33 @@ fn main() {
 
     let mut prev: Option<Rc<dyn Operator>> = None;
     for i in 1..=8 {
-        let next = Rc::new(SeqDataOperator { value: i, prev: prev.map(|o| o.clone()), index: operators.len() });
+        let next = Rc::new(SeqDataOperator {
+            value: i,
+            prev: prev.map(|o| o.clone()),
+            index: operators.len(),
+        });
         operators.push(next.clone());
         prev = Some(next);
     }
-    operators.push(Rc::new(AddOperator { index: operators.len() }));
-    operators.push(Rc::new(MultOperator { index: operators.len() }));
-    operators.push(Rc::new(DivOperator { index: operators.len() }));
-    operators.push(Rc::new(PowOperator { index: operators.len() }));
-    operators.push(Rc::new(FactorialOperator { index: operators.len() }));
+    operators.push(Rc::new(AddOperator {
+        index: operators.len(),
+    }));
+    operators.push(Rc::new(MultOperator {
+        index: operators.len(),
+    }));
+    operators.push(Rc::new(DivOperator {
+        index: operators.len(),
+    }));
+    operators.push(Rc::new(PowOperator {
+        index: operators.len(),
+    }));
+    operators.push(Rc::new(FactorialOperator {
+        index: operators.len(),
+    }));
 
     let test = {
         let op = prev.unwrap();
-        move |s: &Stack| {
-            s.is_used(op.borrow())
-        }
+        move |s: &Stack| s.is_used(op.borrow())
     };
     let results = compute(args.target, operators, test);
 

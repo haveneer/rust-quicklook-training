@@ -57,5 +57,7 @@ mod tests {
 
     #[test]
     #[should_panic]
-    fn test2() { div(3, 0); }
+    fn test2() {
+        div(3, 0);
+    }
 }

@@ -1,5 +1,5 @@
-// neither tail recursion nor tail call optimization are ever guaranteed by Rust, 
-// although the optimizer may choose to perform them. 
+// neither tail recursion nor tail call optimization are ever guaranteed by Rust,
+// although the optimizer may choose to perform them.
 // https://stackoverflow.com/a/59258170/12430075
 
 // This example is explicitly tailrec and it is optimized by Rust
@@ -27,4 +27,6 @@ fn main() {
 }
 
 #[test]
-fn test() { main(); }
+fn test() {
+    main();
+}

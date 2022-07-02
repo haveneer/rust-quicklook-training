@@ -1,5 +1,5 @@
-mod f1; // declare an independent module (see f1.rs)
-mod dir1; // declare an independent module (see dir1.rs)
+mod dir1;
+mod f1; // declare an independent module (see f1.rs) // declare an independent module (see dir1.rs)
 
 use mylib1; // declared in this project Cargo.tom
 

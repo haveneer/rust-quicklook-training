@@ -63,4 +63,6 @@ impl std::fmt::Display for MyStruct {
 }
 
 #[test]
-fn test() { main(); }
+fn test() {
+    main();
+}

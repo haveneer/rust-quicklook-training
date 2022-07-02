@@ -1,7 +1,7 @@
-use std::borrow::Borrow;
-use std::rc::Rc;
 use crate::operator::*;
 use crate::stack::*;
+use std::borrow::Borrow;
+use std::rc::Rc;
 
 #[derive(Clone)]
 pub struct SeqDataOperator {
@@ -28,7 +28,11 @@ impl Operator for SeqDataOperator {
     }
 
     fn check_stack(&self, stack: &Stack) -> bool {
-        let previous_value_is_used = self.prev.as_ref().map(|x| stack.is_used(x.borrow())).unwrap_or(true);
+        let previous_value_is_used = self
+            .prev
+            .as_ref()
+            .map(|x| stack.is_used(x.borrow()))
+            .unwrap_or(true);
         previous_value_is_used && !stack.is_used(self)
     }
 
@@ -44,4 +48,3 @@ impl Operator for SeqDataOperator {
         stack.push((self.value.to_string(), self.clone()));
     }
 }
-

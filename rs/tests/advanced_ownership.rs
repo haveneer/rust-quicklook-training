@@ -4,7 +4,6 @@ trait Op {
 
 struct OpA;
 
-
 impl Op for OpA {
     fn f(&self) {
         println!("OpA");
@@ -27,7 +26,10 @@ struct Container<'a> {
 fn main() {
     let v: Vec<&dyn Op> = vec![&OpA, &OpB];
 
-    let mut c = Container { all_ops: v, used_ops: Vec::new() };
+    let mut c = Container {
+        all_ops: v,
+        used_ops: Vec::new(),
+    };
     c.used_ops.push(*c.all_ops.get(0).unwrap());
     c.used_ops.push(*c.all_ops.get(1).unwrap());
     c.used_ops.push(*c.all_ops.get(0).unwrap());
@@ -38,6 +40,6 @@ fn main() {
 }
 
 #[test]
-fn test() { main() }
-
-
+fn test() {
+    main()
+}

@@ -16,11 +16,25 @@ fn main() {
         "The end"
     };
 
-    assert_eq!(Pin::new(&mut generator).resume(()), GeneratorState::Yielded(1));
-    assert_eq!(Pin::new(&mut generator).resume(()), GeneratorState::Yielded(3));
-    assert_eq!(Pin::new(&mut generator).resume(()), GeneratorState::Yielded(6));
-    assert_eq!(Pin::new(&mut generator).resume(()), GeneratorState::Complete("The end"));
+    assert_eq!(
+        Pin::new(&mut generator).resume(()),
+        GeneratorState::Yielded(1)
+    );
+    assert_eq!(
+        Pin::new(&mut generator).resume(()),
+        GeneratorState::Yielded(3)
+    );
+    assert_eq!(
+        Pin::new(&mut generator).resume(()),
+        GeneratorState::Yielded(6)
+    );
+    assert_eq!(
+        Pin::new(&mut generator).resume(()),
+        GeneratorState::Complete("The end")
+    );
 }
 
 #[test]
-fn test() { main() }
+fn test() {
+    main()
+}

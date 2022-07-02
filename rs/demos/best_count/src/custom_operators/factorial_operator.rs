@@ -1,6 +1,6 @@
-use std::rc::Rc;
 use crate::operator::*;
 use crate::stack::*;
+use std::rc::Rc;
 
 #[derive(Clone)]
 pub struct FactorialOperator {
@@ -51,7 +51,9 @@ impl Operator for FactorialOperator {
 impl FactorialOperator {
     fn eval(n: u64) -> u64 {
         let mut r = 1;
-        for i in 2..=n { r *= i; }
+        for i in 2..=n {
+            r *= i;
+        }
         r
     }
 }
@@ -59,7 +61,7 @@ impl FactorialOperator {
 #[cfg(test)]
 mod tests {
     use super::*;
-    
+
     #[test]
     fn evaluation() {
         assert_eq!(FactorialOperator::eval(0), 1);

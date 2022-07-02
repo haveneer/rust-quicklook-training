@@ -7,7 +7,7 @@ struct RandomGenerator {
 impl RandomGenerator {
     fn new() -> Self {
         Self {
-            rng: rand::thread_rng()
+            rng: rand::thread_rng(),
         }
     }
 }
@@ -33,10 +33,10 @@ impl<I, B, F> SubFold<I, B, F> {
 }
 
 impl<I, B, F> Iterator for SubFold<I, B, F>
-    where
-        I: Iterator,
-        B: Clone,
-        F: Fn(B, I::Item) -> B,
+where
+    I: Iterator,
+    B: Clone,
+    F: Fn(B, I::Item) -> B,
 {
     type Item = B;
 
@@ -54,10 +54,7 @@ impl<I, B, F> Iterator for SubFold<I, B, F>
         // acc
 
         // More functional style
-        let mut subiter =
-            self.iter.by_ref()
-                .take(self.n)
-                .peekable();
+        let mut subiter = self.iter.by_ref().take(self.n).peekable();
         if subiter.peek().is_some() {
             Some(subiter.fold(self.init.clone(), &self.f))
         } else {
@@ -68,9 +65,11 @@ impl<I, B, F> Iterator for SubFold<I, B, F>
 
 trait SubFoldable: Iterator {
     fn subfold<B, F>(self, n: usize, init: B, f: F) -> SubFold<Self, B, F>
-        where Self: Sized,
-              F: Fn(B, Self::Item) -> B,
-              Self::Item: Clone {
+    where
+        Self: Sized,
+        F: Fn(B, Self::Item) -> B,
+        Self::Item: Clone,
+    {
         SubFold::new(self, n, init, f)
     }
 }
@@ -84,8 +83,10 @@ mod tests {
     #[test]
     fn no_overload_of_iterator_trait() {
         let iter = RandomGenerator::new();
-        SubFold::new(iter, 3, String::new(), |acc: String, x: i32| acc + &x.to_string())
-            .next();
+        SubFold::new(iter, 3, String::new(), |acc: String, x: i32| {
+            acc + &x.to_string()
+        })
+        .next();
     }
 
     #[test]

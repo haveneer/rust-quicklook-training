@@ -1,16 +1,18 @@
+mod custom_operators;
 mod operator;
 pub mod stack;
-mod custom_operators;
 
-use std::collections::HashSet;
-use std::rc::Rc;
+pub use crate::custom_operators::*;
 pub use crate::operator::Operator;
 pub use crate::stack::Stack;
-pub use crate::custom_operators::*;
+use std::collections::HashSet;
+use std::rc::Rc;
 
-
-pub fn compute(target: u64, operators: Vec<Rc<dyn Operator>>, test: impl Fn(&Stack) -> bool) -> HashSet<String>
-{
+pub fn compute(
+    target: u64,
+    operators: Vec<Rc<dyn Operator>>,
+    test: impl Fn(&Stack) -> bool,
+) -> HashSet<String> {
     let mut stack = Stack::new();
     let mut solutions = HashSet::new();
 
@@ -32,7 +34,7 @@ pub fn compute(target: u64, operators: Vec<Rc<dyn Operator>>, test: impl Fn(&Sta
                 }
             }
         }
-        
+
         while stack.len() > 0 && next_op.is_none() {
             let old_op = stack.back_replay();
             // std::println!("Backreplay : {} [{} -> out]", stack.to_string(), old_op.symbol());

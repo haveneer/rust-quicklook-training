@@ -14,9 +14,7 @@ struct Vertex2 {
 fn to_bytes<T>(t: &T) -> &[u8] {
     let p: *const T = t;
     let p = p as *const u8;
-    unsafe {
-        std::slice::from_raw_parts(p, std::mem::size_of::<T>())
-    }
+    unsafe { std::slice::from_raw_parts(p, std::mem::size_of::<T>()) }
 }
 
 fn main() {
@@ -27,4 +25,6 @@ fn main() {
 }
 
 #[test]
-fn test() { main() }
+fn test() {
+    main()
+}

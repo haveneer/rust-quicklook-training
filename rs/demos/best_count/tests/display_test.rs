@@ -1,6 +1,6 @@
-use std::rc::Rc;
-use best_count::*;
 pub use best_count::stack::StackResult;
+use best_count::*;
+use std::rc::Rc;
 
 #[test]
 fn expression_display() {
@@ -20,48 +20,59 @@ fn expression_display() {
     operators[11] = Rc::new(FactorialOperator { index: 0 });
 
     // 3!!/(4!*5)
-    let stack =
-        vec![operators[3].clone(),
-             operators[11].clone(),
-             operators[11].clone(),
-             operators[4].clone(),
-             operators[11].clone(),
-             operators[5].clone(),
-             operators[8].clone(),
-             operators[9].clone(),
-        ];
+    let stack = vec![
+        operators[3].clone(),
+        operators[11].clone(),
+        operators[11].clone(),
+        operators[4].clone(),
+        operators[11].clone(),
+        operators[5].clone(),
+        operators[8].clone(),
+        operators[9].clone(),
+    ];
 
-    assert_eq!(StackResult {
-        operators: &stack.as_slice()[0..=1].to_vec(),
-        value: &0,
-    }.to_string(), "3!");
+    assert_eq!(
+        StackResult {
+            operators: &stack.as_slice()[0..=1].to_vec(),
+            value: &0,
+        }
+        .to_string(),
+        "3!"
+    );
 
-    assert_eq!(StackResult {
-        operators: &stack.as_slice()[0..=2].to_vec(),
-        value: &0,
-    }.to_string(), "3!!");
+    assert_eq!(
+        StackResult {
+            operators: &stack.as_slice()[0..=2].to_vec(),
+            value: &0,
+        }
+        .to_string(),
+        "3!!"
+    );
 
-    assert_eq!(StackResult {
-        operators: &stack.as_slice()[3..=4].to_vec(),
-        value: &0,
-    }.to_string(), "4!");
+    assert_eq!(
+        StackResult {
+            operators: &stack.as_slice()[3..=4].to_vec(),
+            value: &0,
+        }
+        .to_string(),
+        "4!"
+    );
 
-    assert_eq!(StackResult {
-        operators: &stack.as_slice()[3..=6].to_vec(),
-        value: &0,
-    }.to_string(), "4!*5");
+    assert_eq!(
+        StackResult {
+            operators: &stack.as_slice()[3..=6].to_vec(),
+            value: &0,
+        }
+        .to_string(),
+        "4!*5"
+    );
 
-    assert_eq!(StackResult {
-        operators: &stack.as_slice()[..].to_vec(),
-        value: &0,
-    }.to_string(), "3!!/(4!*5)");
+    assert_eq!(
+        StackResult {
+            operators: &stack.as_slice()[..].to_vec(),
+            value: &0,
+        }
+        .to_string(),
+        "3!!/(4!*5)"
+    );
 }
-
-
-
-
-
-
-
-
-

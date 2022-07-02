@@ -12,7 +12,7 @@ impl std::ops::Add<B> for A {
     fn add(self, rhs: B) -> Self::Output {}
 }
 
-// You should implement trait for all combinaison 
+// You should implement trait for all combinaison
 // - &T op U
 // - T op &U
 // - &T op &U
@@ -26,4 +26,6 @@ fn main() {
 }
 
 #[test]
-fn test() { main(); }
+fn test() {
+    main();
+}

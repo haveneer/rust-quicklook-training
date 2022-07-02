@@ -7,7 +7,8 @@ pub struct ReportCard<T: Display> {
 }
 
 impl<T> ReportCard<T>
-    where T: Display,
+where
+    T: Display,
 {
     pub fn print(&self) -> String {
         format!(
@@ -18,7 +19,8 @@ impl<T> ReportCard<T>
 }
 
 impl<T> Display for ReportCard<T>
-    where T: Display,
+where
+    T: Display,
 {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", self.print())?;

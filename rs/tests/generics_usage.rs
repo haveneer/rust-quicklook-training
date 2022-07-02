@@ -7,7 +7,9 @@ fn main() {
 }
 
 #[test]
-fn test_foo() { main() }
+fn test_foo() {
+    main()
+}
 
 #[test]
 fn generics_bad_usage() {

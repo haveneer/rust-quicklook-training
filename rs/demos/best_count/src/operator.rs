@@ -1,8 +1,11 @@
-use std::rc::Rc;
 use crate::stack::Stack;
+use std::rc::Rc;
 
 #[derive(PartialEq)]
-pub enum Kind { Data, Operator }
+pub enum Kind {
+    Data,
+    Operator,
+}
 
 pub trait Operator {
     fn cardinality(&self) -> u8;
@@ -13,7 +16,7 @@ pub trait Operator {
     fn eval_on_stack(&self, stack: &Stack) -> (u64, bool);
     fn index(&self) -> usize;
     fn string_on_stack(self: Rc<Self>, stack: &mut Vec<(String, Rc<dyn Operator>)>);
-    
+
     fn prepare(&self, x: (String, Rc<dyn Operator>)) -> String {
         let protect = x.1.priority() > self.priority();
         if protect {

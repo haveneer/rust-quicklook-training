@@ -21,5 +21,5 @@ fn main() {
     let mut input = Cow::from(&slice[..]);
     abs_all(&mut input);
 
-    // Without CoW you have to prevent the worst case with an early clone() but maybe useless 
+    // Without CoW you have to prevent the worst case with an early clone() but maybe useless
 }

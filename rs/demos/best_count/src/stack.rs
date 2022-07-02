@@ -1,7 +1,7 @@
-use std::collections::HashMap;
-use std::rc::Rc;
 use crate::operator::Kind;
 use crate::operator::Operator;
+use std::collections::HashMap;
+use std::rc::Rc;
 
 pub struct Stack {
     data: Vec<(u64, bool)>,
@@ -38,7 +38,7 @@ impl Stack {
         }
         match self.operator_usage.get_mut(&back_op.index()) {
             Some(v) => *v -= 1,
-            None => panic!("Should exist in back_replay")
+            None => panic!("Should exist in back_replay"),
         }
         back_op
     }
@@ -58,7 +58,9 @@ impl Stack {
         self.stacked_operators.push(op.clone());
         match self.operator_usage.get_mut(&op.index()) {
             Some(v) => *v += 1,
-            None => { self.operator_usage.insert(op.index(), 1); }
+            None => {
+                self.operator_usage.insert(op.index(), 1);
+            }
         }
         // println!("DATA AFTER => {:?}\n", self.data);
     }
@@ -92,12 +94,10 @@ impl Stack {
     }
 }
 
-
 pub struct StackResult<'a> {
     pub operators: &'a Vec<Rc<dyn Operator>>,
     pub value: &'a u64,
 }
-
 
 impl<'a> ToString for StackResult<'a> {
     fn to_string(&self) -> String {

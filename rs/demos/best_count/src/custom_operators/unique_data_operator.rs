@@ -1,6 +1,6 @@
-use std::rc::Rc;
 use crate::operator::*;
 use crate::stack::*;
+use std::rc::Rc;
 
 #[derive(Clone)]
 pub struct UniqueDataOperator {
@@ -41,4 +41,3 @@ impl Operator for UniqueDataOperator {
         stack.push((self.value.to_string(), self.clone()));
     }
 }
-

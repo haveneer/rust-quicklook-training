@@ -1,7 +1,7 @@
-use std::rc::Rc;
+use crate::custom_operators::log2::*;
 use crate::operator::*;
 use crate::stack::*;
-use crate::custom_operators::log2::*;
+use std::rc::Rc;
 
 #[derive(Clone)]
 pub struct MultOperator {
@@ -48,7 +48,10 @@ impl Operator for MultOperator {
     fn string_on_stack(self: Rc<Self>, stack: &mut Vec<(String, Rc<dyn Operator>)>) {
         let b = stack.pop().unwrap();
         let a = stack.pop().unwrap();
-        stack.push((std::format!("{}*{}", self.prepare(a), self.prepare(b)), self.clone()));
+        stack.push((
+            std::format!("{}*{}", self.prepare(a), self.prepare(b)),
+            self.clone(),
+        ));
     }
 }
 

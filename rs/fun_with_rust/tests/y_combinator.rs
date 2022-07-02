@@ -1,7 +1,7 @@
 //! A simple implementation of the Y Combinator:
 //! λf.(λx.xx)(λx.f(xx))
 //! <=> λf.(λx.f(xx))(λx.f(xx))
-//! Reader helper: 
+//! Reader helper:
 //! * http://www.inf.fu-berlin.de/lehre/WS03/alpi/lambda.pdf
 //! * https://fr.wikipedia.org/wiki/Lambda-calcul
 //! see https://en.wikipedia.org/wiki/Fixed-point_combinator
@@ -18,7 +18,10 @@ trait Apply<T, R> {
 /// λf.λt.sft
 /// => λs.λt.sst [s/f]
 /// => λs.ss
-impl<T, R, F> Apply<T, R> for F where F: Fn(&dyn Apply<T, R>, T) -> R {
+impl<T, R, F> Apply<T, R> for F
+where
+    F: Fn(&dyn Apply<T, R>, T) -> R,
+{
     fn apply(&self, f: &dyn Apply<T, R>, t: T) -> R {
         self(f, t)
     }
@@ -28,8 +31,12 @@ impl<T, R, F> Apply<T, R> for F where F: Fn(&dyn Apply<T, R>, T) -> R {
 /// => (λx.xx)(λx.f(xx))
 /// => Yf
 fn y<T, R>(f: impl Fn(&dyn Fn(T) -> R, T) -> R) -> impl Fn(T) -> R {
-    move |t| (&|x: &dyn Apply<T, R>, y| x.apply(x, y))
-        (&|x: &dyn Apply<T, R>, y| f(&|z| x.apply(x, z), y), t)
+    move |t| {
+        (&|x: &dyn Apply<T, R>, y| x.apply(x, y))(
+            &|x: &dyn Apply<T, R>, y| f(&|z| x.apply(x, z), y),
+            t,
+        )
+    }
 }
 
 /// Factorial of n.
@@ -40,18 +47,17 @@ fn fac(n: usize) -> usize {
 
 /// nth Fibonacci number.
 fn fib(n: usize) -> usize {
-    let almost_fib = |f: &dyn Fn((usize, usize, usize)) -> usize, (a0, a1, x)|
-        match x {
-            0 => a0,
-            1 => a1,
-            _ => f((a1, a0 + a1, x - 1)),
-        };
+    let almost_fib = |f: &dyn Fn((usize, usize, usize)) -> usize, (a0, a1, x)| match x {
+        0 => a0,
+        1 => a1,
+        _ => f((a1, a0 + a1, x - 1)),
+    };
 
     y(almost_fib)((1, 1, n))
 }
 
 fn main() {
-    // Computations are fully optimized at compile time: 
+    // Computations are fully optimized at compile time:
     // https://play.rust-lang.org/?version=stable&mode=release&edition=2021&gist=82517f70eeefcd0092088df1b13855fe
     let n = 10;
     println!("fac({}) = {}", n, fac(n));
@@ -61,4 +67,6 @@ fn main() {
 }
 
 #[test]
-fn test() { main() }
+fn test() {
+    main()
+}

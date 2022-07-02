@@ -1,17 +1,30 @@
 use std::mem::size_of;
 
 macro_rules! show_size {
-    (header) => (
+    (header) => {
         println!("{:<22} {:>4}    {}", "Type", "T", "Option<T>");
-    );
-    ($t:ty) => (
-        println!("{:<22} {:4} {:4}", stringify!($t), size_of::<$t>(), size_of::<Option<$t>>())
-    )
+    };
+    ($t:ty) => {
+        println!(
+            "{:<22} {:4} {:4}",
+            stringify!($t),
+            size_of::<$t>(),
+            size_of::<Option<$t>>()
+        )
+    };
 }
 
-enum SimpleEnum { A, B, C }
+enum SimpleEnum {
+    A,
+    B,
+    C,
+}
 
-enum ComplexEnum { A, B(i32), C { x: f64 } }
+enum ComplexEnum {
+    A,
+    B(i32),
+    C { x: f64 },
+}
 
 fn main() {
     // Show non-nullable pointer optimization inside an Option
@@ -27,4 +40,6 @@ fn main() {
 }
 
 #[test]
-fn test() { main(); }
+fn test() {
+    main();
+}

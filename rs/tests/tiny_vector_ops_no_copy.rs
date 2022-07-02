@@ -87,8 +87,8 @@ mod tests {
 
         // let v3 = v0 + v2; // error: v0 used after moved
         let v3 = v1 + v2; // move v1 and v2
-        // println!("v1 = {}", v1); // error: v1 used after moved
-        // println!("v2 = {}", v2); // error: v2 used after moved
+                          // println!("v1 = {}", v1); // error: v1 used after moved
+                          // println!("v2 = {}", v2); // error: v2 used after moved
         println!("v3 = {}", v3);
         // let v4 = v3 + v1; // error: use already moved value: `v1`
     }

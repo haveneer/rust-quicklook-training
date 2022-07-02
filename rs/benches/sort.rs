@@ -1,4 +1,4 @@
-use criterion::{black_box, Criterion, criterion_group, criterion_main};
+use criterion::{black_box, criterion_group, criterion_main, Criterion};
 use rand::{distributions::Uniform, Rng};
 use rayon::prelude::*;
 
@@ -28,9 +28,6 @@ pub fn par_sort_benchmark(c: &mut Criterion) {
     });
 }
 
-criterion_group!(sort, 
-    sort_benchmark, 
-    par_sort_benchmark,
-);
+criterion_group!(sort, sort_benchmark, par_sort_benchmark,);
 
 criterion_main!(sort);

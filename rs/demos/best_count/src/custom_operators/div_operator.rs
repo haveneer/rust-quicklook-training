@@ -1,6 +1,6 @@
-use std::rc::Rc;
 use crate::operator::*;
 use crate::stack::*;
+use std::rc::Rc;
 
 #[derive(Clone)]
 pub struct DivOperator {
@@ -25,8 +25,9 @@ impl Operator for DivOperator {
     }
 
     fn check_stack(&self, stack: &Stack) -> bool {
-        if stack.len() < self.cardinality().into()
-        { false } else {
+        if stack.len() < self.cardinality().into() {
+            false
+        } else {
             let b = stack.get_data(0).unwrap();
             let a = stack.get_data(1).unwrap();
             b != 0 && (a % b == 0)
@@ -46,6 +47,9 @@ impl Operator for DivOperator {
     fn string_on_stack(self: Rc<Self>, stack: &mut Vec<(String, Rc<dyn Operator>)>) {
         let b = stack.pop().unwrap();
         let a = stack.pop().unwrap();
-        stack.push((std::format!("{}/{}", self.prepare(a), self.prepare_extended(b)), self));
+        stack.push((
+            std::format!("{}/{}", self.prepare(a), self.prepare_extended(b)),
+            self,
+        ));
     }
 }

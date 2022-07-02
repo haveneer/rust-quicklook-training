@@ -9,7 +9,7 @@ fn f1(n: Option<i64>) -> Result<i64, MyError> {
     n.ok_or(MyError {
         msg: format!("Error with always dynamically allocated message: {}", "BAD"),
     }) //
-        .and_then(|n| Ok(n))
+    .and_then(|n| Ok(n))
 }
 
 fn f2(n: Option<i64>) -> Result<i64, MyError> {
@@ -20,7 +20,7 @@ fn f2(n: Option<i64>) -> Result<i64, MyError> {
             "NOT NO BAD"
         ),
     })
-        .and_then(|n| Ok(n))
+    .and_then(|n| Ok(n))
 }
 
 #[derive(Debug)]
@@ -45,7 +45,7 @@ fn f3(n: Option<i64>) -> Result<i64, MyError2> {
         param1: "Fixed string",
         param2: 666,
     })
-        .and_then(|n| Ok(n))
+    .and_then(|n| Ok(n))
 }
 
 impl error::Error for MyError2 {}
@@ -75,4 +75,6 @@ fn main() {
 }
 
 #[test]
-fn test() { main() }
+fn test() {
+    main()
+}
