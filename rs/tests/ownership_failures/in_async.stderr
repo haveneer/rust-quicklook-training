@@ -1,10 +1,10 @@
 error[E0502]: cannot borrow `numbers` as mutable because it is also borrowed as immutable
-  --> tests/ownership_failures/in_async.rs:11:9
+  --> tests/ownership_failures/in_async.rs:10:9
    |
-9  |     let sum_future = sum(&numbers);
+8  |     let sum_future = sum(&numbers);
    |                          -------- immutable borrow occurs here
-10 |     std::thread::sleep(Duration::from_millis(100));
-11 |     add(&mut numbers); //~ cannot borrow `numbers` as mutable
+9  |     std::thread::sleep(Duration::from_millis(100));
+10 |     add(&mut numbers); //~ cannot borrow `numbers` as mutable
    |         ^^^^^^^^^^^^ mutable borrow occurs here
-12 |     println!("The sum is {}", sum_future.await);
+11 |     println!("The sum is {}", sum_future.await);
    |                               ---------- immutable borrow later used here

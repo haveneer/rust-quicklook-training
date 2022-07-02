@@ -8,5 +8,5 @@ error[E0369]: cannot add `{integer}` to `T`
   |
 help: consider restricting type parameter `T`
   |
-1 | fn foo<T: std::ops::Add<Output = {integer}>>(arg: T) -> T { return arg + 1; }
-  |         +++++++++++++++++++++++++++++++++++
+1 | fn foo<T: std::ops::Add<i32>>(arg: T) -> T { return arg + 1; }
+  |         ++++++++++++++++++++
