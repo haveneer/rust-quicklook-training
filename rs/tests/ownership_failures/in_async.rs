@@ -1,6 +1,5 @@
 // edition:2018
 
-// compiletest_rs: not able to load external crates ?
 use futures::executor::block_on;
 use std::time::Duration;
 

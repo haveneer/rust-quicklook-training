@@ -25,9 +25,12 @@ jobs:
       - uses: actions/checkout@v2
         with:
           submodules: true
-      #- name: add additional dev tools # require for using compiletest_rs
-      #  shell: bash
-      #  run: rustup component add rustc-dev --toolchain nightly
+
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly
+          override: true
+
       - name: Configure Python venv path
         shell: bash
         run: |
@@ -60,7 +63,8 @@ jobs:
           pip3 install -r requirements.txt
           maturin develop
           ${BIN_VENV}/pytest
-      # Disable since it is too expensive  
-      # - name: bencmarks
-      #  run: cd rs && cargo bench
+
+        # Disable since it is too expensive  
+        # - name: benchmarks
+        #  run: cd rs && cargo bench
         
