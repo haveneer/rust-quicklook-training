@@ -1,12 +1,16 @@
 mod options;
 
-use actix_web::{error, get, post, web, App, Error, HttpResponse, HttpServer, Responder};
+use actix_web::web::Data;
+use actix_web::{
+    error, get, middleware, post, web, App, Error, HttpResponse, HttpServer, Responder,
+};
 use anyhow;
 use clap::Parser;
 use futures::StreamExt;
 use options::Options;
 use serde::{Deserialize, Serialize};
 use std::net::SocketAddr;
+use std::sync::Mutex;
 use tracing::{error, info};
 use tracing_subscriber;
 
@@ -17,10 +21,18 @@ struct Message {
     username: String,
 }
 
+struct CentralData {
+    counter: usize,
+}
+
+// curl -X GET http://localhost:port/api/hello/john
+
 #[get("/api/hello/{name}")]
-async fn hello(name: web::Path<String>) -> impl Responder {
+async fn hello(name: web::Path<String>, data: Data<Mutex<CentralData>>) -> impl Responder {
     // Never fail
-    info!("Hello Request received");
+    let mut data = data.lock().unwrap();
+    data.counter += 1;
+    info!("Hello Request received (count={count})", count=data.counter);
     format!("Hello {name}!")
 }
 
@@ -45,6 +57,8 @@ async fn echo(mut payload: web::Payload) -> Result<HttpResponse, Error> {
     Ok(HttpResponse::Ok().json(obj)) // <- send response
 }
 
+// curl -X POST -d '{"username": "john"}' -H "Content-type: application/json" http://localhost:7878/api/json
+
 #[actix_web::main] // or #[tokio::main]
 async fn main() -> anyhow::Result<()> {
     let options = Options::parse();
@@ -52,6 +66,7 @@ async fn main() -> anyhow::Result<()> {
     // Configure RUST_LOG environment variable like
     // RUST_LOG=debug
     // RUST_LOG=gossip_server=debug
+    // env::set_var("RUST_LOG", "actix_web=debug,actix_server=info");
     tracing_subscriber::fmt::init();
 
     let entry_points = options.entry_points().clone();
@@ -61,8 +76,12 @@ async fn main() -> anyhow::Result<()> {
 
     info!("Server started");
 
-    let server = HttpServer::new(|| {
+    let data = Data::new(Mutex::new(CentralData { counter: 0 }));
+
+    let server = HttpServer::new(move || {
         App::new()
+            .app_data(Data::clone(&data))
+            .wrap(middleware::Logger::default())
             .service(hello) // alternative form: .route("/api/hello/{name}", web::get().to(echo));
             .service(echo) // alternative form: .route("/api/json", web::post().to(echo));
     })
