@@ -1,4 +1,5 @@
 // lazy_static allows to build complex structures as static data
+// https://crates.io/crates/once_cell seems to be closer to be in std::
 use lazy_static::*;
 
 struct ComplexStructure {
