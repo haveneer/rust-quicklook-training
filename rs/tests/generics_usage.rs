@@ -18,5 +18,5 @@ fn generics_bad_usage() {
     let version_path = if cfg!(nightly) { "unstable" } else { "stable" };
 
     t.compile_fail(format!("tests/failures/{version_path}/generics_bad_usage.rs"));
-    t.compile_fail(format!("tests/failures/{version_path}//generics_with_unsatisfied_bounds.rs"));
+    t.compile_fail(format!("tests/failures/{version_path}/generics_with_unsatisfied_bounds.rs"));
 }
