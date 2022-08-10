@@ -23,8 +23,8 @@ jobs:
             os: ubuntu-20.04
             c-compiler: clang-12
             cxx-compiler: clang++-12
-          - name: macOS 10.15
-            os: macOS-10.15
+          - name: macOS 12
+            os: macOS-12
 
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it

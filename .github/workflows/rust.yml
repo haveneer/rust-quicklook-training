@@ -17,7 +17,7 @@ jobs:
           - name: Linux
             os: ubuntu-20.04
           - name: macOS
-            os: macOS-10.15
+            os: macOS-11
           - name: Windows
             os: windows-latest
     steps:
