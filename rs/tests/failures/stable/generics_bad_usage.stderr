@@ -1,0 +1,12 @@
+error[E0369]: cannot add `{integer}` to `T`
+ --> tests/failures/stable/generics_bad_usage.rs:1:37
+  |
+1 | fn foo<T>(arg: T) -> T { return arg + 1; }
+  |                                 --- ^ - {integer}
+  |                                 |
+  |                                 T
+  |
+help: consider restricting type parameter `T`
+  |
+1 | fn foo<T: std::ops::Add<{integer}>>(arg: T) -> T { return arg + 1; }
+  |         ++++++++++++++++++++++++++

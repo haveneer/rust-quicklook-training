@@ -88,9 +88,13 @@ mod tests {
     #[test]
     fn ownership_failures() {
         let t = trybuild::TestCases::new();
+
+        let version_path = if cfg!(nightly) { "unstable" } else { "stable" };
+
         t.compile_fail("tests/ownership_failures/borrow_and_functions.rs");
-        t.compile_fail("tests/ownership_failures/explicit_clone.rs");
-        t.compile_fail("tests/ownership_failures/implicit_move.rs");
         t.compile_fail("tests/ownership_failures/in_async.rs");
+        t.compile_fail(format!("tests/ownership_failures/{version_path}/explicit_clone.rs"));
+        t.compile_fail(format!("tests/ownership_failures/{version_path}/implicit_move.rs"));
+
     }
 }

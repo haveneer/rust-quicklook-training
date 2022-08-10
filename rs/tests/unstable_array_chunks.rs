@@ -1,7 +1,8 @@
-#![feature(array_chunks)]
+#![cfg_attr(feature = "nightly", feature(array_chunks))]
 
 #[cfg(test)]
 mod tests {
+    #[cfg(nightly)]
     #[test]
     fn test_array_chunks_infer() {
         let v: &[i32] = &[0, 1, 2, 3, 4, -4];

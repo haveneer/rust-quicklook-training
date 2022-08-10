@@ -1,5 +1,5 @@
-#![feature(trace_macros)]
-#![feature(log_syntax)] // requires nightly build
+#![cfg_attr(feature = "nightly", feature(trace_macros))]
+#![cfg_attr(feature = "nightly", feature(log_syntax))] // requires nightly build
 
 // To expand macro by compiler
 // cargo +nightly rustc --test macro_debugging -- -Z unstable-options --pretty=expanded
@@ -13,8 +13,10 @@ macro_rules! each_tt {
 
 #[test]
 fn test_trace_macro() {
+    #[cfg(nightly)]
     trace_macros!(true);
     each_tt!(spim wak plee whum);
+    #[cfg(nightly)]
     trace_macros!(false);
     each_tt!(spim wak plee whum);
 }
@@ -23,6 +25,7 @@ macro_rules! sing {
     () => {};
     ($tt:tt $($rest:tt)*) =>
         {{ // without double brace, it does not compile (or use sing!{ })
+            #[cfg(nightly)]
             log_syntax!($tt); sing!($($rest)*);  // with log_syntax, compiler will print all seen tokens
         }};                                      // (compile time, not runtime)
 }

@@ -1,7 +1,7 @@
 // Ref: https://huonw.github.io/blog/2016/04/myths-and-legends-about-integer-overflow-in-rust/
 
-#![feature(bigint_helper_methods)]
-#![feature(unchecked_math)]
+#![cfg_attr(feature = "nightly", feature(bigint_helper_methods))]
+#![cfg_attr(feature = "nightly", feature(unchecked_math))]
 
 fn main() {
     let x: u8 = 200;
@@ -13,7 +13,9 @@ fn main() {
     assert_eq!(x.overflowing_add(y), (99, true));
     assert_eq!(x.saturating_add(y), 255);
     assert_eq!(x.wrapping_add(y), 99);
+    #[cfg(nightly)]
     assert_eq!(unsafe { x.unchecked_add(y) }, 99); // unstable
+    #[cfg(nightly)]
     assert_eq!(x.carrying_add(y, true), (100, true)); // unstable
 }
 

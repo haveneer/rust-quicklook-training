@@ -5,8 +5,8 @@ fn main() {
     if rust_toolchain.starts_with("stable") {
         // do nothing
     } else if rust_toolchain.starts_with("nightly") {
-        //enable the 'nightly-features' feature flag
-        println!("cargo:rustc-cfg=feature=\"nightly-features\"");
+        //enable the 'nightly' feature flag
+        println!("cargo:rustc-cfg=feature=\"nightly\"");
     } else {
         panic!("Unexpected value for rustc toolchain")
     }

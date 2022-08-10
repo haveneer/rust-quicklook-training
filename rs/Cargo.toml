@@ -43,4 +43,4 @@ harness = false
 
 [features]
 default = []
-nightly-features = []
+nightly = []

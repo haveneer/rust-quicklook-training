@@ -9,6 +9,7 @@ on:
 
 jobs:
   build-rs:
+    name: ${{ matrix.name }} build with ${{ matrix.toolchain }} Rust
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -16,10 +17,16 @@ jobs:
         include:
           - name: Linux
             os: ubuntu-20.04
+            toolchain: stable
+          - name: Linux
+            os: ubuntu-20.04
+            toolchain: nightly
           - name: macOS
             os: macOS-11
+            toolchain: stable
           - name: Windows
             os: windows-latest
+            toolchain: stable
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
@@ -28,7 +35,7 @@ jobs:
 
       - uses: actions-rs/toolchain@v1
         with:
-          toolchain: nightly
+          toolchain: ${{ matrix.toolchain }}
           override: true
 
       - name: Configure Python venv path
