@@ -89,7 +89,7 @@ mod tests {
     fn ownership_failures() {
         let t = trybuild::TestCases::new();
 
-        let version_path = if cfg!(nightly) { "unstable" } else { "stable" };
+        let version_path = if cfg!(feature = "nightly") { "unstable" } else { "stable" };
 
         t.compile_fail("tests/ownership_failures/borrow_and_functions.rs");
         t.compile_fail("tests/ownership_failures/in_async.rs");

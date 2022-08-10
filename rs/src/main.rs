@@ -1,9 +1,12 @@
 fn main() {
-    println!("This is demo project")
-}
+    #[cfg(feature = "nightly")]
+    let feature = "nightly";
+    #[cfg(not(feature = "nightly"))]
+    let feature = "!nightly";
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn test() {}
+    if cfg!(feature = "nightly") { 
+        println!("Running nightly/{feature}");    
+    } else {
+        println!("Running !nightly/{feature}");
+    };
 }

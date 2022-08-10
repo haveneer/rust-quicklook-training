@@ -15,7 +15,7 @@ fn test_foo() {
 fn generics_bad_usage() {
     let t = trybuild::TestCases::new();
 
-    let version_path = if cfg!(nightly) { "unstable" } else { "stable" };
+    let version_path = if cfg!(feature = "nightly") { "unstable" } else { "stable" };
 
     t.compile_fail(format!("tests/failures/{version_path}/generics_bad_usage.rs"));
     t.compile_fail(format!("tests/failures/{version_path}/generics_with_unsatisfied_bounds.rs"));

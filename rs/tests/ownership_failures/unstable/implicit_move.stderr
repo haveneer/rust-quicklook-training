@@ -1,5 +1,5 @@
 error[E0382]: borrow of moved value: `numbers`
- --> tests/ownership_failures/implicit_move.rs:8:26
+ --> tests/ownership_failures/unstable/implicit_move.rs:8:26
   |
 3 |         let numbers = vec![1, 2, 3, 4, 5];
   |             ------- move occurs because `numbers` has type `Vec<i32>`, which does not implement the `Copy` trait

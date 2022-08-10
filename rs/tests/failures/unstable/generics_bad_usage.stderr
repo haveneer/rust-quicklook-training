@@ -1,5 +1,5 @@
 error[E0369]: cannot add `{integer}` to `T`
- --> tests/failures/generics_bad_usage.rs:1:37
+ --> tests/failures/unstable/generics_bad_usage.rs:1:37
   |
 1 | fn foo<T>(arg: T) -> T { return arg + 1; }
   |                                 --- ^ - {integer}
