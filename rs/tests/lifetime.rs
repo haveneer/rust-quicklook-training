@@ -103,3 +103,24 @@ fn lifetime4() {
     //        }
     //    }
 }
+
+
+// 'a : 'b :  'a lasts at least as long as 'b
+fn f<'a, 'b>(x: &'a i32, mut y: &'b i32) where 'a: 'b {
+    y = x;                      // &'a i32 is a subtype of &'b i32 because 'a: 'b
+    let r: &'b &'a i32 = &&0;   // &'b &'a i32 is well formed because 'a: 'b
+}
+
+// See https://doc.rust-lang.org/reference/trait-bounds.html
+// https://doc.rust-lang.org/reference/subtyping.html
+
+#[test]
+fn lifetime5() {
+    let x = 1;
+    {
+        let y = 2;
+        let z = f(&x, &y);
+        drop(y);
+        f(&y, &x);
+    };
+}
