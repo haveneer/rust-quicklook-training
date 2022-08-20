@@ -20,9 +20,6 @@ jobs:
             toolchain: stable
           - name: Linux
             os: ubuntu-20.04
-            toolchain: beta
-          - name: Linux
-            os: ubuntu-20.04
             toolchain: nightly
           - name: macOS
             os: macOS-11
