@@ -7,7 +7,7 @@ mod tests {
 
     struct X<T> {
         field: isize,
-        phantom: core::marker::PhantomData<T>,
+        phantom: core::marker::PhantomData<T>, // without the marker T is unused; it doesn't compile
     }
 
     impl<T> X<T> {
