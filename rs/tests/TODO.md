@@ -73,6 +73,11 @@ Bads :/
 * Compare functional languages (Rust / OCaml / Haskell) : https://pure.uva.nl/ws/files/2217922/167003_rust_for_functional_programmers.pdf
 * TODO: solana blockchain rust smart contract
 
+# Blog
+* https://lafor.ge (en français)
+* https://github.com/sponsors/dtolnay et en particulier https://github.com/dtolnay/case-studies
+
+
 ## Error management
 
 * https://github.com/dtolnay/thiserror
