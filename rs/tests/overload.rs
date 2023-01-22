@@ -8,19 +8,19 @@ mod tests {
 
     struct B {}
 
+    #[rustfmt::skip]
     impl Moon for A {
-        fn moon(&self) { /* ... */
-        }
+        fn moon(&self) { /* ... */ }
     }
 
+    #[rustfmt::skip]
     impl Moon for B {
-        fn moon(&self) { /* ... */
-        }
+        fn moon(&self) { /* ... */ }
     }
 
+    #[rustfmt::skip]
     impl Moon for f64 {
-        fn moon(&self) { /* ... */
-        }
+        fn moon(&self) { /* ... */ }
     }
 
     #[test]
