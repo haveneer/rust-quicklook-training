@@ -86,6 +86,7 @@ mod tests {
     }
 
     #[test]
+    #[rustfmt::skip]
     fn ownership_failures() {
         let t = trybuild::TestCases::new();
 

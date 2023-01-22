@@ -12,6 +12,7 @@ fn test_foo() {
 }
 
 #[test]
+#[rustfmt::skip]
 fn generics_bad_usage() {
     let t = trybuild::TestCases::new();
 

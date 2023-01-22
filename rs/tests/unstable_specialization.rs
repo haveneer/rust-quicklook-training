@@ -35,9 +35,9 @@ mod nightly {
             &(*self as i32) == other
         }
     }
-    
+
     struct Foo(i32);
-    
+
     // Specialization for T=Foo(i32)
     impl Compare<i32> for Foo {
         fn equal(&self, other: &i32) -> bool {

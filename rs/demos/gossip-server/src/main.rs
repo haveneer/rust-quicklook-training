@@ -32,7 +32,10 @@ async fn hello(name: web::Path<String>, data: Data<Mutex<CentralData>>) -> impl 
     // Never fail
     let mut data = data.lock().unwrap();
     data.counter += 1;
-    info!("Hello Request received (count={count})", count=data.counter);
+    info!(
+        "Hello Request received (count={count})",
+        count = data.counter
+    );
     format!("Hello {name}!")
 }
 
