@@ -10,7 +10,7 @@ fn u8_to_string(data: &[u8]) -> Result<String, Box<dyn std::error::Error>> {
     for byte in data {
         write!(&mut s, "{:02X}", byte)?;
     }
-    return Ok(s);
+    Ok(s)
 }
 
 fn count_zeros(data: &[u8]) -> usize {
