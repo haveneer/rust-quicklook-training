@@ -10,11 +10,13 @@ use futures::StreamExt;
 use options::Options;
 use serde::{Deserialize, Serialize};
 use std::net::SocketAddr;
-use std::sync::Mutex;
-use tracing::{error, info};
+use std::sync::mpsc::SyncSender;
+use std::sync::{mpsc, RwLock};
+use tracing::{error, info, warn};
 use tracing_subscriber;
 
 const MAX_PAYLOAD_SIZE: usize = 256 * 1024; // max payload size is 256k
+const MAX_MSPC_MESSAGE: usize = 1024;
 
 #[derive(Serialize, Deserialize, Debug)]
 struct Message {
@@ -25,24 +27,46 @@ struct CentralData {
     counter: usize,
 }
 
+#[derive(Debug)]
+struct MPSCMessage {
+    message: String,
+}
+
 // curl -X GET http://localhost:port/api/hello/john
 
 #[get("/api/hello/{name}")]
-async fn hello(name: web::Path<String>, data: Data<Mutex<CentralData>>) -> impl Responder {
+async fn hello(
+    name: web::Path<String>,
+    data: Data<RwLock<(CentralData, SyncSender<MPSCMessage>)>>,
+) -> impl Responder {
     // Never fail
-    let mut data = data.lock().unwrap();
-    data.counter += 1;
+    let mut data = data.write().unwrap();
+    data.0.counter += 1;
     info!(
         "Hello Request received (count={count})",
-        count = data.counter
+        count = data.0.counter
     );
+    data.1
+        .send(MPSCMessage {
+            message: "hello".to_string(),
+        })
+        .expect("Cannot send message");
     format!("Hello {name}!")
 }
 
 #[post("/api/json")]
-async fn echo(mut payload: web::Payload) -> Result<HttpResponse, Error> {
+async fn echo(
+    mut payload: web::Payload,
+    data: Data<RwLock<(CentralData, SyncSender<MPSCMessage>)>>,
+) -> Result<HttpResponse, Error> {
     // May fail
+    let data = data.read().unwrap();
     info!("JSON Request received");
+    data.1
+        .send(MPSCMessage {
+            message: "echo".to_string(),
+        })
+        .expect("Cannot send message");
     // payload is a stream of Bytes objects
     let mut body = web::BytesMut::new();
     while let Some(chunk) = payload.next().await {
@@ -79,7 +103,9 @@ async fn main() -> anyhow::Result<()> {
 
     info!("Server started");
 
-    let data = Data::new(Mutex::new(CentralData { counter: 0 }));
+    let (tx, rx) = mpsc::sync_channel::<MPSCMessage>(MAX_MSPC_MESSAGE);
+
+    let data = Data::new(RwLock::new((CentralData { counter: 0 }, tx)));
 
     let server = HttpServer::new(move || {
         App::new()
@@ -93,6 +119,12 @@ async fn main() -> anyhow::Result<()> {
 
     tokio::spawn(async move {
         forever_wait().await;
+    });
+
+    tokio::spawn(async move {
+        while let Ok(m) = rx.recv() {
+            warn!("Message from {}", m.message);
+        }
     });
 
     server.await?;
@@ -140,3 +172,6 @@ async fn register(addrs: &Vec<String>) -> anyhow::Result<()> {
     }
     Ok(())
 }
+
+// TODO: add tests
+// https://actix.rs/docs/testing/
