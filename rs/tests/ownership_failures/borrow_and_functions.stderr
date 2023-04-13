@@ -1,8 +1,10 @@
 error[E0596]: cannot borrow `*numbers` as mutable, as it is behind a `&` reference
   --> tests/ownership_failures/borrow_and_functions.rs:14:5
    |
-12 | fn consume(numbers: &Vec<i32>) -> i32 {
-   |                     --------- help: consider changing this to be a mutable reference: `&mut Vec<i32>`
-13 |     // numbers is READ-ONLY, cannot be mutated
 14 |     numbers.push(42);  //~ error: cannot borrow `*numbers` as mutable
    |     ^^^^^^^^^^^^^^^^ `numbers` is a `&` reference, so the data it refers to cannot be borrowed as mutable
+   |
+help: consider changing this to be a mutable reference
+   |
+12 | fn consume(numbers: &mut Vec<i32>) -> i32 {
+   |                     ~~~~~~~~~~~~~

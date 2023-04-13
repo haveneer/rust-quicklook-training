@@ -57,6 +57,7 @@ fn match_enum() {
 
     println!("{:-<20}", "");
 
+    #[allow(bindings_with_variant_name)] // was a warning; now an error since Rust 1.64
     for e in MyEnum::iter() {
         match e {
             A => println!("/!\\ A = {:?}", A),
