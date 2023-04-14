@@ -1,1 +1,4 @@
-pub fn f4() {} // pub is required to be used outside
+// pub is required to be used outside
+pub fn f4() -> bool {
+    true
+}

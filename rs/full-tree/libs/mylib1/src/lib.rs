@@ -1,5 +1,5 @@
 pub mod f3;
-// declares an independent module (see f3.rs)
+// declares an independent module (see f7)
 mod f4;
 
 // declares an independent _private_ module (see f4.rs) : cannot be used from outside

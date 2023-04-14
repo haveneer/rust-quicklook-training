@@ -1,3 +1,3 @@
 pub fn f6a() {}
 
-pub fn f6b() {}
+pub(crate) fn f6b() {}
