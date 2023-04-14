@@ -2,6 +2,9 @@
 
 name: Rust CI
 
+env:
+  DEFAULT_PYTHON_VERSION: "3.11"
+
 on:
   push:
   schedule:
@@ -38,6 +41,11 @@ jobs:
           toolchain: ${{ matrix.toolchain }}
           override: true
           default: true
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.DEFAULT_PYTHON_VERSION }}
 
       - name: Configure Python venv path
         shell: bash
