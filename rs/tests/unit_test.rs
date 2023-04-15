@@ -10,7 +10,6 @@ pub fn divide_non_zero_result(a: u32, b: u32) -> u32 {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use rstest::*;
 
     #[test]
     fn test_divide() {
