@@ -33,7 +33,7 @@ fn match_enum() {
         A,
         B,
         C(u8),
-    };
+    }
 
     use strum::IntoEnumIterator;
     for e in MyEnum::iter() {
@@ -144,7 +144,7 @@ fn math_rules() {
     for i in 0..=11u8 {
         let annotation = match i {
             0 => "Null",
-            1...4 => "Low", // ... range are deprecated since edition 2018; prefer ..=
+            1..=4 => "Low",
             5..=7 => "Ok",
             8..=9 => "Very good",
             10 => "Perfect",
