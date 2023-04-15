@@ -2,7 +2,7 @@
 name = "rs"
 version = "0.1.0"
 authors = ["Pascal HAVÉ <hpwxf@haveneer.com>"]
-edition = "2018"
+edition = "2021"
 
 [dependencies]
 lazy_static = "1.4.0"
@@ -11,23 +11,29 @@ auto_ops = "0.3.0"
 procedural_macro = { path = "procedural_macro" }
 futures = "0.3"
 rand = "0.8.3"
-# crates for julia example
+# // crates for julia example
 image = "0.23.14"
 num-complex = "0.4.0"
 palette = "0.5.0"
 rayon = "1.5"
 chrono = "0.4"
-criterion = { version = "0.3.5", features = ["html_reports"] } # benchmark !
+criterion = { version = "0.4", features = ["html_reports"] } # // benchmark !
 
-trybuild = "1.0" # as a replacement of compiletest_rs crate
-#                # use TRYBUILD=overwrite to write/replace stderr 
+trybuild = "1.0" # // as a replacement of compiletest_rs crate
+#                # // use TRYBUILD=overwrite to write/replace stderr
 
 [dev-dependencies]
-rstest = "0.11.0"
-mockall = "0.10.2"
+rstest = "0.17"
+mockall = "0.11"
 
 [workspace]
-members = ["hello", "procedural_macro", "full-tree", "full-tree/libs/mylib1", "demos/*", "doclib", "fun_with_rust"]
+members = ["hello", "procedural_macro",
+    "full-tree", "full-tree/libs/mylib1",
+    "demos/*", "doclib", "fun_with_rust"]
+
+[features]
+default = []
+nightly = []
 
 [[bench]]
 name = "sort"
@@ -41,6 +47,3 @@ harness = false
 name = "factorial"
 harness = false
 
-[features]
-default = []
-nightly = []
