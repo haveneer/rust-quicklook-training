@@ -1,5 +1,5 @@
 // pub is required to be used outside
-pub fn f7() -> bool {
+pub fn f7() -> crate::f1::Type {
     true
 }
 
