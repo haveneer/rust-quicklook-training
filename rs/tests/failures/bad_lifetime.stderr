@@ -1,0 +1,9 @@
+error[E0597]: `a` does not live long enough
+ --> tests/failures/bad_lifetime.rs:7:13
+  |
+7 |         b = &a;
+  |             ^^ borrowed value does not live long enough
+8 |     }
+  |     - `a` dropped here while still borrowed
+9 |     let c = *b;
+  |             -- borrow later used here

@@ -104,7 +104,7 @@ fn lifetime4() {
     //    }
 }
 
-// 'a : 'b :  'a lasts at least as long as 'b
+// 'a : 'b : 'a outlives 'b <=> 'a lasts at least as long as 'b
 fn f<'a, 'b>(x: &'a i32, mut y: &'b i32)
 where
     'a: 'b,
@@ -125,4 +125,14 @@ fn lifetime5() {
         drop(y);
         f(&y, &x);
     };
+}
+
+#[test]
+#[rustfmt::skip]
+fn lifetime_failures() {
+    let t = trybuild::TestCases::new();
+
+    // let version_path = if cfg!(feature = "nightly") { "unstable" } else { "stable" };
+
+    t.compile_fail("tests/failures/bad_lifetime.rs");
 }
