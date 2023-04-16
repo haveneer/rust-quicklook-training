@@ -1,3 +1,9 @@
+* traits inheritance (super traits): https://doc.rust-lang.org/rust-by-example/trait/supertraits.html
+* auto trait derivations
+* Do not add Copy trait if you want to avoid copies (if available, it will become the default behavior)
+* lifetime
+* Les structures de Rust
+
 * rustup doc
 * Toolchain overrides: https://rust-lang.github.io/rustup/overrides.html
 
@@ -5,8 +11,6 @@
 * More about errors:
   * https://www.lpalmieri.com/posts/error-handling-rust/
   * https://www.youtube.com/watch?v=jpVzSse7oJ4
-* multi crates / modules
-* ajouter un exemple de super:: et self:: dans full_tree (alternative aux chemins complets et pouvant retirer une ambiguïté en particulier pour self::)
 * visibilité (pub, pub(crate), pub(super)) = https://doc.rust-lang.org/beta/rust-by-example/mod/visibility.html
 * les préfixes de chaines de caractères et autres littéraux : https://doc.rust-lang.org/reference/tokens.html
 * pointers variety
@@ -40,12 +44,10 @@
     * https://manishearth.github.io/blog/2015/05/27/wrapper-types-in-rust-choosing-your-guarantees/
 * Phantom:
 * const fn (Rust ≥ 1.51)
-* closures + move
 * Generics
     * https://doc.rust-lang.org/rust-by-example/generics.html
     * https://without.boats/blog/shipping-const-generics/
-* Fn, FnMut, FnOnce traits
-* traits inheritance (super traits): https://doc.rust-lang.org/rust-by-example/trait/supertraits.html
+
 * async book: https://rust-lang.github.io/async-book
 * Écriture fonctionnelle (C++ range like)
 * autres usages de ? et From::
@@ -57,7 +59,6 @@ Bads :/
     * https://stackoverflow.com/questions/66566058/why-mutable-reference-on-const-is-not-an-error?noredirect=1#comment117674607_66566058
     * https://github.com/rust-lang/rust/issues/55721#issuecomment-643454340
     * let mut x = &mut 1; *x += 1; (ident with const)
-* Do not add Copy trait if you want to avoid copies (if available, it will become the default behavior)
 
 # Good questions
 
@@ -71,13 +72,11 @@ Bads :/
 * https://github.com/CookieCoder15/pipes-rs
 * https://github.com/rust-lang/rustlings
 * https://blog.logrocket.com/parsing-in-rust-with-nom/
-* Compare functional languages (Rust / OCaml / Haskell) : https://pure.uva.nl/ws/files/2217922/167003_rust_for_functional_programmers.pdf
 * TODO: solana blockchain rust smart contract
 
 # Blog
 * https://lafor.ge (en français)
 * https://github.com/sponsors/dtolnay et en particulier https://github.com/dtolnay/case-studies
-
 
 ## Error management
 
