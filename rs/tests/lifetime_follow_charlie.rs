@@ -22,7 +22,7 @@ mod tests1 {
         let charlie = Charlie::new();
         let a = A { charlie };
         let b = B { charlie: &a };
-        // let c = C { a, b}; // forbidden
+        // let c = C { a, b }; // forbidden
         //                    // there is no way to build C if b referenced the same embedded a
         let f = move || {
             // let x = a;  // you can use ONLY ONE
@@ -61,7 +61,6 @@ mod tests2 {
 
         // Both c and f solutions are OK but not in the same time; b is still moved
         // let c = C { a: a.clone(), b }; // OK
-        // //                             // there is no way to build C if b referenced the same embedded a
 
         let f = move || {
             let xa = a; // both OK
