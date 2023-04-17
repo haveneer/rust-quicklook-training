@@ -132,7 +132,7 @@ fn lifetime5() {
 fn lifetime_failures() {
     let t = trybuild::TestCases::new();
 
-    // let version_path = if cfg!(feature = "nightly") { "unstable" } else { "stable" };
+    let version_path = if cfg!(feature = "nightly") { "unstable" } else { "stable" };
 
-    t.compile_fail("tests/failures/bad_lifetime.rs");
+    t.compile_fail(format!("tests/failures/{version_path}/bad_lifetime.rs"));
 }
