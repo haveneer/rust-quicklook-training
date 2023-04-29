@@ -1,6 +1,8 @@
 error[E0597]: `a` does not live long enough
  --> tests/failures/stable/bad_lifetime.rs:7:13
   |
+6 |         let a = 1;
+  |             - binding `a` declared here
 7 |         b = &a;
   |             ^^ borrowed value does not live long enough
 8 |     }
