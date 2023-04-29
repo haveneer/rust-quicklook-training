@@ -1,8 +1,10 @@
 // definitions out of any body
-const GLOBAL_CONST_STRING: &str = "Hello"; // const are inlined and don't have fixed memory address
+// const are inlined and don't have fixed memory address
+const GLOBAL_CONST_STRING: &str = "Hello";
 const GLOBAL_CONST_VALUE: usize = 65536;
 
-static GLOBAL_STATIC_STRING: &str = "Hello"; // static are not inlined and have a fixed memory address
+// static are not inlined and have a fixed memory address
+static GLOBAL_STATIC_STRING: &str = "Hello";
 static mut GLOBAL_STATIC_VALUE: usize = 65536; // and could be mut(able)
 
 // Differences static vs const

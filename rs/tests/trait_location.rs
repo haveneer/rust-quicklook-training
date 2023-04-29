@@ -9,6 +9,7 @@ mod my_struct {
 }
 
 mod my_impl {
+    // could be done also in a tests module for specific debugging purposes
     impl super::my_trait::MyTrait for super::my_struct::MyStruct {
         fn f() {}
     }
