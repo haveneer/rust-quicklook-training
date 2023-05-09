@@ -1983,6 +1983,8 @@ dependencies = [
  "rand 0.8.3",
  "rayon",
  "rstest",
+ "serde",
+ "serde_json",
  "strum",
  "trybuild",
 ]
