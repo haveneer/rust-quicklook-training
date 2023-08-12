@@ -105,12 +105,12 @@ fn lifetime4() {
 }
 
 // 'a : 'b : 'a outlives 'b <=> 'a lasts at least as long as 'b
-fn f<'a, 'b>(x: &'a i32, mut y: &'b i32)
+fn f<'a, 'b>(x: &'a String, mut y: &'b String)
 where
     'a: 'b,
 {
-    y = x; // &'a i32 is a subtype of &'b i32 because 'a: 'b
-    let r: &'b &'a i32 = &&0; // &'b &'a i32 is well formed because 'a: 'b
+    y = x; // &'a String is a subtype of &'b String because 'a: 'b
+    let r: &'b &'a i32 = &&0; // &'b &'a String is well formed because 'a: 'b
 }
 
 // See https://doc.rust-lang.org/reference/trait-bounds.html
@@ -118,13 +118,42 @@ where
 
 #[test]
 fn lifetime5() {
-    let x = 1;
+    let x = 1.to_string();
     {
-        let y = 2;
+        let y = 2.to_string();
         let z = f(&x, &y);
-        drop(y);
         f(&y, &x);
+        x
     };
+}
+
+struct Droppable {
+    v: i32,
+}
+
+impl Drop for Droppable {
+    fn drop(&mut self) {
+        println!("Droppable {{ v: {} }} has been dropped", self.v);
+    }
+}
+
+#[test]
+fn lifetime6() {
+    let mut x = Droppable { v: 1 };
+    x = Droppable { v: 2 }; // drop implied by assignment (cf mut)
+    drop(x); // explicit drop
+    let x = Droppable { v: 3 };
+    // x: A binding is just a name for a value, pointing the name to something else does not affect the value itself, which lives as it would have otherwise
+    let x = Droppable { v: 4 }; // new binding doesn't imply immediate drop
+    println!("End of block");
+}
+
+#[test]
+fn lifetime7() {
+    let x = 1;
+    println!("Before drop x={x}");
+    drop(x); // drop a copy of y since i32 is Copy
+    println!("After drop x={x} and still alive!");
 }
 
 #[test]
