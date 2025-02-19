@@ -1,4 +1,4 @@
-﻿[package]
+[package]
 name = "rs"
 version = "0.1.0"
 authors = ["Pascal HAVÉ <hpwxf@haveneer.com>"]
@@ -11,7 +11,7 @@ auto_ops = "0.3.0"
 procedural_macro = { path = "procedural_macro" }
 futures = "0.3"
 rand = "0.8.3"
-# // crates for julia example
+# crates for julia example
 image = "0.23.14"
 num-complex = "0.4.0"
 palette = "0.5.0"
@@ -23,6 +23,7 @@ criterion = { version = "0.4", features = ["html_reports"] } # // benchmark !
 
 trybuild = "1.0" # // as a replacement of compiletest_rs crate
 #                # // use TRYBUILD=overwrite to write/replace stderr
+tokio = { workspace = true }
 
 # other demos
 #serde = "1"
@@ -34,9 +35,19 @@ rstest = "0.17"
 mockall = "0.11"
 
 [workspace]
-members = ["hello", "procedural_macro",
-    "full-tree", "full-tree/libs/mylib1",
-    "demos/*", "doclib", "fun_with_rust"]
+members = [
+  "hello",
+  "procedural_macro",
+  "full-tree",
+  "full-tree/libs/mylib1",
+  "demos/*",
+  "doclib",
+  "fun_with_rust",
+  "advanced",
+]
+
+[workspace.dependencies]
+tokio = { version = "1", features = ["full"] }
 
 [features]
 default = []
