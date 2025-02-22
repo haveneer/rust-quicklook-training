@@ -11,6 +11,7 @@
 /// **Both single- and multithreaded** runtimes are available in Rust, which have different strengths and weaknesses.
 mod tests {
     use futures::executor::block_on;
+    use futures_timer::Delay;
     use futures::join;
     use std::sync::Mutex;
     use std::thread;
@@ -19,7 +20,7 @@ mod tests {
     async fn do_expensive_job_async(id: i8) {
         for _ in 0..10 {
             println!("Thread {} working...", id);
-            thread::sleep(Duration::from_millis(100));
+            Delay::new(Duration::from_millis(100)).await;
         }
         // if id == 2 {
         //     panic!()

@@ -10,6 +10,7 @@ strum = { version = "0.22", features = ["derive"] }
 auto_ops = "0.3.0"
 procedural_macro = { path = "procedural_macro" }
 futures = "0.3"
+futures-timer = "3.0.2"
 rand = "0.8.3"
 # crates for julia example
 image = "0.23.14"
@@ -26,6 +27,8 @@ trybuild = "1.0"
 memoffset = "0.6.3" # // as a replacement of compiletest_rs crate
 #                # // use TRYBUILD=overwrite to write/replace stderr
 tokio = { workspace = true }
+libc = "0.2.169"
+pin-project = "1.1.9"
 
 # other demos
 #serde = "1"
