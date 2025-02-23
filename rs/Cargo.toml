@@ -26,7 +26,7 @@ itertools = "0.14"
 trybuild = "1.0"
 memoffset = "0.6.3" # // as a replacement of compiletest_rs crate
 #                # // use TRYBUILD=overwrite to write/replace stderr
-tokio = { workspace = true }
+tokio = { version = "1", features = ["full"] }
 libc = "0.2.169"
 pin-project = "1.1.9"
 
