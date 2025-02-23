@@ -1,1 +1,1 @@
-pub mod generator_test;
+pub mod coroutine_test;
