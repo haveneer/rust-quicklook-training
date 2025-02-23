@@ -8,11 +8,11 @@ fn main() {
 
     assert_eq!(x + y, Wrapping(-56));
 
-    #[cfg(nightly)]
+    #[cfg(feature = "nightly")]
     let max = Saturating(u32::MAX);
-    #[cfg(nightly)]
+    #[cfg(feature = "nightly")]
     let one = Saturating(1u32);
-    #[cfg(nightly)]
+    #[cfg(feature = "nightly")]
     assert_eq!(u32::MAX, (max + one).0);
 }
 

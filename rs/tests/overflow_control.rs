@@ -13,9 +13,9 @@ fn main() {
     assert_eq!(x.overflowing_add(y), (99, true));
     assert_eq!(x.saturating_add(y), 255);
     assert_eq!(x.wrapping_add(y), 99);
-    #[cfg(nightly)]
+    #[cfg(feature = "nightly")]
     assert_eq!(unsafe { x.unchecked_add(y) }, 99); // unstable
-    #[cfg(nightly)]
+    #[cfg(feature = "nightly")]
     assert_eq!(x.carrying_add(y, true), (100, true)); // unstable
 }
 

@@ -13,10 +13,10 @@ macro_rules! each_tt {
 
 #[test]
 fn test_trace_macro() {
-    #[cfg(nightly)]
+    #[cfg(feature = "nightly")]
     trace_macros!(true);
     each_tt!(spim wak plee whum);
-    #[cfg(nightly)]
+    #[cfg(feature = "nightly")]
     trace_macros!(false);
     each_tt!(spim wak plee whum);
 }
@@ -25,7 +25,7 @@ macro_rules! sing {
     () => {};
     ($tt:tt $($rest:tt)*) =>
         {{ // without double brace, it does not compile (or use sing!{ })
-            #[cfg(nightly)]
+            #[cfg(feature = "nightly")]
             log_syntax!($tt); sing!($($rest)*);  // with log_syntax, compiler will print all seen tokens
         }};                                      // (compile time, not runtime)
 }

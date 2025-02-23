@@ -6,7 +6,7 @@ pub trait Compare<T: ?Sized = Self> {
     fn equal(&self, other: &T) -> bool;
 }
 
-#[cfg(nightly)]
+#[cfg(feature = "nightly")]
 mod nightly {
     // Default implementation (nightly only)
     impl<T> Compare<T> for T
