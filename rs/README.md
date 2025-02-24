@@ -2,5 +2,7 @@
 
 To run unstable tests, use:
 ```
-cargo +nightly test --features=nightly --test <TEST_FILENAME> -- --nocapture
+cargo +nightly test --test <TEST_FILENAME> -- --nocapture
 ```
+
+PS: `nightly` feature is enabled automatically by default when using a nightly version (cf [`build.rs`](build.rs)).

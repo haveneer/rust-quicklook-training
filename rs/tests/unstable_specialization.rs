@@ -8,10 +8,12 @@ pub trait Compare<T: ?Sized = Self> {
 
 #[cfg(feature = "nightly")]
 mod nightly {
+    use super::*;
+
     // Default implementation (nightly only)
     impl<T> Compare<T> for T
     where
-        Self: core::cmp::PartialEq<T>,
+        Self: PartialEq<T>,
     {
         default fn equal(&self, other: &T) -> bool {
             print!("Compare default Self with T");
