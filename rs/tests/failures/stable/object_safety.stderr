@@ -1,0 +1,77 @@
+error[E0038]: the trait `MyTrait` cannot be made into an object
+  --> tests/failures/stable/object_safety.rs:19:14
+   |
+19 |     let obj: Box<dyn MyTrait> = Box::new(MyType);
+   |              ^^^^^^^^^^^^^^^^ `MyTrait` cannot be made into an object
+   |
+note: for a trait to be "object safe" it needs to allow building a vtable to allow the call to be resolvable dynamically; for more information visit <https://doc.rust-lang.org/reference/items/traits.html#object-safety>
+  --> tests/failures/stable/object_safety.rs:6:34
+   |
+1  | trait MyTrait {
+   |       ------- this trait cannot be made into an object...
+...
+6  |     fn with_self_return(self) -> Self; // object-safety: Self in return
+   |                                  ^^^^ ...because method `with_self_return` references the `Self` type in its return type
+   = help: consider moving `with_self_return` to another trait
+   = help: only type `MyType` implements the trait, consider using it directly instead
+
+error[E0038]: the trait `MyTrait` cannot be made into an object
+  --> tests/failures/stable/object_safety.rs:19:33
+   |
+19 |     let obj: Box<dyn MyTrait> = Box::new(MyType);
+   |                                 ^^^^^^^^^^^^^^^^ `MyTrait` cannot be made into an object
+   |
+note: for a trait to be "object safe" it needs to allow building a vtable to allow the call to be resolvable dynamically; for more information visit <https://doc.rust-lang.org/reference/items/traits.html#object-safety>
+  --> tests/failures/stable/object_safety.rs:6:34
+   |
+1  | trait MyTrait {
+   |       ------- this trait cannot be made into an object...
+...
+6  |     fn with_self_return(self) -> Self; // object-safety: Self in return
+   |                                  ^^^^ ...because method `with_self_return` references the `Self` type in its return type
+   = help: consider moving `with_self_return` to another trait
+   = help: only type `MyType` implements the trait, consider using it directly instead
+   = note: required for the cast from `Box<MyType>` to `Box<dyn MyTrait>`
+
+error[E0038]: the trait `MyTrait` cannot be made into an object
+  --> tests/failures/stable/object_safety.rs:23:5
+   |
+23 |     obj.with_custom_receiver();
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^ `MyTrait` cannot be made into an object
+   |
+note: for a trait to be "object safe" it needs to allow building a vtable to allow the call to be resolvable dynamically; for more information visit <https://doc.rust-lang.org/reference/items/traits.html#object-safety>
+  --> tests/failures/stable/object_safety.rs:6:34
+   |
+1  | trait MyTrait {
+   |       ------- this trait cannot be made into an object...
+...
+6  |     fn with_self_return(self) -> Self; // object-safety: Self in return
+   |                                  ^^^^ ...because method `with_self_return` references the `Self` type in its return type
+   = help: consider moving `with_self_return` to another trait
+   = help: only type `MyType` implements the trait, consider using it directly instead
+
+error: the `with_self_sized` method cannot be invoked on a trait object
+  --> tests/failures/stable/object_safety.rs:24:9
+   |
+4  |         Self: Sized; // object-safety: Sized Self
+   |               ----- this has a `Sized` requirement
+...
+24 |     obj.with_self_sized();
+   |         ^^^^^^^^^^^^^^^
+
+error[E0038]: the trait `MyTrait` cannot be made into an object
+  --> tests/failures/stable/object_safety.rs:25:5
+   |
+25 |     obj.with_self_return();
+   |     ^^^^^^^^^^^^^^^^^^^^^^ `MyTrait` cannot be made into an object
+   |
+note: for a trait to be "object safe" it needs to allow building a vtable to allow the call to be resolvable dynamically; for more information visit <https://doc.rust-lang.org/reference/items/traits.html#object-safety>
+  --> tests/failures/stable/object_safety.rs:6:34
+   |
+1  | trait MyTrait {
+   |       ------- this trait cannot be made into an object...
+...
+6  |     fn with_self_return(self) -> Self; // object-safety: Self in return
+   |                                  ^^^^ ...because method `with_self_return` references the `Self` type in its return type
+   = help: consider moving `with_self_return` to another trait
+   = help: only type `MyType` implements the trait, consider using it directly instead
