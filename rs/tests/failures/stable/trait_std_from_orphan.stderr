@@ -1,0 +1,11 @@
+error[E0117]: only traits defined in the current crate can be implemented for types defined outside of the crate
+  --> tests/failures/stable/trait_std_from_orphan.rs:15:1
+   |
+15 | impl From<String> for Vec<i32> {
+   | ^^^^^------------^^^^^--------
+   | |    |                |
+   | |    |                `Vec` is not defined in the current crate
+   | |    `String` is not defined in the current crate
+   | impl doesn't use only types from inside the current crate
+   |
+   = note: define and implement a trait or new type instead

@@ -29,6 +29,7 @@ memoffset = "0.6.3" # // as a replacement of compiletest_rs crate
 tokio = { version = "1", features = ["full"] }
 libc = "0.2.169"
 pin-project = "1.1.9"
+thiserror = "2"
 
 # other demos
 #serde = "1"
