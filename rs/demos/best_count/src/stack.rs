@@ -1,6 +1,7 @@
 use crate::operator::Kind;
 use crate::operator::Operator;
 use std::collections::HashMap;
+use std::fmt::Display;
 use std::rc::Rc;
 
 pub struct Stack {
@@ -99,18 +100,19 @@ pub struct StackResult<'a> {
     pub value: &'a u64,
 }
 
-impl<'a> ToString for StackResult<'a> {
-    fn to_string(&self) -> String {
+impl<'a> Display for StackResult<'a> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let mut string_stack = Vec::<(String, Rc<dyn Operator>)>::new();
         for op in self.operators.iter() {
             op.clone().string_on_stack(&mut string_stack);
         }
 
-        string_stack
+        let str = string_stack
             .into_iter()
             .rev()
             .map(|s| s.0.to_string())
             .collect::<Vec<String>>()
-            .join("; ")
+            .join("; ");
+        write!(f, "{}", str)
     }
 }
