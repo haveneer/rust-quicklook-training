@@ -30,6 +30,7 @@ tokio = { version = "1", features = ["full"] }
 libc = "0.2.169"
 pin-project = "1.1.9"
 thiserror = "2"
+ouroboros = "0.18"
 
 # other demos
 #serde = "1"
@@ -71,3 +72,6 @@ harness = false
 name = "factorial"
 harness = false
 
+[[bench]]
+name = "smart_pointers"
+harness = false

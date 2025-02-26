@@ -1,31 +1,4 @@
 #[test]
-fn trivial_match_enum() {
-    enum Tree {
-        Empty,
-        Node { left: Box<Tree>, right: Box<Tree> },
-    }
-
-    let tree = {
-        Tree::Node {
-            left: Box::new(Tree::Empty),
-            right: Box::new(Tree::Node {
-                left: Box::new(Tree::Empty),
-                right: Box::new(Tree::Empty),
-            }),
-        }
-    };
-
-    match tree {
-        Tree::Empty => {
-            println!("Empty Tree");
-        }
-        Tree::Node { left: _, right: _ } => {
-            println!("Tree with nodes");
-        }
-    }
-}
-
-#[test]
 fn match_enum() {
     // strum requires the Default's trait on subfield (here u8)
     #[derive(Debug, strum::EnumIter)]

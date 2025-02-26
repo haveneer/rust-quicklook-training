@@ -1,7 +1,6 @@
 // cf https://doc.rust-lang.org/std/pin/#example-self-referential-struct
 //    https://stackoverflow.com/questions/32300132/why-cant-i-store-a-value-and-a-reference-to-that-value-in-the-same-struct/32300133#32300133
 // Crates that do it:
-// * https://crates.io/crates/owning_ref
 // * https://crates.io/crates/ouroboros
 
 use std::marker::PhantomPinned;

@@ -33,6 +33,9 @@ fn main() {
     greet(&my);
     // Ici, &my est de type &MyBox<String>. Le compilateur applique deref deux fois :
     // &MyBox<String> -> &String -> &str, pour correspondre à greet().
+    let string_ref: &String = <MyBox<_> as Deref>::deref(&my);
+    let str_ref: &str = <String as Deref>::deref(&string_ref);
+    greet(str_ref);
 }
 
 #[test]
