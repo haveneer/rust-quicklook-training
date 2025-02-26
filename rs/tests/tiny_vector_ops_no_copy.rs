@@ -56,10 +56,10 @@ impl Add for TinyVector {
     }
 }
 
-impl<'a, 'b> Sub<&'b TinyVector> for &'a TinyVector {
+impl Sub<&TinyVector> for &TinyVector {
     type Output = TinyVector;
 
-    fn sub(self, rhs: &'b TinyVector) -> Self::Output {
+    fn sub(self, rhs: &TinyVector) -> Self::Output {
         // self is already a ref
         let mut data = self.data.clone();
         for i in 0..TinyVector::SIZE {
