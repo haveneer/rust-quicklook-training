@@ -102,32 +102,26 @@ impl Container {
     }
 }
 
-// Test de l'utilisation
-#[cfg(test)]
-mod tests {
-    use super::*;
+#[test]
+fn test_container_with_ouroboros() {
+    // On crée quelques objets "Op" dans des Box
+    let ops: Vec<Box<dyn Op>> = vec![Box::new(OpA), Box::new(OpB)];
 
-    #[test]
-    fn test_container_with_ouroboros() {
-        // On crée quelques objets "Op" dans des Box
-        let ops: Vec<Box<dyn Op>> = vec![Box::new(OpA), Box::new(OpB)];
+    // On construit un Container avec ces ops
+    let mut container = Container::from_ops(ops);
 
-        // On construit un Container avec ces ops
-        let mut container = Container::from_ops(ops);
+    // On référence successivement des Op existants
+    container.push(0); // => référence OpA
+    container.push(1); // => référence OpB
+    container.push(0); // => référence OpC
 
-        // On référence successivement des Op existants
-        container.push(0); // => référence OpA
-        container.push(1); // => référence OpB
-        container.push(0); // => référence OpC
+    // Debug : on vérifie la structure
+    container.debug_print();
 
-        // Debug : on vérifie la structure
-        container.debug_print();
+    // On invoque la méthode `f()` de chaque Op référencé
+    container.call_used_ops();
 
-        // On invoque la méthode `f()` de chaque Op référencé
-        container.call_used_ops();
-
-        // On peut bouger 'container' => comme c'est géré par ouroboros,
-        // il ne sera pas déplacé en mémoire d'une façon qui invaliderait used_ops.
-        let _container2 = container;
-    }
+    // On peut bouger 'container' => comme c'est géré par ouroboros,
+    // il ne sera pas déplacé en mémoire d'une façon qui invaliderait used_ops.
+    let _container2 = container;
 }

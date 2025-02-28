@@ -75,3 +75,7 @@ harness = false
 [[bench]]
 name = "smart_pointers"
 harness = false
+
+[[bench]]
+name = "refcell"
+harness = false

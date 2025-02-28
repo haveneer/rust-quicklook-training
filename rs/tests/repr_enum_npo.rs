@@ -45,6 +45,7 @@ fn main() {
     details::show_repr("OptionOf<Box<i32>>", OptionOf::new(Box::new(255)));
     details::show_repr("OptionOf<&i32>", OptionOf::new(&x));
     details::show_repr("OptionOf<bool>", OptionOf::new(true));
+    details::show_repr("Option<Pin<Box>>", Some(Box::pin(1)));
     details::show_repr(
         "OptionOf<NonZeroI32>",
         OptionOf::new(NonZeroI32::new(255).unwrap()),

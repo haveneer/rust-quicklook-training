@@ -111,8 +111,8 @@ def main():
 
         plt.xticks(x_positions, valid_categories, rotation=45, ha='right')
         plt.title(f"Benchmarks for function '{function_name}'")
-        plt.xlabel("Category")
-        plt.ylabel("Mean time (point_estimate)")
+        # plt.xlabel("Category")
+        plt.ylabel("Mean time (ns)")
         plt.tight_layout()
 
         # Save the figure
