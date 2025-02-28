@@ -15,7 +15,7 @@ impl RandomGenerator {
 impl Iterator for RandomGenerator {
     type Item = i32;
     fn next(&mut self) -> Option<Self::Item> {
-        Some(self.rng.gen::<i32>())
+        Some(self.rng.r#gen::<i32>())
     }
 }
 

@@ -12,7 +12,7 @@ mod details {
     use std::mem::Discriminant;
 
     impl Case {
-        pub fn gen() -> Self {
+        pub fn generator() -> Self {
             match thread_rng().gen_range(0..2) {
                 0 => Case::A(1, 2),
                 1 => Case::B([1, 2, 3]),
@@ -33,7 +33,7 @@ mod details {
 }
 
 fn main() {
-    let case = Case::gen();
+    let case = Case::generator();
     match std::mem::discriminant(&case) { // si un jour vous deviez introspecter un type inconnu...
         // complex matching since PartialEq is not implemented using a derive on Discriminant type
         d if d == Case::DISCRIMINANT_A => println!("discriminant A"),

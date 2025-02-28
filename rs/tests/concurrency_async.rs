@@ -14,7 +14,6 @@ mod tests {
     use futures_timer::Delay;
     use futures::join;
     use std::sync::Mutex;
-    use std::thread;
     use std::time::Duration;
 
     async fn do_expensive_job_async(id: i8) {
