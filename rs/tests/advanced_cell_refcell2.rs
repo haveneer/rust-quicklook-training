@@ -51,7 +51,8 @@ fn main() {
     let fib = Fibonacci::new();
 
     assert_eq!(fib.compute(10), 55);
-    { // details
+    {
+        // details
         println!(
             "Cache hits/misses: {}/{}",
             fib.cache_hits(),

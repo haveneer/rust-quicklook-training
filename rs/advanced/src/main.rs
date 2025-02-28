@@ -1,6 +1,6 @@
 mod emulable;
-mod parser;
 mod network;
+mod parser;
 
 fn main() {
     println!("Hello, world!");

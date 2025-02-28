@@ -1,6 +1,6 @@
-use tokio::net::TcpListener;
-use tokio::io::{AsyncReadExt, AsyncWriteExt};
 use crate::parser::parse_instruction;
+use tokio::io::{AsyncReadExt, AsyncWriteExt};
+use tokio::net::TcpListener;
 
 #[tokio::main]
 async fn main() -> std::io::Result<()> {

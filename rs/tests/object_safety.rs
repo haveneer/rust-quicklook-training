@@ -1,4 +1,3 @@
-
 #[test]
 #[rustfmt::skip]
 fn object_safety_failures() {

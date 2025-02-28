@@ -34,7 +34,8 @@ mod details {
 
 fn main() {
     let case = Case::generator();
-    match std::mem::discriminant(&case) { // si un jour vous deviez introspecter un type inconnu...
+    match std::mem::discriminant(&case) {
+        // si un jour vous deviez introspecter un type inconnu...
         // complex matching since PartialEq is not implemented using a derive on Discriminant type
         d if d == Case::DISCRIMINANT_A => println!("discriminant A"),
         d if d == Case::DISCRIMINANT_B => println!("discriminant B"),

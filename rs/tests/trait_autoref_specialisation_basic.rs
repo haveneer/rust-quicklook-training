@@ -4,7 +4,8 @@ trait Print {
     fn print(self);
 }
 
-impl Print for Value { // TODO What if you remove this impl?
+impl Print for Value {
+    // TODO What if you remove this impl?
     fn print(self) {
         println!("called on Value");
     }

@@ -2,7 +2,8 @@ use std::ops::{Coroutine, CoroutineState};
 use std::pin::Pin;
 
 pub fn coroutine_test() {
-    let mut generator = #[coroutine] || {
+    let mut generator = #[coroutine]
+    || {
         let xs = vec![1, 2, 3];
         let mut sum = 0;
         for x in xs {

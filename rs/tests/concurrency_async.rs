@@ -11,8 +11,8 @@
 /// **Both single- and multithreaded** runtimes are available in Rust, which have different strengths and weaknesses.
 mod tests {
     use futures::executor::block_on;
-    use futures_timer::Delay;
     use futures::join;
+    use futures_timer::Delay;
     use std::sync::Mutex;
     use std::time::Duration;
 

@@ -9,7 +9,6 @@ impl<T> MyTrait for Vec<T> {
     }
 }
 
-
 #[test]
 fn test() {
     let v = vec![1];

@@ -28,8 +28,16 @@ mod details {
         use crate::RustVertex;
         let v1 = RustVertex { x: 1, y: 2, z: 3 };
         let v2 = CVertex { x: 1, y: 2, z: 3 };
-        println!("Rust  size={:2} bytes={}", size_of_val(&v1), to_str_bytes(&v1));
-        println!("C/C++ size={:2} bytes={}", size_of_val(&v2), to_str_bytes(&v2));
+        println!(
+            "Rust  size={:2} bytes={}",
+            size_of_val(&v1),
+            to_str_bytes(&v1)
+        );
+        println!(
+            "C/C++ size={:2} bytes={}",
+            size_of_val(&v2),
+            to_str_bytes(&v2)
+        );
     }
 
     #[test] // we cannot use #[test] on demo to make available in rust playground
