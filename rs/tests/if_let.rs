@@ -2,14 +2,14 @@
 // See also while let
 
 #[test]
-fn test_simple() {
+fn test_if_let_simple() {
     let option = Some(1); // same with Result
     let r = if let Some(_i) = option { 1 } else { 0 };
     assert_eq!(r, 1);
 }
 
 #[test]
-fn test_nested() {
+fn test_it_let_nested() {
     struct MyStruct {
         a: i32,
         b: i32,
@@ -30,7 +30,17 @@ fn test_nested() {
 }
 
 #[test]
-fn test_scoped() {
+fn test_while_let() {
+    let mut v = (1..8).into_iter().map(|i| Some(i)).collect::<Vec<_>>();
+    v.insert(3, None);
+
+    while let Some(Some(i)) = v.pop() {
+        println!("{i}");
+    }
+}
+
+#[test]
+fn test_if_let_scope() {
     mod hints {
         // The behavior changes after edition 2024
         pub const HINT1: &str = "after edition 2024 (≥1.85)";

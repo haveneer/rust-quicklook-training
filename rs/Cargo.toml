@@ -1,4 +1,4 @@
-﻿[package]
+[package]
 name = "rs"
 version = "0.1.0"
 authors = ["Pascal HAVÉ <hpwxf@haveneer.com>"]
@@ -20,7 +20,6 @@ rayon = "1.5"
 chrono = "0.4"
 serde = "1"
 serde_json = "1"
-criterion = { version = "0.4", features = ["html_reports"] } # // benchmark !
 itertools = "0.14"
 
 trybuild = "1.0"
@@ -32,6 +31,10 @@ pin-project = "1.1.9"
 thiserror = "2"
 ouroboros = "0.18"
 
+# benchmark !
+criterion = { version = "0.5", features = ["html_reports"] }
+iai-callgrind = "0.14.0"
+
 # other demos
 #serde = "1"
 #serde-xml-rs = "0.6.0"
@@ -40,6 +43,10 @@ ouroboros = "0.18"
 [dev-dependencies]
 rstest = "0.17"
 mockall = "0.11"
+
+[profile.bench]
+debug = true
+strip = false
 
 [workspace]
 members = [
@@ -59,6 +66,7 @@ tokio = { version = "1", features = ["full"] }
 [features]
 default = []
 nightly = []
+iai = []
 
 [[bench]]
 name = "sort"
@@ -78,4 +86,20 @@ harness = false
 
 [[bench]]
 name = "refcell"
+harness = false
+
+[[bench]]
+name = "dispatch"
+harness = false
+
+[[bench]]
+name = "concurrent_real_scenarios"
+harness = false
+
+[[bench]]
+name = "dispatch_enum"
+harness = false
+
+[[bench]]
+name = "iai_demo"
 harness = false

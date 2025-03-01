@@ -7,10 +7,6 @@ struct Square {
     side: f64,
 }
 
-struct Circle {
-    radius: f64,
-}
-
 impl Shape for Square {
     fn area(&self) -> f64 {
         self.side * self.side
@@ -18,6 +14,10 @@ impl Shape for Square {
     fn name(&self) -> &'static str {
         "Square"
     }
+}
+
+struct Circle {
+    radius: f64,
 }
 
 impl Shape for Circle {

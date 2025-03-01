@@ -15,19 +15,19 @@ def find_estimates_files(root_dir="target/criterion"):
 def extract_benchmark_name_from_path(filepath):
     """
     Determines the complete benchmark name from the path.
-    Example: 'target/criterion/myfunction-category/new/estimates.json' -> 'myfunction-category'
+    Example: 'target/criterion/mycase-variant/new/estimates.json' -> 'mycase-variant'
     """
-    dirpath = os.path.dirname(filepath)   # e.g. 'target/criterion/myfunction-category/new'
-    upper_dir = os.path.dirname(dirpath)  # e.g. 'target/criterion/myfunction-category'
-    benchmark_name = os.path.basename(upper_dir)  # e.g. 'myfunction-category'
+    dirpath = os.path.dirname(filepath)   # e.g. 'target/criterion/mycase-variant/new'
+    upper_dir = os.path.dirname(dirpath)  # e.g. 'target/criterion/mycase-variant'
+    benchmark_name = os.path.basename(upper_dir)  # e.g. 'mycase-variant'
     return benchmark_name
 
 def main():
     # 1) Find all estimates.json files
     files = find_estimates_files()
 
-    # We'll store data in a nested dictionary: {function_name: {category_name: (mean, std_dev)}}
-    data_by_function = defaultdict(dict)
+    # We'll store data in a nested dictionary: {case_name: {variant_name: (mean, std_dev)}}
+    data_by_case = defaultdict(dict)
 
     # We'll collect all categories across all benchmarks so we can enforce a fixed order
     all_categories = set()
@@ -44,19 +44,19 @@ def main():
                 # Extract the benchmark name from the path
                 full_bench_name = extract_benchmark_name_from_path(filepath)
 
-                # 3) Split into <FUNCTION>-<CATEGORY>
+                # 3) Split into <CASE>-<VARIANT>
                 # We do a rsplit('-', 1) to separate from the right
                 if "-" in full_bench_name:
-                    function_name, category_name = full_bench_name.rsplit("-", 1)
+                    case_name, variant_name = full_bench_name.rsplit("-", 1)
                 else:
-                    function_name = full_bench_name
-                    category_name = "default"
+                    case_name = "default"
+                    variant_name = full_bench_name
 
                 # Store the mean and std_dev in our data structure
-                data_by_function[function_name][category_name] = (mean_val, std_dev_val)
+                data_by_case[case_name][variant_name] = (mean_val, std_dev_val)
 
-                # Keep track of the category
-                all_categories.add(category_name)
+                # Keep track of the variant
+                all_categories.add(variant_name)
 
         except Exception as e:
             print(f"Could not process file {filepath} : {e}")
@@ -64,20 +64,20 @@ def main():
     # 4) Determine a fixed order for categories (alphabetical)
     all_categories = sorted(all_categories)
 
-    # 5) Assign a fixed color per category
+    # 5) Assign a fixed color per variant
     cmap = plt.get_cmap("tab10")
     color_map = {}
     for i, cat in enumerate(all_categories):
         color_map[cat] = cmap(i % 10)  # if more than 10 categories, it wraps around
 
     # Create an output directory for the charts
-    output_dir = "criterion_plots_by_function"
+    output_dir = "criterion_plots_by_case"
     os.makedirs(output_dir, exist_ok=True)
 
-    # 6) Generate one bar chart per function
-    for function_name, cat_data in data_by_function.items():
+    # 6) Generate one bar chart per case
+    for case_name, cat_data in data_by_case.items():
 
-        # cat_data is a dict: {category_name: (mean, std_dev)}
+        # cat_data is a dict: {variant_name: (mean, std_dev)}
         means = []
         std_devs = []
         colors = []
@@ -93,7 +93,7 @@ def main():
                 colors.append(color_map[cat])
                 valid_categories.append(cat)
             else:
-                # If this function does not have a benchmark for that category, skip it
+                # If this case does not have a benchmark for that variant, skip it
                 pass
 
         # Plot the chart
@@ -110,13 +110,14 @@ def main():
         )
 
         plt.xticks(x_positions, valid_categories, rotation=45, ha='right')
-        plt.title(f"Benchmarks for function '{function_name}'")
-        # plt.xlabel("Category")
+        if case_name != "default":
+            plt.title(f"Benchmarks for case '{case_name}'")
+        # plt.xlabel("Variant")
         plt.ylabel("Mean time (ns)")
         plt.tight_layout()
 
         # Save the figure
-        output_path = os.path.join(output_dir, f"{function_name}.png")
+        output_path = os.path.join(output_dir, f"{case_name}.png")
         plt.savefig(output_path)
         plt.close()
 
