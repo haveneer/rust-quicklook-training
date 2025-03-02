@@ -12,51 +12,37 @@ mod tests {
         f("world");
         println!("Greetings form is '{}'", data);
         f("John");
+        println!("Greetings form is '{}'", data); // As many as you want!
     }
 
     #[test]
+    #[rustfmt:: skip]
     fn closure_move() {
         let data = String::from("Hello");
 
-        let f = move |x: &str| {
-            // Now data is moved in this closure (and owned by it)
-            println!("{}, {}", data, x);
+        let f = /* move */ |x: &str| { // force move ?
+            // Now 'data' is moved in this closure (and owned by it)
+            let moved_data: String = data; // data is consumed here
+            println!("{}, {}", moved_data, x);
         };
 
-        f("world");
+        f("John"); // Once and sometimes only once...
+        // f("Doe"); // data moved from the closure to the body and then dropped
         // println!("Greetings form is '{}'", data); // error: value moved into closure
-        f("John");
     }
 
     #[test]
-    fn closure_move_and_mut() {
+    fn closure_exclusive_mut() {
         let mut data = String::from("Hello"); // must be 'mut' even if this is its moved version which will be mutated
 
-        let mut f = move |x: &str| {
-            // Now data is moved in this closure, and must be 'mut' to be able to modify it
+        let mut f = |x: &str| {
             data.push_str(x);
             println!("New greetings is '{}'", data);
         };
 
-        f(" great");
         f(" wonderful");
+        // println!("Greetings form is '{}'", data); // value still used by closure
         f(" master");
-        // println!("Greetings form is '{}'", data); // error: value moved into closure
-    }
-
-    #[test]
-    fn closure_move_and_back() {
-        let mut data = String::from("Hello");
-
-        let f = move |x: &str| -> String {
-            // Now data is moved in this closure and goes out when called
-            data.push_str(x);
-            data
-        };
-        // println!("Greetings form is '{}'", data); // error: value moved into closure
-        let data = f(" great");
-        // m(" great"); // error: closure cannot be invoked more than once because it moves the variable `data` out of its environment
-
-        println!("Greetings form is '{}'", data); // error: value moved into closure
+        println!("Greetings form is '{}'", data); // Ok closure lifetime is over
     }
 }
