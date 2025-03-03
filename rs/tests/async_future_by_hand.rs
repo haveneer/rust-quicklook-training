@@ -43,7 +43,7 @@ impl Future for ManualFuture {
         println!("Polling...");
         // Quickly check if the future is already ready, without locking.
         if self.inner.ready.load(Ordering::Acquire) {
-            return Poll::Ready(());
+            return Poll::Ready(()); // should also clean the waker
         }
 
         // The future is not ready yet, so we register the waker to be woken up later.
@@ -52,7 +52,7 @@ impl Future for ManualFuture {
         // Double-check: Between the previous read and acquiring the mutex,
         // the status may have changed (the future might have become ready).
         if self.inner.ready.load(Ordering::Acquire) {
-            return Poll::Ready(());
+            return Poll::Ready(()); // should also clean the waker
         }
 
         // If no waker is registered or the current waker is different from the new one,

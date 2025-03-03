@@ -93,13 +93,5 @@ name = "dispatch"
 harness = false
 
 [[bench]]
-name = "concurrent_real_scenarios"
-harness = false
-
-[[bench]]
-name = "dispatch_enum"
-harness = false
-
-[[bench]]
 name = "iai_demo"
 harness = false

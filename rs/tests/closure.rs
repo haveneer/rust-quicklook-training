@@ -16,7 +16,7 @@ mod tests {
     }
 
     #[test]
-    #[rustfmt:: skip]
+    #[rustfmt::skip]
     fn closure_move() {
         let data = String::from("Hello");
 
