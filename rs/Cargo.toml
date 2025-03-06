@@ -30,6 +30,7 @@ libc = "0.2.169"
 pin-project = "1.1.9"
 thiserror = "2"
 ouroboros = "0.18"
+hashbrown = "0.15"
 
 # benchmark !
 criterion = { version = "0.5", features = ["html_reports"] }

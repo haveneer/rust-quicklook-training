@@ -24,7 +24,7 @@ async fn async_operation1() -> String {
     String::from("result1")
 }
 
-// Future by hand
+// async by hand
 fn async_operation2() -> impl std::future::Future<Output = String> {
     // Or Box<dyn ...> is needed
     println!("<message from async_operation2>");

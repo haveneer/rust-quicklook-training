@@ -56,7 +56,7 @@ impl Future for ManualFuture {
         }
 
         // If no waker is registered or the current waker is different from the new one,
-        // update with the current waker to avoid unnecessary wake-ups.
+        // ALWAYS update with the current waker to avoid unnecessary wake-ups.
         let should_update = waker_slot
             .as_ref()
             .map(|w| !w.will_wake(cx.waker()))

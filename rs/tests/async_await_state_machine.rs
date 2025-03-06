@@ -131,6 +131,10 @@ impl Future for ReadFileByChunksFuture {
     }
 }
 
+pub fn read_file_desugared(path: &str) -> ReadFileByChunksFuture {
+    ReadFileByChunksFuture::new(path)
+}
+
 async fn read_file(path: &str) -> std::io::Result<()> {
     let mut file = File::open(path).await?;
     let mut buffer = [0u8; BUFFER_SIZE];
@@ -146,10 +150,6 @@ async fn read_file(path: &str) -> std::io::Result<()> {
     }
     println!("Final hash: {:x}", hasher.finish());
     Ok(())
-}
-
-pub fn read_file_desugared(path: &str) -> ReadFileByChunksFuture {
-    ReadFileByChunksFuture::new(path)
 }
 
 #[tokio::test]
