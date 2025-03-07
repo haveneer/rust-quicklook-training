@@ -40,7 +40,7 @@ impl Container {
     /// Construit une instance de `Container` via le builder d'ouroboros.
     /// - On passe un `Vec<Box<dyn Op>>` en paramètre pour `all_ops`.
     /// - On crée la liste `used_ops` en empruntant les éléments qu'on veut (initialement vide ou non).
-    fn from_ops(mut all_ops: Vec<Box<dyn Op>>) -> Self {
+    fn from_ops(all_ops: Vec<Box<dyn Op>>) -> Self {
         // On crée l'objet via ContainerBuilder:
         ContainerBuilder {
             all_ops, // donne ownership à la structure

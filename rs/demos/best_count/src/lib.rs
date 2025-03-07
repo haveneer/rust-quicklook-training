@@ -19,7 +19,7 @@ pub fn compute(
     let mut next_op: Option<&Rc<dyn Operator>> = operators.first();
     while let Some(op) = next_op {
         next_op = if op.check_stack(&stack) {
-            stack.apply_operator(&op);
+            stack.apply_operator(op);
             operators.first()
         } else {
             operators.get(op.index() + 1)
@@ -35,7 +35,7 @@ pub fn compute(
             }
         }
 
-        while stack.len() > 0 && next_op.is_none() {
+        while !stack.is_empty() && next_op.is_none() {
             let old_op = stack.back_replay();
             // std::println!("Backreplay : {} [{} -> out]", stack.to_string(), old_op.symbol());
             next_op = operators.get(old_op.index() + 1);

@@ -59,7 +59,7 @@ impl PowOperator {
     fn check(a: u64, b: u64) -> bool {
         let log2a = log2(a);
         let log2b = log2(b);
-        log2(log2a as u64) + log2b < MAXDIGITNUMBER && b * log2a < MAXDIGITNUMBER as u64
+        log2(log2a) + log2b < MAXDIGITNUMBER && b * log2a < MAXDIGITNUMBER
     }
 
     fn eval(mut a: u64, mut b: u64) -> u64 {

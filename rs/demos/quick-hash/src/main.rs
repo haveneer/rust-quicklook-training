@@ -14,7 +14,7 @@ fn u8_to_string(data: &[u8]) -> Result<String, Box<dyn std::error::Error>> {
 }
 
 fn count_zeros(data: &[u8]) -> usize {
-    return data.iter().rev().take_while(|&&x| x == 0).count();
+    data.iter().rev().take_while(|&&x| x == 0).count()
 }
 
 fn main() {

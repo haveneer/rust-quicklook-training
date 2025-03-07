@@ -52,7 +52,7 @@ fn test_if_let_scope() {
     if let Some(_) = *m.try_lock().unwrap() {
         println!("Passed in first lock");
     } else {
-        if let Some(_) = m.try_lock().ok() {
+        if let Ok(_) = m.try_lock() {
             println!("Passed in second lock: {}", hints::HINT1);
         } else {
             println!("Already locked: {}", hints::HINT2);
