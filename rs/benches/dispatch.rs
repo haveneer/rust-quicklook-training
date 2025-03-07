@@ -102,13 +102,40 @@ fn dynamic_in_box_dispatch(bencher: &mut Criterion) {
     });
 }
 
+enum EnumShape {
+    Square { side: f64 },
+    Circle { radius: f64 },
+}
+
+fn enum_dispatcher_diameter(shape: &EnumShape) -> f64 {
+    match shape {
+        EnumShape::Square { side } => Square { side: *side }.diameter(),
+        EnumShape::Circle { radius } => Circle { radius: *radius }.diameter(),
+    }
+}
+
+#[cfg(not(feature = "iai"))]
+fn enum_dispatch(bencher: &mut Criterion) {
+    let square = EnumShape::Square { side: 1.0 };
+    let circle = EnumShape::Circle { radius: 1.0 };
+    bencher.bench_function("enum_dispatch", |b| {
+        b.iter(|| {
+            for _ in 0..1000 {
+                black_box(enum_dispatcher_diameter(black_box(&square)));
+                black_box(enum_dispatcher_diameter(black_box(&circle)));
+            }
+        })
+    });
+}
+
 #[cfg(not(feature = "iai"))]
 criterion_group!(
     benches,
     static_no_box_dispatch,
     static_in_box_dispatch,
     dynamic_no_box_dispatch,
-    dynamic_in_box_dispatch
+    dynamic_in_box_dispatch,
+    enum_dispatch
 );
 #[cfg(not(feature = "iai"))]
 criterion_main!(benches);
@@ -153,7 +180,17 @@ fn iai_dynamic_in_box_dispatch() {
     }
 }
 
+#[library_benchmark]
+fn iai_enum_dispatch() {
+    let square = EnumShape::Square { side: 1.0 };
+    let circle = EnumShape::Circle { radius: 1.0 };
+    for _ in 0..1000 {
+        black_box(enum_dispatcher_diameter(black_box(&square)));
+        black_box(enum_dispatcher_diameter(black_box(&circle)));
+    }
+}
+
 #[cfg(feature = "iai")]
-library_benchmark_group!(name = bench_dispatch_group; benchmarks = iai_static_no_box_dispatch, iai_static_in_box_dispatch, iai_dynamic_no_box_dispatch, iai_dynamic_in_box_dispatch);
+library_benchmark_group!(name = bench_dispatch_group; benchmarks = iai_static_no_box_dispatch, iai_static_in_box_dispatch, iai_dynamic_no_box_dispatch, iai_dynamic_in_box_dispatch, iai_enum_dispatch);
 #[cfg(feature = "iai")]
 main!(library_benchmark_groups = bench_dispatch_group);
