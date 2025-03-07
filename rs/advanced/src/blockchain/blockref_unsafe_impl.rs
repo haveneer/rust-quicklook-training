@@ -1,56 +1,54 @@
 use crate::{BlockRef, ParseError, TransactionRef};
 
+unsafe fn read_slice<const N: usize>(input: &[u8], offset: usize) -> &[u8; N] {
+    let slice = &input[offset..offset + N];
+    &*(slice.as_ptr().cast::<[u8; N]>())
+}
+
 impl<'a> BlockRef<'a> {
     pub fn from_bytes_unsafe(input: &'a [u8]) -> Result<(Self, usize), ParseError> {
         // Check that the fixed header (id, timestamp, transaction count) is present.
-        if input.len() < 48 {
+        let total_len = input.len();
+        if total_len < 48 {
             return Err(ParseError::UnexpectedEOF);
         }
 
-        let initial_position = input.as_ptr();
-
         // Read block id (4 bytes, little-endian)
-        let (first, input) = unsafe { input.split_at_unchecked(4) };
-        let id = unsafe { &*(first.as_ptr().cast::<[u8; 4]>()) };
+        let id = unsafe { read_slice::<4>(input, 0) };
         let id = u32::from_le_bytes(*id);
 
         // Read timestamp (8 bytes, little-endian)
-        let (first, input) = unsafe { input.split_at_unchecked(8) };
-        let timestamp = unsafe { &*(first.as_ptr().cast::<[u8; 8]>()) };
+        let timestamp = unsafe { read_slice::<8>(input, 4) };
         let timestamp = u64::from_le_bytes(*timestamp);
 
         // Read previous block hash (32 bytes)
-        let (prev_hash, input) = input
-            .split_first_chunk::<32>()
-            .ok_or(ParseError::UnexpectedEOF)?;
+        let prev_hash = unsafe { read_slice::<32>(input, 12) };
 
         // Read the number of transactions (4 bytes, little-endian)
-        let (first, mut input) = unsafe { input.split_at_unchecked(4) };
-        let num_tx = unsafe { &*(first.as_ptr().cast::<[u8; 4]>()) };
+        let num_tx = unsafe { read_slice::<4>(input, 44) };
         let num_tx = u32::from_le_bytes(*num_tx);
 
         // Read each transaction
         let mut transactions = Vec::with_capacity(num_tx as usize);
+        let mut offset = 48;
         for _ in 0..num_tx {
             // Read the transaction length (4 bytes)
-            let (tx_len, tmp_input) = input
-                .split_first_chunk::<4>()
-                .ok_or(ParseError::UnexpectedEOF)?;
-            input = tmp_input;
-
+            if total_len < offset + 4 {
+                return Err(ParseError::UnexpectedEOF);
+            }
+            let tx_len = unsafe { read_slice::<4>(input, offset) };
             let tx_len = u32::from_le_bytes(*tx_len) as usize;
+            offset += 4;
 
             // Verify that the transaction data is available
-            let (tx_data, tmp_input) = input
-                .split_at_checked(tx_len)
-                .ok_or(ParseError::UnexpectedEOF)?;
-            input = tmp_input;
+            if total_len < offset + tx_len {
+                return Err(ParseError::UnexpectedEOF);
+            }
+            let tx_data = &input[offset..offset + tx_len];
+            offset += tx_len;
+
             transactions.push(TransactionRef { data: tx_data });
         }
-
-        debug_assert_eq!(input.len(), 0);
-
-        let offset = unsafe { input.as_ptr().offset_from(initial_position) } as usize;
 
         Ok((
             BlockRef {
