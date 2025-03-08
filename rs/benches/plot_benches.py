@@ -5,6 +5,7 @@ import json
 import matplotlib.pyplot as plt
 from collections import defaultdict
 
+
 def find_estimates_files(root_dir="target/criterion"):
     """
     Recursively searches for all 'estimates.json' files under the given directory.
@@ -12,15 +13,43 @@ def find_estimates_files(root_dir="target/criterion"):
     pattern = os.path.join(root_dir, "**", "estimates.json")
     return glob.glob(pattern, recursive=True)
 
+
+def common_prefix_and_remainder(strings):
+    """
+    This function takes a list of strings and returns a tuple:
+    - the longest common prefix among all the strings
+    - a list of the original strings without this prefix
+    """
+    if not strings:
+        return "", []
+
+    # Initialize the prefix with the first string
+    prefix = strings[0]
+
+    # Adjust the common prefix based on the other strings
+    for s in strings[1:]:
+        while not s.startswith(prefix):
+            prefix = prefix[:-1]  # Remove one character from the right
+            if prefix == "":
+                break
+        if prefix == "":
+            break
+
+    # Create a list of strings with the common prefix removed
+    remainders = [s[len(prefix):] for s in strings]
+    return prefix, remainders
+
+
 def extract_benchmark_name_from_path(filepath):
     """
     Determines the complete benchmark name from the path.
     Example: 'target/criterion/mycase-variant/new/estimates.json' -> 'mycase-variant'
     """
-    dirpath = os.path.dirname(filepath)   # e.g. 'target/criterion/mycase-variant/new'
+    dirpath = os.path.dirname(filepath)  # e.g. 'target/criterion/mycase-variant/new'
     upper_dir = os.path.dirname(dirpath)  # e.g. 'target/criterion/mycase-variant'
     benchmark_name = os.path.basename(upper_dir)  # e.g. 'mycase-variant'
     return benchmark_name
+
 
 def main():
     # 1) Find all estimates.json files
@@ -31,6 +60,14 @@ def main():
 
     # We'll collect all categories across all benchmarks so we can enforce a fixed order
     all_categories = set()
+
+    # prefix, remainders = common_prefix_and_remainder(files)
+    # print(f"Use {prefix} as common prefix")
+    #
+    # files_to_names = defaultdict(dict)
+    #
+    # for index, filepath in enumerate(files):
+    #     files_to_names[filepath] = remainders[index]
 
     # 2) Read each JSON file and extract the measurements
     for filepath in files:
@@ -48,9 +85,14 @@ def main():
                 # We do a rsplit('-', 1) to separate from the right
                 if "-" in full_bench_name:
                     case_name, variant_name = full_bench_name.rsplit("-", 1)
+                    if case_name == "":
+                        case_name = "default"
                 else:
                     case_name = "default"
                     variant_name = full_bench_name
+
+                # case_name = "default"
+                # variant_name = files_to_names[filepath]
 
                 # Store the mean and std_dev in our data structure
                 data_by_case[case_name][variant_name] = (mean_val, std_dev_val)
@@ -124,6 +166,7 @@ def main():
         print(f"Saved chart to: {output_path}")
 
     print("Done.")
+
 
 if __name__ == "__main__":
     main()

@@ -31,6 +31,8 @@ pin-project = "1.1.9"
 thiserror = "2"
 ouroboros = "0.18"
 hashbrown = "0.15"
+bumpalo = "3.17"
+arcstr = "1.2"
 
 # benchmark !
 criterion = { version = "0.5", features = ["html_reports"] }
@@ -95,4 +97,12 @@ harness = false
 
 [[bench]]
 name = "iai_demo"
+harness = false
+
+[[bench]]
+name = "allocations_many_small"
+harness = false
+
+[[bench]]
+name = "allocations_inner_loop"
 harness = false
