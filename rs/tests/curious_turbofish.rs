@@ -1,5 +1,6 @@
 trait MyTrait {
     fn new() -> Self;
+    fn len(&self) -> usize;
 }
 
 impl<T> MyTrait for Vec<T> {
@@ -7,23 +8,19 @@ impl<T> MyTrait for Vec<T> {
         println!("Vec::new from MyTrait");
         Vec::<T>::new()
     }
+
+    fn len(&self) -> usize {
+        Vec::<T>::len(&self)
+    }
 }
 
 #[test]
 fn test() {
     let v = vec![1];
-
-    let mut x = Vec::new(); // turbo fish + outer < >
-    x.push(1);
-
-    let mut x = Vec::<i32>::new(); // turbo fish without outer < >
-    x.push(1);
-
-    let mut x = <Vec<i32>>::new(); // no turbo fish but outer < >
-    x.push(1);
-
-    let mut x = <Vec<i32> as MyTrait>::new(); // explicit ambiguous call
-    x.push(1);
-
-    let x = <String>::new(); // <T>::method syntax (sometimes useful to remove ambiguities)
+    let v: Vec<i32> = Vec::new(); // usual implicit form
+    let v = Vec::<i32>::new(); // turbo fish without outer < >
+    let v = <Vec<i32>>::new(); // no turbo fish but outer < >
+    let v = <Vec<i32> as MyTrait>::new(); // explicit ambiguous call
+    <Vec<i32> as MyTrait>::len(&v); // MyTrait redefines len()
+    let s = <String>::new(); // <T>::method syntax (sometimes useful to remove ambiguities)
 }
