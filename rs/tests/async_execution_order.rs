@@ -6,6 +6,7 @@ async fn main() {
     let task1 = tokio::spawn(async {
         println!("Task1: starting");
         sleep(Duration::from_secs(2)).await; // waits 2s without blocking the thread
+
         // TODO what about the following alternative?
         // std::thread::sleep(Duration::from_secs(2));
         println!("Task1: finished after 2s");

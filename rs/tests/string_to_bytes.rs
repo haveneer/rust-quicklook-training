@@ -15,9 +15,6 @@ fn main() {
     println!("after push2: {}/{} {:p}", s.len(), s.capacity(), s.as_ptr());
     s.shrink_to_fit();
     println!("after fit: {}/{}   {:p}", s.len(), s.capacity(), s.as_ptr());
-
-    let x= std::sync::Arc::<str>::new("toto");
-
 }
 
 #[test]

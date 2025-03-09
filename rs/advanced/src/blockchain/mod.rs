@@ -1,6 +1,7 @@
 mod block_impl;
 mod blockref_safe_impl;
 mod blockref_unsafe_impl;
+mod process;
 
 use std::ops::Deref;
 

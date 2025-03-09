@@ -1,3 +1,4 @@
+#![cfg_attr(feature = "nightly", feature(bigint_helper_methods))]
 // Ref: https://huonw.github.io/blog/2016/04/myths-and-legends-about-integer-overflow-in-rust/
 
 use std::ops::Add;
