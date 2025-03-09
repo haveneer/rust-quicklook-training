@@ -61,6 +61,7 @@ mod details {
     }
 }
 
+#[rustfmt::skip]
 fn main() {
     let union = MyCUnion { f1: 256 };
     println!("MyCUnion {{ f1: 256 }}          : {}", details::to_str_bytes(&union));

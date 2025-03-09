@@ -1,7 +1,8 @@
 use crate::{BlockRef, TransactionRef};
 
+#[allow(dead_code)]
 pub fn process<'a>(blocks: impl Iterator<Item = BlockRef<'a>>, mut f: impl FnMut(&TransactionRef)) {
-    blocks.for_each(|block| block.transactions.iter().for_each(|tx| f(tx)))
+    blocks.for_each(|block| block.transactions.iter().for_each(&mut f))
 }
 
 #[cfg(test)]

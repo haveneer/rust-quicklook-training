@@ -1,3 +1,4 @@
+#[rustfmt::skip]
 fn main() {
     let mut s = String::from("Éléphant 🦣 épatant");
     println!("{}", s);

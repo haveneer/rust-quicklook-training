@@ -30,13 +30,13 @@ where
 
 fn main() {
     let report_card = ReportCard {
-        grade: 3.14,
+        grade: 3.15,
         student_name: "Gary Plotter".to_string(),
         student_age: 11,
     };
     assert_eq!(
         format!("{}", report_card),
-        "Gary Plotter (11) - achieved a grade of 3.14"
+        "Gary Plotter (11) - achieved a grade of 3.15"
     );
 }
 

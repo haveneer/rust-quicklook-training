@@ -1,4 +1,5 @@
 #![allow(dead_code)]
+#![allow(clippy::redundant_locals)]
 use std::marker::PhantomPinned;
 use std::pin::{pin, Pin};
 

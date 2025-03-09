@@ -203,6 +203,7 @@ fn check_macho_segments(addr: usize) -> Option<MemorySection> {
         }
         let slide = unsafe { _dyld_get_image_vmaddr_slide(i) } as usize;
         // Interpret the header as a mach_header_64
+        #[allow(clippy::unnecessary_cast)]
         let header = unsafe { &*(header_ptr as *const mach_o::header::mach_header_64) };
         if let Some(section) = match_address_in_mach_header(header, slide, addr) {
             return Some(section);

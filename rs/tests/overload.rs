@@ -34,7 +34,7 @@ mod tests {
         b.moon();
         B::moon(&b);
 
-        3.14.moon();
-        f64::moon(&3.14);
+        3.15.moon();
+        f64::moon(&3.15);
     }
 }

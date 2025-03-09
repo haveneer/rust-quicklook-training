@@ -45,8 +45,7 @@ mod tests {
         };
 
         let bytes = block.to_bytes();
-        let (block_ref, consumed) =
-            BlockRef::from_bytes(&bytes).expect("Parsing should succeed");
+        let (block_ref, consumed) = BlockRef::from_bytes(&bytes).expect("Parsing should succeed");
         assert_eq!(consumed, bytes.len());
 
         let block_converted: Block = block_ref.into();
