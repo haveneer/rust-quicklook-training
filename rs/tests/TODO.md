@@ -1,7 +1,5 @@
 * traits inheritance (super traits): https://doc.rust-lang.org/rust-by-example/trait/supertraits.html
-* auto trait derivations
 * Do not add Copy trait if you want to avoid copies (if available, it will become the default behavior)
-* lifetime
 * Les structures de Rust
 
 * rustup doc
@@ -18,12 +16,7 @@
     * concurrent :
     * https://manishearth.github.io/blog/2015/05/27/wrapper-types-in-rust-choosing-your-guarantees/
     * ```
-    Box<T> is for single ownership.
-    Rc<T> is for multiple ownership.
-    Arc<T> is for multiple ownership, but threadsafe.
-    Cell<T> is for “interior mutability” for Copy types; that is, when you need to mutate something behind a &T.
     
-    Cell<T> and RefCell<T> are for single-threaded scenarios. Consider using RwLock<T> or Mutex<T> if you need shared mutability in a multi-threaded situation. 
     ```
     * compare the different "interior mutability" types
         * Cell
@@ -42,7 +35,6 @@
             * Sync if the contents are Send.
 
     * https://manishearth.github.io/blog/2015/05/27/wrapper-types-in-rust-choosing-your-guarantees/
-* Phantom:
 * const fn (Rust ≥ 1.51)
 * Generics
     * https://doc.rust-lang.org/rust-by-example/generics.html

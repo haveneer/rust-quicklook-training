@@ -12,14 +12,14 @@
 mod tests {
     use futures::executor::block_on;
     use futures::join;
+    use futures_timer::Delay;
     use std::sync::Mutex;
-    use std::thread;
     use std::time::Duration;
 
     async fn do_expensive_job_async(id: i8) {
         for _ in 0..10 {
             println!("Thread {} working...", id);
-            thread::sleep(Duration::from_millis(100));
+            Delay::new(Duration::from_millis(100)).await;
         }
         // if id == 2 {
         //     panic!()

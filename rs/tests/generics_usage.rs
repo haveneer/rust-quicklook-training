@@ -2,7 +2,7 @@ fn foo<T>(arg: T) {}
 
 fn main() {
     foo(1);
-    foo(3.14);
+    foo(0.577);
     foo("Hello");
 }
 

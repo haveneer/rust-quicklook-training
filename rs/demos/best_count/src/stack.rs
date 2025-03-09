@@ -1,6 +1,7 @@
 use crate::operator::Kind;
 use crate::operator::Operator;
 use std::collections::HashMap;
+use std::fmt::Display;
 use std::rc::Rc;
 
 pub struct Stack {
@@ -12,6 +13,7 @@ pub struct Stack {
 }
 
 impl Stack {
+    #[allow(clippy::new_without_default)]
     pub fn new() -> Self {
         Stack {
             data: vec![],
@@ -24,6 +26,10 @@ impl Stack {
 
     pub fn len(&self) -> usize {
         self.data.len()
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.data.is_empty()
     }
 
     pub fn back_replay(&mut self) -> Rc<dyn Operator> {
@@ -46,7 +52,7 @@ impl Stack {
     pub fn apply_operator(&mut self, op: &Rc<dyn Operator>) {
         // println!("BEFORE AFTER => {:?}", self.data);
         // println!("Apply operator {}", op.symbol());
-        let new_value = op.eval_on_stack(&self);
+        let new_value = op.eval_on_stack(self);
 
         for _ in 0..op.cardinality() {
             self.old_data.push(self.data.pop().unwrap()); // check_stack has been done before
@@ -68,13 +74,11 @@ impl Stack {
     pub fn result(&self) -> Option<StackResult> {
         if self.len() != 1 {
             None
-        } else if let Some(value) = self.data.last() {
-            Some(StackResult {
+        } else {
+            self.data.last().map(|value| StackResult {
                 operators: &self.stacked_operators,
                 value: &value.0,
             })
-        } else {
-            None
         }
     }
 
@@ -82,7 +86,7 @@ impl Stack {
         self.operator_usage
             .get(&op.index())
             // .map(|&v| v != 0).unwrap_or(false)
-            .map_or(false, |&v| v != 0)
+            .is_some_and(|&v| v != 0)
     }
 
     pub fn get_last_operator(&self) -> Option<&Rc<dyn Operator>> {
@@ -99,18 +103,19 @@ pub struct StackResult<'a> {
     pub value: &'a u64,
 }
 
-impl<'a> ToString for StackResult<'a> {
-    fn to_string(&self) -> String {
+impl Display for StackResult<'_> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let mut string_stack = Vec::<(String, Rc<dyn Operator>)>::new();
         for op in self.operators.iter() {
             op.clone().string_on_stack(&mut string_stack);
         }
 
-        string_stack
+        let str = string_stack
             .into_iter()
             .rev()
             .map(|s| s.0.to_string())
             .collect::<Vec<String>>()
-            .join("; ")
+            .join("; ");
+        write!(f, "{}", str)
     }
 }

@@ -5,7 +5,7 @@ mod tests {
     #[test]
     fn test() {
         let mut n = 0;
-        let mut gen = move || {
+        let mut generator = move || {
             n = n + 1;
             let result = n;
             println!("Generate [{}]", result);
@@ -13,7 +13,7 @@ mod tests {
         };
 
         iter::repeat(0)
-            .map(|_| gen())
+            .map(|_| generator())
             .filter(|n| (n % 2) == 1)
             .take(1)
             .for_each(|x| println!("{}", x));

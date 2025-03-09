@@ -7,10 +7,10 @@ impl Trait for i64 {
 }
 
 // # Argument position : equivalent forms (no deprecation)
-fn impl_in2015<T: Trait>(arg: T) {}
-
 // turbo-fish allowed: impl_in2015::<i64>()
-fn impl_in2018(arg: impl Trait) {}
+fn impl_in2015<T: Trait>(_arg: T) {}
+
+fn impl_in2018(_arg: impl Trait) {}
 
 // # Return position (no deprecation; not same perf)
 fn impl_out2015() -> Box<dyn Trait> {
@@ -47,16 +47,16 @@ mod tests {
         x.foo();
 
         let f = returns_closure2015();
-        let y = f(0);
+        let _y = f(0);
 
         let f = returns_closure2018();
-        let y = f(0);
+        let _y = f(0);
     }
 
     #[test]
     fn size_of_vec_of_dyn() {
         let v_dyn: [&dyn Trait; 4] = [&1i64, &2, &3, &4];
-        println!("size_of(v_dyn) = {}", std::mem::size_of_val(&v_dyn));
+        println!("size_of(v_dyn) = {}", size_of_val(&v_dyn));
         for &i in v_dyn.iter() {
             i.foo();
         }
@@ -65,7 +65,7 @@ mod tests {
     #[test]
     fn size_of_vec_of_impl() {
         let v_impl: [i64; 4] = [1, 2, 3, 4];
-        println!("size_of(v_impl) = {}", std::mem::size_of_val(&v_impl));
+        println!("size_of(v_impl) = {}", size_of_val(&v_impl));
         for &i in v_impl.iter() {
             i.foo();
         }

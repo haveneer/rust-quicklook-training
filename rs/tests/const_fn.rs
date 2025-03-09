@@ -9,6 +9,6 @@ const VALUE: i64 = f(128);
 #[test]
 fn main() {
     let mut rng = rand::thread_rng();
-    let x = rng.gen::<i64>();
+    let x = rng.r#gen::<i64>();
     f(x);
 }

@@ -6,7 +6,7 @@ error[E0369]: cannot add `{integer}` to `T`
   |                                 |
   |                                 T
   |
-help: consider restricting type parameter `T`
+help: consider restricting type parameter `T` with trait `Add`
   |
 1 | fn foo<T: std::ops::Add<i32, Output = T>>(arg: T) -> T { return arg + 1; }
   |         ++++++++++++++++++++++++++++++++

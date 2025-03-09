@@ -23,7 +23,7 @@ mod tests {
         // help: items from traits can only be used if the trait is in scope
         // help: the following trait is implemented but not in scope
         use my_trait::MyTrait as _; // if it can cause symbol collision
-        //                          // you can mask it with an alias
+                                    //                          // you can mask it with an alias
 
         my_struct::MyStruct::f();
     }

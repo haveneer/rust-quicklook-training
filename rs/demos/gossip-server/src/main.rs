@@ -4,7 +4,6 @@ use actix_web::web::Data;
 use actix_web::{
     error, get, middleware, post, web, App, Error, HttpResponse, HttpServer, Responder,
 };
-use anyhow;
 use clap::Parser;
 use futures::StreamExt;
 use options::Options;
@@ -13,7 +12,6 @@ use std::net::SocketAddr;
 use std::sync::mpsc::SyncSender;
 use std::sync::{mpsc, RwLock};
 use tracing::{error, info, warn};
-use tracing_subscriber;
 
 const MAX_PAYLOAD_SIZE: usize = 256 * 1024; // max payload size is 256k
 const MAX_MSPC_MESSAGE: usize = 1024;
@@ -60,13 +58,17 @@ async fn echo(
     data: Data<RwLock<(CentralData, SyncSender<MPSCMessage>)>>,
 ) -> Result<HttpResponse, Error> {
     // May fail
-    let data = data.read().unwrap();
-    info!("JSON Request received");
-    data.1
-        .send(MPSCMessage {
-            message: "echo".to_string(),
-        })
-        .expect("Cannot send message");
+    {
+        // minimize lock timetime
+        let data = data.read().unwrap();
+        info!("JSON Request received");
+        data.1
+            .send(MPSCMessage {
+                message: "echo".to_string(),
+            })
+            .expect("Cannot send message");
+    }
+
     // payload is a stream of Bytes objects
     let mut body = web::BytesMut::new();
     while let Some(chunk) = payload.next().await {

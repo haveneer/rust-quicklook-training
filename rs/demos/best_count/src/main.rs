@@ -24,7 +24,7 @@ fn main() {
     for i in 1..=8 {
         let next = Rc::new(SeqDataOperator {
             value: i,
-            prev: prev.map(|o| o.clone()),
+            prev: prev.clone(),
             index: operators.len(),
         });
         operators.push(next.clone());

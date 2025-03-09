@@ -1,6 +1,4 @@
-#![cfg_attr(feature = "nightly", feature(saturating_int_impl))]
-
-use std::num::Wrapping;
+use std::num::{Saturating, Wrapping};
 
 fn main() {
     let x = Wrapping(100_i8);
@@ -8,11 +6,8 @@ fn main() {
 
     assert_eq!(x + y, Wrapping(-56));
 
-    #[cfg(nightly)]
     let max = Saturating(u32::MAX);
-    #[cfg(nightly)]
     let one = Saturating(1u32);
-    #[cfg(nightly)]
     assert_eq!(u32::MAX, (max + one).0);
 }
 
