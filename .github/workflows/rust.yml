@@ -19,13 +19,13 @@ jobs:
       matrix:
         include:
           - name: Linux
-            os: ubuntu-20.04
+            os: ubuntu-22.04
             toolchain: stable
           - name: Linux
-            os: ubuntu-20.04
+            os: ubuntu-22.04
             toolchain: nightly
           - name: macOS
-            os: macOS-11
+            os: macOS-latest
             toolchain: stable
           - name: Windows
             os: windows-latest
