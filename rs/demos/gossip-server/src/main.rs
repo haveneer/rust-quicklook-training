@@ -8,7 +8,6 @@ use clap::Parser;
 use futures::StreamExt;
 use options::Options;
 use serde::{Deserialize, Serialize};
-use std::net::SocketAddr;
 use std::sync::mpsc::SyncSender;
 use std::sync::{mpsc, RwLock};
 use tracing::{error, info, warn};
@@ -88,7 +87,7 @@ async fn echo(
 
 // curl -X POST -d '{"username": "john"}' -H "Content-type: application/json" http://localhost:7878/api/json
 
-#[actix_web::main] // or #[tokio::main]
+#[tokio::main]
 async fn main() -> anyhow::Result<()> {
     let options = Options::parse();
 
@@ -96,10 +95,11 @@ async fn main() -> anyhow::Result<()> {
     // RUST_LOG=debug
     // RUST_LOG=gossip_server=debug
     // env::set_var("RUST_LOG", "actix_web=debug,actix_server=info");
+    // console_subscriber::init();
     tracing_subscriber::fmt::init();
-
     let entry_points = options.entry_points().clone();
     // tokio::spawn(async move {
+    println!("entry_points: {entry_points:?}");
     register(&entry_points).await?;
     // });
 
@@ -141,35 +141,35 @@ async fn forever_wait() {
 }
 
 async fn register(addrs: &Vec<String>) -> anyhow::Result<()> {
+    // Création d'un client HTTP reqwest
+    let client = reqwest::Client::new();
     for addr in addrs {
-        let addr = addr.parse::<SocketAddr>()?;
-        info!("Connecting to {addr:?}");
-        let client = awc::Client::default();
+        // Conversion de la chaîne en SocketAddr
+        let addr: std::net::SocketAddr = addr.parse()?;
+        info!("Connecting to {:?}", addr);
 
+        // Envoi d'une requête GET
         let message = "John";
-        let res = client
-            .get(format!("http://{addr:?}/api/hello/{message}"))
-            .send()
-            .await;
-        match res {
-            Ok(res) => info!("Response: {:?}", res),
-            Err(err) => error!("Fail to send1: {:?}", err),
+        let url = format!("http://{}/api/hello/{}", addr, message);
+        match client.get(&url).send().await {
+            Ok(response) => info!("GET Response: {:?}", response),
+            Err(err) => error!("Failed to send GET request: {:?}", err),
         }
 
-        let request = serde_json::json!({
+        // Envoi d'une requête POST avec un corps JSON
+        let request_body = serde_json::json!({
             "username": "john",
         });
-        let res = client
-            .post(format!("http://{addr:?}/api/json"))
-            .send_json(&request)
-            .await;
-        match res {
-            Ok(mut res) => {
-                info!("Header: {:?}", res);
-                let val = res.json::<Message>().await?;
-                info!("Response: {:?}", val);
+        let url = format!("http://{}/api/json", addr);
+        match client.post(&url)
+            .json(&request_body)
+            .send().await {
+            Ok(mut response) => {
+                info!("POST Headers: {:?}", response.headers());
+                let val = response.json::<Message>().await?;
+                info!("POST Response: {:?}", val);
             }
-            Err(err) => error!("Fail to send2: {:?}", err),
+            Err(err) => error!("Failed to send POST request: {:?}", err),
         }
     }
     Ok(())

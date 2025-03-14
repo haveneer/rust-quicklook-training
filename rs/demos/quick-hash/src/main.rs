@@ -18,15 +18,16 @@ fn count_zeros(data: &[u8]) -> usize {
 }
 
 fn main() {
+    let message = "my message";
+    let format_message = |s, seed| format!("{s}[seed={seed:08X}]");
+
     {
         let mut hasher = Sha256::new();
-        let seed = 512;
-        let msg = std::format!("Name: me; seed: {:10}", seed);
+        let msg = format_message(message, 512);
         hasher.update(msg.as_bytes());
         let result = hasher.finalize();
-        println!("Msg: [{}]", msg);
-        println!("Hash: {:x?}", result);
-        println!("Hash: {:?}", u8_to_string(result.as_slice()).unwrap());
+        println!(r#"Message with seed: "{msg}""#);
+        println!("Hash: {}", u8_to_string(&result).unwrap());
     }
 
     let max_seed_power = 20;
@@ -40,6 +41,7 @@ fn main() {
             .template("[{elapsed_precise}] {wide_bar:.cyan/blue} {pos:>7}/{len:7} {msg}"),
     );
 
+    println!("Looking for longer zero suffix for various seeds:");
     let results = (0..max_val)
         .into_par_iter()
         .progress_with(pb) // progressbar kills perfs
@@ -47,7 +49,7 @@ fn main() {
             || vec![0; 32],
             |mut acc, seed| {
                 let mut hasher = Sha256::new();
-                let msg = std::format!("Name: me; seed: {:10}", seed);
+                let msg = format_message(message, seed);
                 hasher.update(msg.as_bytes());
                 let result = hasher.finalize();
                 acc[count_zeros(result.as_slice())] += 1;

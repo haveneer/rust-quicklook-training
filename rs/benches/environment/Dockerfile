@@ -1,5 +1,5 @@
 # Rust stable basé sur Debian bullseye
-FROM rust:1.81-bullseye
+FROM rust:1.85-bookworm
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
@@ -14,8 +14,9 @@ RUN cargo install cargo-expand
 RUN cargo install cargo-criterion
 
 # Installer iai-callgrind
-RUN cargo install iai-callgrind
+RUN cargo install iai-callgrind-runner
+
 
 # (Optionnel) Installer Miri
-RUN rustup component add miri
+# RUN rustup +nightly component add miri
 

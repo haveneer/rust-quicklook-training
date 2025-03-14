@@ -8,11 +8,12 @@ edition = "2021"
 [dependencies]
 serde = { version = "1", features = ["derive"] }
 serde_json = "1.0"
-actix-web = "4.1.0" # based on tokio
-awc = "3" # actix-web client
+actix-web = "4.9.0" # based on tokio
 tokio = { workspace = true }
+console-subscriber = "0.4"
 futures = "0.3"
 tracing = "0.1"
-tracing-subscriber = "0.2"
-clap = { version = "3.2.8", features = ["derive"] }
+tracing-subscriber = "0.3"
+clap = { version = "3.2", features = ["derive"] }
 anyhow = { version = "1.0" }
+reqwest = { version = "0.11", features = ["json"] }

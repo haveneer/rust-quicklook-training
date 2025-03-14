@@ -1,0 +1,39 @@
+[package]
+name = "block_parser"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+tokio = { workspace = true }
+tokio-util = "0.7"
+rand = "0.8.0"
+console-subscriber = "0.4"
+tracing = "0.1"
+tracing-subscriber = "0.3"
+tokio-stream = "0.1.17"
+axum = "0.6"
+serde_json = "1.0"
+chrono = { workspace = true }
+sha2 = "0.9.8"
+
+[dev-dependencies]
+criterion = { version = "0.5", features = ["html_reports"] }
+memmap2 = "0.9.5"
+tempfile = "3.18.0"
+iai-callgrind = "0.14.0"
+
+[features]
+iai = []
+
+[[bench]]
+name = "parser"
+harness = false
+
+[[bin]]
+name = "main_sender"
+
+[[bin]]
+name = "main_reader"
+
+[[bin]]
+name = "main_reader2"
