@@ -237,7 +237,7 @@ mod tests {
         assert_eq!(iter.next().unwrap().data(), &[5, 6, 7]);
         assert_eq!(iter.next().unwrap().data(), &[8, 9]);
         assert!(iter.next().is_none());
-        assert_eq!(block.prev_hash, [1u8; 32]);
+        assert_eq!(block.prev_hash(), &[1u8; 32]);
         assert_eq!(offset, buf.len());
         assert_eq!(block.to_bytes(), buf.as_slice());
     }
