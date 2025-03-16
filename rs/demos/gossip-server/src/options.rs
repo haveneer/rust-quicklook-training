@@ -1,6 +1,5 @@
 use clap::Parser;
 
-/// Simple program to greet a person
 #[derive(Parser, Debug)]
 #[clap(author, version, about, long_about = None)]
 pub struct Options {
@@ -9,8 +8,8 @@ pub struct Options {
     port: u16,
 
     /// Server to connect when starting
-    #[clap(value_parser)]
-    entry_point: Vec<String>,
+    #[clap(value_parser, name = "SERVER")]
+    servers: Vec<std::net::SocketAddr>,
 }
 
 impl Options {
@@ -18,7 +17,7 @@ impl Options {
         self.port
     }
 
-    pub fn entry_points(&self) -> &Vec<String> {
-        &self.entry_point
+    pub fn servers(&self) -> &[std::net::SocketAddr] {
+        &self.servers
     }
 }

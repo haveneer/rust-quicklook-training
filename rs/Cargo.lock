@@ -1413,6 +1413,7 @@ dependencies = [
  "clap 3.2.25",
  "console-subscriber",
  "futures",
+ "rand 0.8.5",
  "reqwest",
  "serde",
  "serde_json",
