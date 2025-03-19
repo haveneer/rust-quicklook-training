@@ -20,7 +20,7 @@ fn main() {
     arr[0] = 1;
     let mut c_by_val = move || {
         arr[0] = 2;
-        println!("{} {}", arr[1], my_struct.field1[1])
+        println!("{} {}", arr[0], my_struct.field1[0])
     };
     arr[0] = 3;
     let c_by_ref = || println!("{} {}", arr[0], my_struct.field1[0]);
