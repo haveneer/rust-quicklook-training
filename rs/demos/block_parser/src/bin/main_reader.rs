@@ -40,7 +40,11 @@ async fn main() -> Result<(), Box<dyn Error>> {
         // Read data from the stream into the buffer starting at 'offset'.
         let n = stream.read_exact(&mut buffer[write_offset..]).await?;
         if n == 0 {
-            println!("Connection closed by the server.");
+            if write_offset == BUFFER_SIZE {
+                println!("Buffer too small");
+            } else {
+                println!("Connection closed by the server.");
+            }
             break;
         }
         write_offset += n;
