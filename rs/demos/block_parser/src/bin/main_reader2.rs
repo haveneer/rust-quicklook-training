@@ -1,6 +1,11 @@
+use block_parser::async_tools::{start_stats, Counters};
 use block_parser::{Block, FromBytes, RefBlock};
 use std::error::Error;
+use std::sync::Arc;
+use std::time::Duration;
+use tokio::join;
 use tokio::net::TcpStream;
+use tokio::sync::Mutex;
 use tokio_stream::StreamExt;
 use tokio_util::io::ReaderStream;
 use tracing::trace;
@@ -25,6 +30,11 @@ async fn main() -> Result<(), Box<dyn Error>> {
     let mut read_offset: usize = 0;
     // 'write_offset' tracks the end of the data in the buffer.
     let mut write_offset: usize = 0;
+
+    let counters = Arc::new(Mutex::new(Counters::new()));
+
+    // Spawn to display stats at a small frequency
+    let stats_handle = start_stats(counters.clone(), Duration::new(3, 0)).await;
 
     // Process each chunk from the async stream.
     while let Some(chunk_result) = stream.next().await {
@@ -64,12 +74,15 @@ async fn main() -> Result<(), Box<dyn Error>> {
                 false
             } else {
                 read_offset += consumed;
+                counters.lock().await.incr_index();
                 true
             }
         } {}
 
         eprintln!("Remaining data in buffer: {}", write_offset);
     }
+
+    join!(stats_handle);
 
     Ok(())
 }

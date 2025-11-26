@@ -161,6 +161,7 @@ pub fn make_test_transactions_with_seed(seed: u64) -> Vec<OwnedTransaction> {
         let n = r.gen_range(0..20);
         let mut data = vec![0; n];
         data.iter_mut().for_each(|x| *x = r.gen());
+        // TODO replace dynamic allocation with a pre-allocated buffer
         transactions.push(OwnedTransaction { data })
     }
     transactions

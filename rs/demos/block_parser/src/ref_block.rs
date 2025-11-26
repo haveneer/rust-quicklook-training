@@ -4,7 +4,7 @@ use std::convert::TryInto;
 
 #[derive(Debug, PartialEq, Eq)]
 pub struct RefBlock<'a> {
-    data: &'a [u8],
+    pub(crate) data: &'a [u8],
 }
 
 impl Block for RefBlock<'_> {

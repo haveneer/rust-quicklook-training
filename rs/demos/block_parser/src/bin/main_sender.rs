@@ -1,4 +1,5 @@
 use axum::{extract::State, response::Json, routing::get, Router};
+use block_parser::async_tools::{start_stats, Counters};
 use block_parser::{make_test_transactions_with_seed, Block, OwnedBlock, ToBytes};
 use chrono::Utc;
 use serde_json::json;
@@ -8,6 +9,7 @@ use std::sync::{
     atomic::{AtomicUsize, Ordering},
     Arc,
 };
+use std::time::Duration;
 use tokio::io::AsyncWriteExt;
 use tokio::net::TcpListener;
 use tokio::sync::{Notify, RwLock};
@@ -29,6 +31,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let current_block = Arc::new(RwLock::new(None));
     let notify = Arc::new(Notify::new());
 
+    let counters = Arc::new(Counters::new());
+    let stats_handle = start_stats(counters.clone(), Duration::new(3, 0)).await;
+
     // Start the TCP server on port 9000.
     let tcp_manager = start_tcp_listener(
         sent_block_counter.clone(),
@@ -39,10 +44,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let http_server = start_http_service(sent_block_counter.clone(), current_block.clone()).await;
 
-    let block_builder = start_block_builder(current_block.clone(), notify.clone()).await;
+    let block_builder = start_block_builder(current_block.clone(), notify.clone(), counters.clone()).await;
 
     // Wait for both servers to run concurrently.
-    tokio::try_join!(tcp_manager, http_server, block_builder)?;
+    tokio::try_join!(tcp_manager, http_server, block_builder, stats_handle)?;
     Ok(())
 }
 
@@ -143,6 +148,7 @@ fn hash_block_in_place(block: &OwnedBlock, hash: &mut [u8; 32]) {
 async fn start_block_builder(
     current_block: Arc<RwLock<Option<OwnedBlock>>>,
     notify: Arc<Notify>,
+    counters: Arc<Counters>,
 ) -> JoinHandle<()> {
     tokio::spawn(async move {
         let genesis_block = make_genesis_block();
@@ -163,7 +169,8 @@ async fn start_block_builder(
             hash_block_in_place(&new_block, &mut prev_hash);
             trace!("New block {:?}", current_block_id);
             current_block.write().await.replace(new_block);
-            tokio::time::sleep(std::time::Duration::from_millis(1)).await;
+            counters.incr_index();
+            // tokio::time::sleep(Duration::from_millis(1)).await;
             notify.notify_waiters();
         }
     })

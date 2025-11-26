@@ -3,8 +3,11 @@ pub mod block_iter;
 mod owned_block;
 mod process;
 mod ref_block;
+pub mod async_tools;
+mod incremental_block_builder;
 
 pub use ref_block::{RefBlock, RefTransaction, RefTransactions};
+pub use incremental_block_builder::IncrementalBlockBuilder;
 pub use block_interfaces::{Block, FromBytes, ToBytes, Transaction, Transactions};
 pub use owned_block::{
     make_test_block, make_test_block_with_seed, make_test_transactions_with_seed,

@@ -33,6 +33,9 @@ harness = false
 name = "main_sender"
 
 [[bin]]
+name = "main_sender2"
+
+[[bin]]
 name = "main_reader"
 
 [[bin]]

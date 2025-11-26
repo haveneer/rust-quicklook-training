@@ -1,17 +1,12 @@
-use axum::extract::State;
-use axum::routing::get;
-use axum::{Json, Router};
-use block_parser::{Block, FromBytes, OwnedBlock, RefBlock};
-use serde_json::json;
+use block_parser::async_tools::{start_stats, Counters};
+use block_parser::{Block, FromBytes, RefBlock};
 use std::error::Error;
-use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::Arc;
 use std::time::Duration;
 use tokio::io::AsyncReadExt;
 use tokio::net::TcpStream;
-use tokio::sync::{Mutex, Notify, RwLock};
+use tokio::sync::{Mutex, Notify};
 use tokio::task::JoinHandle;
-use tokio::time::Instant;
 use tracing::{debug, error, info, instrument, trace};
 
 const BUFFER_SIZE: usize = 5 * 1024;
@@ -20,10 +15,6 @@ struct SharedBuffer {
     buffer: [u8; BUFFER_SIZE],
     read_offset: usize,
     write_offset: usize,
-}
-
-struct Counters {
-    read: usize,
 }
 
 #[tokio::main]
@@ -43,7 +34,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
         write_offset: 0,
     }));
 
-    let counters = Arc::new(Mutex::new(Counters { read: 0 }));
+    let counters = Arc::new(Counters::new());
 
     // Create a Notify to signal that new data is available.
     let notify = Arc::new(Notify::new());
@@ -56,36 +47,16 @@ async fn main() -> Result<(), Box<dyn Error>> {
         start_process_buffer(shared_buffer.clone(), counters.clone(), notify.clone()).await;
 
     // Spawn to display stats at a small frequency
-    let stats_handle = start_stats(counters.clone()).await;
+    let stats_handle = start_stats(counters.clone(), Duration::new(3, 0)).await;
 
     // Wait for both tasks to complete.
     let _ = tokio::join!(buffer_handle, processor_handle, stats_handle);
     Ok(())
 }
 
-async fn start_stats(counters: Arc<Mutex<Counters>>) -> JoinHandle<()> {
-    tokio::spawn(async move {
-        const PERIOD: u64 = 3000;
-
-        let mut latest_read = counters.lock().await.read;
-        let mut latest_time = Instant::now();
-        loop {
-            tokio::time::sleep(Duration::from_millis(PERIOD)).await;
-            let current_read = counters.lock().await.read;
-            let current_time = Instant::now();
-            info!(
-                "Total read: {current_read:8} [{:6.1} blocks/s]",
-                (current_read - latest_read) as f64 / (current_time - latest_time).as_secs_f64()
-            );
-            latest_read = current_read;
-            latest_time = current_time;
-        }
-    })
-}
-
 async fn start_process_buffer(
     shared_buffer: Arc<Mutex<SharedBuffer>>,
-    counters: Arc<Mutex<Counters>>,
+    counters: Arc<Counters>,
     notify: Arc<Notify>,
 ) -> JoinHandle<()> {
     tokio::spawn(async move {
@@ -98,7 +69,7 @@ async fn start_process_buffer(
                     &buffer_guard.buffer[buffer_guard.read_offset..buffer_guard.write_offset];
                 let consumed = process_buffer(available_data).await.unwrap_or(0);
                 if consumed > 0 {
-                    counters.lock().await.read += 1;
+                    counters.incr_index();
                     buffer_guard.read_offset += consumed;
                 } else {
                     break;

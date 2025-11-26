@@ -1,8 +1,13 @@
 use block_parser::{Block, FromBytes, RefBlock};
 use std::error::Error;
+use std::sync::Arc;
+use std::time::Duration;
 use tokio::io::AsyncReadExt;
+use tokio::join;
 use tokio::net::TcpStream;
+use tokio::sync::Mutex;
 use tracing::info;
+use block_parser::async_tools::{start_stats, Counters};
 
 const BUFFER_SIZE: usize = 50 * 1024;
 
@@ -31,6 +36,9 @@ async fn main() -> Result<(), Box<dyn Error>> {
     // 'offset' tracks the position of reader / writer in the buffer
     let mut read_offset: usize = 0;
     let mut write_offset: usize = 0;
+
+    let counters = Arc::new(Mutex::new(Counters::new()));
+    let stats_handle = start_stats(counters.clone(), Duration::new(3, 0)).await;
 
     loop {
         // Instrumentation: Create a span for the read operation.
@@ -62,12 +70,15 @@ async fn main() -> Result<(), Box<dyn Error>> {
                 false
             } else {
                 read_offset += consumed;
+                counters.lock().await.incr_index();
                 true
             }
         } {}
 
         eprintln!("Remaining data in buffer: {write_offset}");
     }
+
+    join!(stats_handle);
 
     Ok(())
 }
