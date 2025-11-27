@@ -2,11 +2,14 @@ fn print_type<T>(_t: &T) {
     println!("{}", std::any::type_name::<T>());
 }
 
-#[test]
-fn test() {
+fn main() {
     print_type(&1);
     let mut v = Vec::new();
-    v.push(1); // without this line, compiler cannot infer type
+    v.push(1); // without this line, compiler cannot infer type (Why ?)
     print_type(&v);
-    v.push(1); // without this line, compiler cannot infer type
+}
+
+#[test]
+fn test() {
+    main()
 }

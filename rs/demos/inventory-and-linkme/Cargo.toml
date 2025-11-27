@@ -1,0 +1,16 @@
+[package]
+name = "inventory-and-linkme"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+inventory = "0.3"
+linkme = "0.3"
+
+[[bin]]
+name = "inventory_example"
+path = "src/inventory_example.rs"
+
+[[bin]]
+name = "linkme_example"
+path = "src/linkme_example.rs"
