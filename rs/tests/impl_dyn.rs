@@ -25,7 +25,7 @@ impl Trait for S {}
 fn main() {
     let a = S;
     a.explain();
-    //a.dyn_explain();
+    // a.dyn_explain();
     let b: &dyn Trait = &S;
     b.explain();
     b.dyn_explain();
