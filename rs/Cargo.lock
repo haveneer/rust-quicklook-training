@@ -1724,6 +1724,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "syn_quote_examples"
+version = "0.1.0"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn 2.0.99",
+]
+
+[[package]]
 name = "target-triple"
 version = "0.1.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
