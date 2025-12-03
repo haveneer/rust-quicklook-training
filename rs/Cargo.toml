@@ -8,7 +8,7 @@ edition = "2021"
 lazy_static = "1.4.0"
 strum = { version = "0.22", features = ["derive"] }
 auto_ops = "0.3.0"
-procedural_macro = { path = "procedural_macro" }
+procedural_macro = { path = "demos/proc_macros/procedural_macro" }
 futures = "0.3"
 futures-timer = "3.0.2"
 rand = "0.8.3"
@@ -59,10 +59,9 @@ strip = false
 [workspace]
 members = [
   "hello",
-  "procedural_macro",
   "full-tree",
   "full-tree/libs/mylib1",
-  "demos/*",
+  "demos/proc_macros/*",
   "doclib",
   "fun_with_rust",
 ]
