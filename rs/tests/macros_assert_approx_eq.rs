@@ -1,6 +1,6 @@
 macro_rules! assert_approx_eq {
     ($left:expr, $right:expr, $epsilon:expr) => {{
-        let diff = ($left - $right).abs();
+        let diff = f64::abs($left - $right);
         if diff > $epsilon {
             panic!(
                 "assertion failed: \
