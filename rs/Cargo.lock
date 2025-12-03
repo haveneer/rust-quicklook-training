@@ -1526,6 +1526,15 @@ name = "hello"
 version = "0.1.0"
 
 [[package]]
+name = "hello_macro"
+version = "0.1.0"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn 2.0.99",
+]
+
+[[package]]
 name = "hermit-abi"
 version = "0.1.19"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3708,6 +3717,10 @@ dependencies = [
  "num-conv",
  "time-core",
 ]
+
+[[package]]
+name = "timing_macro"
+version = "0.1.0"
 
 [[package]]
 name = "tinystr"
