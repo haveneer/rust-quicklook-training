@@ -1,6 +1,3 @@
-// Exemple de macro attribute pour mesurer le temps d'exécution
-// Ceci est un exemple "no-run" - nécessite proc-macro = true dans Cargo.toml
-
 use proc_macro::TokenStream;
 use quote::quote;
 use syn::{parse_macro_input, ItemFn};
@@ -25,12 +22,3 @@ pub fn timing(_attr: TokenStream, item: TokenStream) -> TokenStream {
 
     TokenStream::from(expanded)
 }
-
-// Utilisation (dans un autre fichier):
-// use timing_macro::timing;
-//
-// #[timing]
-// fn expensive_computation() -> u64 {
-//     std::thread::sleep(std::time::Duration::from_millis(100));
-//     42
-// }

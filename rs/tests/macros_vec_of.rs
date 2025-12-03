@@ -15,7 +15,7 @@ fn main() {
     let v = vec_of!(1, 2, 3, 4, 5);
     println!("{:?}", v); // [1, 2, 3, 4, 5]
 
-    let empty = vec_of!();
+    let empty: Vec<i32> = vec_of!();
     println!("{:?}", empty); // []
 }
 
