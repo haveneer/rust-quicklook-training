@@ -8,13 +8,17 @@ trait Animal {
 #[derive(Debug)]
 struct Dog;
 impl Animal for Dog {
-    fn speak(&self) -> &str { "Woof!" }
+    fn speak(&self) -> &str {
+        "Woof!"
+    }
 }
 
 #[derive(Debug)]
 struct Cat;
 impl Animal for Cat {
-    fn speak(&self) -> &str { "Meow!" }
+    fn speak(&self) -> &str {
+        "Meow!"
+    }
 }
 
 fn main() {
@@ -27,10 +31,7 @@ fn main() {
     // - Modify private fields
 
     // ✅ POSSIBLE in Rust with Any
-    let animals: Vec<Box<dyn Any>> = vec![
-        Box::new(Dog),
-        Box::new(Cat),
-    ];
+    let animals: Vec<Box<dyn Any>> = vec![Box::new(Dog), Box::new(Cat)];
 
     println!("Type checking with TypeId:");
     for animal in &animals {

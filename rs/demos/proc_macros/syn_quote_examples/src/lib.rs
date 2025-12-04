@@ -29,18 +29,16 @@ pub fn inspect_fields(input: TokenStream) -> TokenStream {
     let ast = parse_macro_input!(input as DeriveInput);
 
     match &ast.data {
-        Data::Struct(data) => {
-            match &data.fields {
-                Fields::Named(fields) => {
-                    for field in &fields.named {
-                        let name = &field.ident;
-                        let ty = &field.ty;
-                        println!("{}: {}", quote!(#name), quote!(#ty));
-                    }
+        Data::Struct(data) => match &data.fields {
+            Fields::Named(fields) => {
+                for field in &fields.named {
+                    let name = &field.ident;
+                    let ty = &field.ty;
+                    println!("{}: {}", quote!(#name), quote!(#ty));
                 }
-                _ => {}
             }
-        }
+            _ => {}
+        },
         _ => {}
     }
 

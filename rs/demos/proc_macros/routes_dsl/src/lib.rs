@@ -1,7 +1,7 @@
 use proc_macro::TokenStream;
 use quote::quote;
-use syn::{parse_macro_input, Ident, LitStr, Token};
 use syn::parse::{Parse, ParseStream};
+use syn::{parse_macro_input, Ident, LitStr, Token};
 
 struct Route {
     method: Ident,
@@ -15,7 +15,11 @@ impl Parse for Route {
         let path: LitStr = input.parse()?;
         input.parse::<Token![=>]>()?;
         let handler: Ident = input.parse()?;
-        Ok(Route { method, path, handler })
+        Ok(Route {
+            method,
+            path,
+            handler,
+        })
     }
 }
 

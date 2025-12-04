@@ -23,10 +23,7 @@ fn test_builder_complete() {
 
 #[test]
 fn test_builder_missing_field() {
-    let result = User::builder()
-        .name("Bob".to_string())
-        .age(25)
-        .build();
+    let result = User::builder().name("Bob".to_string()).age(25).build();
 
     assert!(result.is_err());
     assert!(result.unwrap_err().contains("email"));
