@@ -12,7 +12,11 @@ pub struct Command {
 
 impl Command {
     pub const fn new(name: &'static str, description: &'static str, handler: fn(&[&str])) -> Self {
-        Command { name, description, handler }
+        Command {
+            name,
+            description,
+            handler,
+        }
     }
 }
 
@@ -22,7 +26,7 @@ pub static COMMANDS: [Command];
 
 // === Module 1: System Commands ===
 mod system {
-    use super::{Command, COMMANDS};
+    use super::{COMMANDS, Command};
     use linkme::distributed_slice;
 
     fn handle_status(_args: &[&str]) {
@@ -43,7 +47,7 @@ mod system {
 
 // === Module 2: User Commands ===
 mod user {
-    use super::{Command, COMMANDS};
+    use super::{COMMANDS, Command};
     use linkme::distributed_slice;
 
     fn handle_login(args: &[&str]) {
@@ -64,7 +68,7 @@ mod user {
 
 // === Module 3: Data Commands ===
 mod data {
-    use super::{Command, COMMANDS};
+    use super::{COMMANDS, Command};
     use linkme::distributed_slice;
 
     fn handle_save(args: &[&str]) {

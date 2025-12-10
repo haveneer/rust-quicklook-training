@@ -12,7 +12,11 @@ pub struct Command {
 
 impl Command {
     pub const fn new(name: &'static str, description: &'static str, handler: fn(&[&str])) -> Self {
-        Command { name, description, handler }
+        Command {
+            name,
+            description,
+            handler,
+        }
     }
 }
 
@@ -108,7 +112,10 @@ fn main() {
 
 // Find and execute a command by name
 fn execute_command(name: &str, args: &[&str]) {
-    if let Some(cmd) = inventory::iter::<Command>.into_iter().find(|c| c.name == name) {
+    if let Some(cmd) = inventory::iter::<Command>
+        .into_iter()
+        .find(|c| c.name == name)
+    {
         println!("Executing '{}':", name);
         (cmd.handler)(args);
         println!();

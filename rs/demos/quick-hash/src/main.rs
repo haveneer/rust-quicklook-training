@@ -35,7 +35,9 @@ fn main() {
     let pb = ProgressBar::new(max_val);
     pb.set_style(
         ProgressStyle::with_template(
-            "[{elapsed_precise}] {wide_bar:.cyan/blue} {pos:>7}/{len:7} {msg}").unwrap(),
+            "[{elapsed_precise}] {wide_bar:.cyan/blue} {pos:>7}/{len:7} {msg}",
+        )
+        .unwrap(),
     );
 
     println!("Looking for longer zero suffix for various seeds:");

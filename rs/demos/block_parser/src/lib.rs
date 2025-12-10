@@ -4,12 +4,12 @@ mod owned_block;
 mod process;
 mod ref_block;
 
-pub use ref_block::{RefBlock, RefTransaction, RefTransactions};
 pub use block_interfaces::{Block, FromBytes, ToBytes, Transaction, Transactions};
 pub use owned_block::{
     make_test_block, make_test_block_with_seed, make_test_transactions_with_seed,
 };
 pub use owned_block::{OwnedBlock, OwnedTransaction};
+pub use ref_block::{RefBlock, RefTransaction, RefTransactions};
 
 /// Possible errors during parsing.
 #[derive(Debug, PartialEq)]
