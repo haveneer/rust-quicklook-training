@@ -61,9 +61,9 @@ members = [
   "hello",
   "full-tree",
   "full-tree/libs/mylib1",
+  "demos/*",
   "demos/proc_macros/*",
   "doclib",
-  "fun_with_rust",
 ]
 
 [workspace.dependencies]

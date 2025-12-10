@@ -1,15 +1,10 @@
-use axum::extract::State;
-use axum::routing::get;
-use axum::{Json, Router};
-use block_parser::{Block, FromBytes, OwnedBlock, RefBlock};
-use serde_json::json;
+use block_parser::{Block, FromBytes, RefBlock};
 use std::error::Error;
-use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::Arc;
 use std::time::Duration;
 use tokio::io::AsyncReadExt;
 use tokio::net::TcpStream;
-use tokio::sync::{Mutex, Notify, RwLock};
+use tokio::sync::{Mutex, Notify};
 use tokio::task::JoinHandle;
 use tokio::time::Instant;
 use tracing::{debug, error, info, instrument, trace};

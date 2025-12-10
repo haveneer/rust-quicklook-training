@@ -28,6 +28,7 @@ pub fn parse_example(input: TokenStream) -> TokenStream {
 pub fn inspect_fields(input: TokenStream) -> TokenStream {
     let ast = parse_macro_input!(input as DeriveInput);
 
+    #[allow(clippy::single_match)]
     match &ast.data {
         Data::Struct(data) => match &data.fields {
             Fields::Named(fields) => {

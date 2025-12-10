@@ -32,13 +32,10 @@ fn main() {
 
     let max_seed_power = 20;
     let max_val = 1 << max_seed_power;
-    let seed_bar_step = 1 << (max_seed_power - 8);
     let pb = ProgressBar::new(max_val);
-    pb.set_draw_delta(seed_bar_step);
-    pb.set_draw_rate(20);
     pb.set_style(
-        ProgressStyle::default_bar()
-            .template("[{elapsed_precise}] {wide_bar:.cyan/blue} {pos:>7}/{len:7} {msg}"),
+        ProgressStyle::with_template(
+            "[{elapsed_precise}] {wide_bar:.cyan/blue} {pos:>7}/{len:7} {msg}").unwrap(),
     );
 
     println!("Looking for longer zero suffix for various seeds:");

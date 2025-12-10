@@ -1,6 +1,8 @@
 # inventory vs linkme: Distributed Plugin Registration in Rust
 
-This project demonstrates two popular Rust crates for distributed plugin registration: `inventory` and `linkme`. Both enable decentralized registration of items across modules without maintaining a central list, but they work differently under the hood.
+This project demonstrates two popular Rust crates for distributed plugin registration: `inventory` and `linkme`. Both
+enable decentralized registration of items across modules without maintaining a central list, but they work differently
+under the hood.
 
 ## Quick Start
 
@@ -14,19 +16,21 @@ cargo run --bin linkme_example
 
 ## Overview
 
-Both crates solve the same problem: allowing different modules to register plugins, commands, or extensions without requiring a central registration file. This is particularly useful in large projects where maintaining a central list would create merge conflicts and tight coupling.
+Both crates solve the same problem: allowing different modules to register plugins, commands, or extensions without
+requiring a central registration file. This is particularly useful in large projects where maintaining a central list
+would create merge conflicts and tight coupling.
 
 ## Key Differences
 
-| Feature | `inventory` | `linkme` |
-|---------|-------------|----------|
-| **Mechanism** | Runtime initialization | Linker-based (compile-time) |
-| **Data Structure** | Iterator | Static slice `[T]` |
-| **Performance** | Small runtime cost | Zero runtime cost |
-| **Type Requirements** | Any type | Must be `Sync` |
-| **Flexibility** | More flexible | More restrictive |
-| **Platform Support** | Broad (incl. WASM) | Requires specific linker features |
-| **Access Pattern** | `inventory::iter::<T>()` | Direct slice access |
+| Feature               | `inventory`              | `linkme`                          |
+|-----------------------|--------------------------|-----------------------------------|
+| **Mechanism**         | Runtime initialization   | Linker-based (compile-time)       |
+| **Data Structure**    | Iterator                 | Static slice `[T]`                |
+| **Performance**       | Small runtime cost       | Zero runtime cost                 |
+| **Type Requirements** | Any type                 | Must be `Sync`                    |
+| **Flexibility**       | More flexible            | More restrictive                  |
+| **Platform Support**  | Broad (incl. WASM)       | Requires specific linker features |
+| **Access Pattern**    | `inventory::iter::<T>()` | Direct slice access               |
 
 ## How They Work
 
@@ -38,6 +42,7 @@ Both crates solve the same problem: allowing different modules to register plugi
 - More portable across platforms
 
 **Syntax:**
+
 ```rust
 inventory::collect!(PluginType);
 
@@ -46,7 +51,7 @@ inventory::submit! {
 }
 
 for item in inventory::iter::<PluginType> {
-    // use item
+// use item
 }
 ```
 
@@ -58,6 +63,7 @@ for item in inventory::iter::<PluginType> {
 - Requires linker support (works on major platforms)
 
 **Syntax:**
+
 ```rust
 #[distributed_slice]
 pub static PLUGINS: [PluginType];
@@ -66,13 +72,14 @@ pub static PLUGINS: [PluginType];
 static ITEM: PluginType = /* ... */;
 
 for item in PLUGINS {
-    // use item
+// use item
 }
 ```
 
 ## Similarities
 
 Both crates provide:
+
 - ✅ Decentralized registration from any module
 - ✅ No central list to maintain
 - ✅ Type-safe collections
@@ -83,12 +90,14 @@ Both crates provide:
 ## When to Use Each
 
 ### Use `inventory` when:
+
 - You need maximum portability (including WebAssembly)
 - Your items are complex types with non-trivial initialization
 - You want to support dynamic linking scenarios
 - Runtime flexibility is more important than performance
 
 ### Use `linkme` when:
+
 - Performance is critical (zero runtime overhead)
 - You're targeting standard platforms (Linux, macOS, Windows, BSD)
 - Your items can be `const` or simple static data
@@ -97,6 +106,7 @@ Both crates provide:
 ## Example Use Cases
 
 Both crates are excellent for:
+
 - **CLI frameworks**: Register subcommands from different modules
 - **Test frameworks**: Collect test cases automatically
 - **Plugin systems**: Register plugins without central coordination

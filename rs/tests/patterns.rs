@@ -100,7 +100,7 @@ fn pattern_multiple() {
             (3, 3) | (3, 23..=93) => "rd",
             _ => "th",
         };
-        return format!("{}{}", x, suffix);
+        format!("{}{}", x, suffix)
     }
 
     assert_eq!(num_to_ordinal(0), "0th");

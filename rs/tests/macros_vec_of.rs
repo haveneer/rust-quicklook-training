@@ -2,6 +2,7 @@
 macro_rules! vec_of {
     ($($element:expr),*) => {
         {
+            #[allow(unused_mut)]
             let mut v = Vec::new();
             $(
                 v.push($element);

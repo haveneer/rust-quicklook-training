@@ -8,8 +8,7 @@ struct MyError {
 fn f1(n: Option<i64>) -> Result<i64, MyError> {
     n.ok_or(MyError {
         msg: format!("Error with always dynamically allocated message: {}", "BAD"),
-    }) //
-    .and_then(|n| Ok(n))
+    })
 }
 
 fn f2(n: Option<i64>) -> Result<i64, MyError> {
@@ -20,7 +19,6 @@ fn f2(n: Option<i64>) -> Result<i64, MyError> {
             "NOT NO BAD"
         ),
     })
-    .and_then(|n| Ok(n))
 }
 
 #[derive(Debug)]
@@ -41,7 +39,7 @@ impl fmt::Display for MyError2 {
 }
 
 fn f3(n: Option<i64>) -> Result<i64, MyError2> {
-    n.ok_or_else(|| MyError2::ComplexError {
+    n.ok_or(MyError2::ComplexError {
         param1: "Fixed string",
         param2: 666,
     })
@@ -52,8 +50,7 @@ impl error::Error for MyError2 {}
 
 // Runtime defined Error type
 fn f4(n: Option<i64>) -> Result<i64, Box<dyn error::Error>> {
-    n.ok_or_else(|| MyError2::EasyError.into())
-        .and_then(|n| Ok(n))
+    n.ok_or(MyError2::EasyError.into())
 }
 
 fn show<E: std::fmt::Debug>(r: Result<i64, E>) {

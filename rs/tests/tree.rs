@@ -40,7 +40,7 @@ fn tree_weight(t: &Tree) -> i32 {
             payload,
             ref right,
         } => {
-            tree_weight(left) + payload + tree_weight(&right)
+            tree_weight(left) + payload + tree_weight(right)
             // or without 'ref' on declaration and no *t dereference and *payload
         }
     }
