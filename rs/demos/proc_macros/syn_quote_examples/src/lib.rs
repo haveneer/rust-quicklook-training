@@ -84,7 +84,9 @@ pub fn syn_example(input: TokenStream) -> TokenStream {
 }
 
 // 6. Exemple avec quote : génère un constructeur new()
-#[proc_macro_derive(AutoNew)]
+// Supporte l'attribut de champ `#[default]` pour omettre le paramètre dans
+// la signature et initialiser ce champ avec `Default::default()`.
+#[proc_macro_derive(AutoNew, attributes(default))]
 pub fn auto_new(input: TokenStream) -> TokenStream {
     let ast = parse_macro_input!(input as DeriveInput);
     let name = &ast.ident;
@@ -97,17 +99,34 @@ pub fn auto_new(input: TokenStream) -> TokenStream {
         _ => panic!("Only structs supported"),
     };
 
-    let field_names = fields.iter().map(|f| &f.ident);
-    let field_types = fields.iter().map(|f| &f.ty);
-    let field_assigns = fields.iter().map(|f| &f.ident);
+    // Helper to detect #[default] on a field
+    let is_default = |f: &syn::Field| f.attrs.iter().any(|a| a.path().is_ident("default"));
+
+    // Parameters for constructor: only non-default fields
+    let ctor_field_names = fields
+        .iter()
+        .filter(|f| !is_default(f))
+        .map(|f| f.ident.as_ref().expect("named field"));
+
+    let ctor_field_types = fields.iter().filter(|f| !is_default(f)).map(|f| &f.ty);
+
+    // Field initializers: default fields use Default::default(), others use the parameter
+    let field_inits = fields.iter().map(|f| {
+        let ident = f.ident.as_ref().expect("named field");
+        if is_default(f) {
+            quote! { #ident: ::core::default::Default::default() }
+        } else {
+            quote! { #ident }
+        }
+    });
 
     let output = quote! {
         impl #name {
             pub fn new(
-                #(#field_names: #field_types),*
+                #(#ctor_field_names: #ctor_field_types),*
             ) -> Self {
                 Self {
-                    #(#field_assigns),*
+                    #(#field_inits),*
                 }
             }
         }

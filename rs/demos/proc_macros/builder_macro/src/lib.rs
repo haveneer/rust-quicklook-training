@@ -16,6 +16,27 @@ pub fn derive_builder(input: TokenStream) -> TokenStream {
         _ => panic!("Builder only works on structs"),
     };
 
+    // Detect #[builder(default)] on fields
+    let defaults: Vec<bool> = fields
+        .iter()
+        .map(|f| {
+            f.attrs.iter().any(|attr| {
+                if !attr.path().is_ident("builder") {
+                    return false;
+                }
+                let mut found = false;
+                // Accept forms like #[builder(default)]
+                let _ = attr.parse_nested_meta(|meta| {
+                    if meta.path.is_ident("default") {
+                        found = true;
+                    }
+                    Ok(())
+                });
+                found
+            })
+        })
+        .collect();
+
     // Génère les champs du builder (tous en Option)
     let builder_fields = fields.iter().map(|f| {
         let name = &f.ident;
@@ -35,11 +56,17 @@ pub fn derive_builder(input: TokenStream) -> TokenStream {
         }
     });
 
-    // Génère les champs pour la méthode build
-    let build_fields = fields.iter().map(|f| {
+    // Génère les champs pour la méthode build, avec support de #[builder(default)]
+    let build_fields = fields.iter().zip(defaults.iter()).map(|(f, has_default)| {
         let name = &f.ident;
-        quote! {
-            #name: self.#name.ok_or(concat!("Field ", stringify!(#name), " is missing"))?
+        if *has_default {
+            quote! {
+                #name: self.#name.unwrap_or_default()
+            }
+        } else {
+            quote! {
+                #name: self.#name.ok_or(concat!("Field ", stringify!(#name), " is missing"))?
+            }
         }
     });
 

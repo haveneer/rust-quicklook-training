@@ -1,9 +1,10 @@
 use builder_macro::Builder;
 
-#[derive(Builder, Debug, PartialEq)]
+#[derive(Builder, Debug)]
 struct User {
     name: String,
     age: u32,
+    #[builder(default)]
     email: String,
 }
 
@@ -22,9 +23,22 @@ fn test_builder_complete() {
 }
 
 #[test]
+fn test_builder_optional_field() {
+    let user = User::builder()
+        .name("Bob".to_string())
+        .age(25)
+        .build()
+        .unwrap();
+
+    assert_eq!(user.name, "Bob");
+    assert_eq!(user.age, 25);
+    assert!(user.email.is_empty());
+}
+
+#[test]
 fn test_builder_missing_field() {
-    let result = User::builder().name("Bob".to_string()).age(25).build();
+    let result = User::builder().name("Charlie".to_string()).build();
 
     assert!(result.is_err());
-    assert!(result.unwrap_err().contains("email"));
+    assert!(result.unwrap_err().contains("age is missing"));
 }

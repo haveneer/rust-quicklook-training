@@ -2783,15 +2783,6 @@ name = "proc_macros"
 version = "0.1.0"
 
 [[package]]
-name = "procedural_macro"
-version = "0.1.0"
-dependencies = [
- "proc-macro2",
- "quote",
- "syn 1.0.109",
-]
-
-[[package]]
 name = "prost"
 version = "0.13.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3165,7 +3156,6 @@ dependencies = [
  "palette",
  "phf 0.11.3",
  "pin-project",
- "procedural_macro",
  "rand 0.8.5",
  "rayon",
  "rstest",

@@ -43,6 +43,8 @@ struct TestSyn {
 struct User {
     name: String,
     age: u32,
+    #[default] // with a custom attribute
+    is_admin: bool,
 }
 
 #[test]
@@ -50,4 +52,5 @@ fn test_auto_new() {
     let user = User::new("Alice".to_string(), 30);
     assert_eq!(user.name, "Alice");
     assert_eq!(user.age, 30);
+    assert!(!user.is_admin);
 }
