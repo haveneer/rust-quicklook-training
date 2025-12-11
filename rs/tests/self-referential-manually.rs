@@ -45,7 +45,7 @@ fn main() {
     // The pointer should point to the correct location,
     // so long as the struct hasn't moved.
     // Meanwhile, we are free to move the pointer around.
-    let mut still_unmoved = unmoved;
+    let still_unmoved = unmoved;
     assert_eq!(still_unmoved.slice, NonNull::from(&still_unmoved.data));
 
     // Since our type doesn't implement Unpin, this will fail to compile:

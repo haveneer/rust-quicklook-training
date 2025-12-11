@@ -51,7 +51,7 @@ mod user {
     use linkme::distributed_slice;
 
     fn handle_login(args: &[&str]) {
-        let user = args.get(0).unwrap_or(&"anonymous");
+        let user = args.first().unwrap_or(&"anonymous");
         println!("  🔐 User '{}' logged in", user);
     }
 
@@ -72,12 +72,12 @@ mod data {
     use linkme::distributed_slice;
 
     fn handle_save(args: &[&str]) {
-        let file = args.get(0).unwrap_or(&"data.txt");
+        let file = args.first().unwrap_or(&"data.txt");
         println!("  💾 Saving to '{}'", file);
     }
 
     fn handle_load(args: &[&str]) {
-        let file = args.get(0).unwrap_or(&"data.txt");
+        let file = args.first().unwrap_or(&"data.txt");
         println!("  📂 Loading from '{}'", file);
     }
 

@@ -32,7 +32,7 @@ fn test_refcell() {
 // Equivalent with compile-time control
 fn test_no_refcell() {
     let mut x = vec![1, 2, 3, 4];
-    let mut my_ref = &mut x;
+    let my_ref = &mut x;
     my_ref.push(5);
     let my_ref = &x;
     println!("{:?}", *my_ref);

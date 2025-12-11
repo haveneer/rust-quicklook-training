@@ -1,3 +1,5 @@
+#![allow(clippy::bool_assert_comparison)]
+
 use darling_example::Config;
 
 #[derive(Config, Debug, Default)]

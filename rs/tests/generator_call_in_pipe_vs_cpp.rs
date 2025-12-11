@@ -6,7 +6,7 @@ mod tests {
     fn test() {
         let mut n = 0;
         let mut generator = move || {
-            n = n + 1;
+            n += 1;
             let result = n;
             println!("Generate [{}]", result);
             result

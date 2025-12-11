@@ -284,7 +284,7 @@ mod tests {
         // exclude full size data
         for cut in 1..data.len() {
             let data = &data[0..cut];
-            let mut iter = BlockViewIterator::new(&data);
+            let mut iter = BlockViewIterator::new(data);
             let result = iter.next();
             assert!(result.is_some());
             let err = result.unwrap().unwrap_err();

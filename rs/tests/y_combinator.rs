@@ -4,7 +4,8 @@
 //! Reader helper:
 //! * http://www.inf.fu-berlin.de/lehre/WS03/alpi/lambda.pdf
 //! * https://fr.wikipedia.org/wiki/Lambda-calcul
-//! see https://en.wikipedia.org/wiki/Fixed-point_combinator
+//! * https://en.wikipedia.org/wiki/Fixed-point_combinator
+//!
 //! On various languages: https://rosettacode.org/wiki/Y_combinator#Rust
 //! More details: https://humanreadablemag.com/issues/1/articles/the-y-combinator-for-programmers
 /// A function type that takes its own type as an input is an infinite recursive type.

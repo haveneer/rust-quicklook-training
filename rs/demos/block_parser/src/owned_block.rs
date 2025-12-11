@@ -184,9 +184,7 @@ mod tests {
 
     #[test]
     fn test_multiple_decode() {
-        let blocks = (0..10)
-            .map(|i| make_test_block_with_seed(i))
-            .collect::<Vec<_>>();
+        let blocks = (0..10).map(make_test_block_with_seed).collect::<Vec<_>>();
 
         let mut many_block_bytes = Vec::new();
         for b in blocks.iter() {

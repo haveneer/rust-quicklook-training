@@ -11,7 +11,7 @@ fn lifetime0() {
     println!("{} et {}", r1, r2);
     // Maintenant un emprunt mutable (possible seulement après la fin des emprunts immuables)
     let r3 = &mut s;
-    r3.push_str("y"); // modification via l'emprunt mutable
+    r3.push('y'); // modification via l'emprunt mutable
     println!("{}", r3);
 }
 

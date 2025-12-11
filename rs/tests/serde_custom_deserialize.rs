@@ -73,7 +73,7 @@ mod tests {
     fn test_custom_deserialize_other() {
         let text = r#"{"theme": "other" }"#;
         assert_eq!(
-            serde_json::from_str::<Container>(&text).unwrap(),
+            serde_json::from_str::<Container>(text).unwrap(),
             Container {
                 theme: Theme::Custom("other".to_string())
             }

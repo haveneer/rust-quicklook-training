@@ -338,8 +338,7 @@ pub fn derive_config(input: TokenStream) -> TokenStream {
     if cfg!(feature = "debug") {
         eprintln!(
             "[darling_example::Config] generated for {} =>\n{}",
-            ident,
-            expanded.to_string()
+            ident, expanded
         );
     }
 

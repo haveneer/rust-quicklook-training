@@ -57,7 +57,7 @@ mod details {
     }
 
     pub fn to_str_bytes<T>(t: &T) -> String {
-        itertools::join(to_bytes(t).into_iter().map(|b| format!("{:02x}", b)), "")
+        itertools::join(to_bytes(t).iter().map(|b| format!("{:02x}", b)), "")
     }
 }
 
