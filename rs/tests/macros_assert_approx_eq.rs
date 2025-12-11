@@ -1,3 +1,5 @@
+#![allow(clippy::approx_constant)]
+
 macro_rules! assert_approx_eq {
     ($left:expr, $right:expr, $epsilon:expr) => {{
         let diff = f64::abs($left - $right);

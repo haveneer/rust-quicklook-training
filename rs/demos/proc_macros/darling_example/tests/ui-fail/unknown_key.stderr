@@ -1,0 +1,5 @@
+error: Unknown field: `does_not_exist`. Available values: `default`, `deprecated`, `max`, `min`, `rename`, `required`
+ --> tests/ui-fail/unknown_key.rs:5:14
+  |
+5 |     #[config(does_not_exist = true)]
+  |              ^^^^^^^^^^^^^^
