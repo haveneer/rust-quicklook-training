@@ -1,45 +1,36 @@
+use futures::future::try_join_all;
 use futures::FutureExt;
-use std::future::ready;
-use tokio::fs;
+use std::hash::{DefaultHasher, Hash, Hasher};
 
-pub trait AnyExt {
-    fn type_name(&self) -> &'static str;
-}
-
-impl<T> AnyExt for T {
-    fn type_name(&self) -> &'static str {
-        std::any::type_name::<T>()
-    }
-}
-
-async fn process<Reader, Writer>(files: &[&str], reader: Reader, mut writer: Writer)
+async fn process<Reader>(files: &[&str], reader: Reader) -> Result<String, std::io::Error>
 where
-    // F : async FnOnce() -> String // syntax not yey stabilized
-    Reader: AsyncFn(&str) -> String,
-    Writer: AsyncFnMut(String),
+    // F : async FnOnce() -> String // syntax not yet stabilized
+    Reader: AsyncFn(&str) -> Result<String, std::io::Error>,
 {
-    for f in files {
-        let s = reader(f).await; // TODO let's do it with `then` & cie
-        println!("s is {}", s.type_name());
-        writer(s).await;
-    }
+    // Lancer toutes les lectures en parallèle puis agréger les résultats
+    let futures_iter = files
+        .iter()
+        .copied()
+        .enumerate()
+        .map(async |(_idx, filename)| reader(filename).await);
+    let results: Vec<_> = try_join_all(futures_iter).await?;
+    Ok(results.concat())
 }
 
 #[tokio::test]
 async fn main() {
-    let reader = async |path: &str| {
-        let r = fs::read_to_string(&path).await.unwrap();
-        r
-    };
+    let reader = async |path: &str| tokio::fs::read_to_string(&path).await;
 
-    let x = fs::read_to_string(&file!());
-
-    let mut vec: Vec<String> = vec![];
-    let writer = async |s: String| {
-        vec.push(ready(s).await);
+    let async_hasher = async |s: String| -> u64 {
+        let mut hasher = DefaultHasher::new();
+        s.hash(&mut hasher);
+        hasher.finish()
     };
 
     let files = [file!(), file!(), file!()];
-    process(&files, reader, writer).await;
-    println!("{:?}", vec.iter().map(|s| s.len()).collect::<Vec<_>>());
+    let r = process(&files, reader)
+        .then(async |x| x.unwrap())
+        .then(async_hasher)
+        .await; // Chaining
+    println!("Hash: {r:08X}");
 }
