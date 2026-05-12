@@ -36,7 +36,7 @@ impl<'a> LogDisplayToString for &&&Match<'a, chrono::DateTime<chrono::Utc>> {
     }
 }
 
-// Second case: all types what implement Display
+// Second case: any type that implements Display
 
 pub(crate) trait DisplayToString {
     fn flexible_to_string(&self) -> String;
@@ -48,7 +48,7 @@ impl<'a, T: std::fmt::Display> DisplayToString for &&Match<'a, T> {
     }
 }
 
-// Third case: all types what implement Display
+// Third case: any type that implements Debug
 
 pub(crate) trait DebugToString {
     fn flexible_to_string(&self) -> String;
