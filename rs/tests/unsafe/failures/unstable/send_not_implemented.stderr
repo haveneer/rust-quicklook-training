@@ -1,0 +1,24 @@
+error[E0277]: `Rc<i32>` cannot be sent between threads safely
+ --> tests/unsafe/failures/unstable/send_not_implemented.rs:10:37
+  |
+ 10 |     let handle = std::thread::spawn(move || *data); //~ ERROR `Rc<i32>` cannot be sent between threads safely
+    |                  ------------------ -------^^^^^^
+    |                  |                  |
+    |                  |                  `Rc<i32>` cannot be sent between threads safely
+    |                  |                  within this `{closure@$DIR/tests/unsafe/failures/unstable/send_not_implemented.rs:10:37: 10:44}`
+    |                  required by a bound introduced by this call
+    |
+    = help: within `{closure@$DIR/tests/unsafe/failures/unstable/send_not_implemented.rs:10:37: 10:44}`, the trait `Send` is not implemented for `Rc<i32>`
+note: required because it's used within this closure
+   --> tests/unsafe/failures/unstable/send_not_implemented.rs:10:37
+    |
+ 10 |     let handle = std::thread::spawn(move || *data); //~ ERROR `Rc<i32>` cannot be sent between threads safely
+    |                                     ^^^^^^^
+note: required by a bound in `spawn`
+   --> $RUST/std/src/thread/functions.rs
+    |
+    | pub fn spawn<F, T>(f: F) -> JoinHandle<T>
+    |        ----- required by a bound in this function
+...
+    |     F: Send + 'static,
+    |        ^^^^ required by this bound in `spawn`
