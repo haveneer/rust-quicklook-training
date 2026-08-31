@@ -42,8 +42,6 @@ fn lifetime1() {
 }
 
 fn max2<'a>(x: &'a i32, y: &'a i32) -> &'a i32 {
-    println!("x is {:?}", *x);
-    println!("y is {:?}", *y);
     if *x > *y {
         x
     } else {
@@ -53,9 +51,6 @@ fn max2<'a>(x: &'a i32, y: &'a i32) -> &'a i32 {
 
 #[test]
 fn lifetime2() {
-    // On usage of reference:
-    // https://stackoverflow.com/questions/36335342/meaning-of-the-ampersand-and-star-symbols-in-rust
-
     let r: &i32;
     let a: i32 = 4;
     {
