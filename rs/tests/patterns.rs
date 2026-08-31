@@ -129,7 +129,26 @@ fn math_rules() {
 }
 
 #[test]
-fn more_patterns() {
-    // is coming in edition 2021
-    // https://github.com/rust-lang/rust/issues/54883
+fn slice_patterns() {
+    fn describe(s: &[i32]) -> String {
+        match s {
+            [] => "empty".to_string(),
+            [x] => format!("single: {x}"),
+            [first, .., last] => format!("first={first}, last={last} (len={})", s.len()),
+        }
+    }
+
+    assert_eq!(describe(&[]), "empty");
+    assert_eq!(describe(&[1]), "single: 1");
+    assert_eq!(describe(&[1, 2, 3, 4]), "first=1, last=4 (len=4)");
+
+    // récursion avec capture du milieu
+    fn is_palindrome(s: &[char]) -> bool {
+        match s {
+            [] | [_] => true,
+            [first, middle @ .., last] => first == last && is_palindrome(middle),
+        }
+    }
+    let word: Vec<char> = "kayak".chars().collect();
+    assert!(is_palindrome(&word));
 }
