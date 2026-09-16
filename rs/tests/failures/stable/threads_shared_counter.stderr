@@ -1,0 +1,20 @@
+error[E0499]: cannot borrow `counter` as mutable more than once at a time
+  --> tests/failures/stable/threads_shared_counter.rs:9:17
+   |
+3  |       std::thread::scope(|s| {
+   |                           - has type `&'1 Scope<'1, '_>`
+4  |           s.spawn(|| {
+   |           -       -- first mutable borrow occurs here
+   |  _________|
+   | |
+5  | |             for _ in 0..1_000_000 {
+6  | |                 counter += 1;
+   | |                 ------- first borrow occurs due to use of `counter` in closure
+7  | |             }
+8  | |         });
+   | |__________- argument requires that `counter` is borrowed for `'1`
+9  |           s.spawn(|| {
+   |                   ^^ second mutable borrow occurs here
+10 |               for _ in 0..1_000_000 {
+11 |                   counter += 1;
+   |                   ------- second borrow occurs due to use of `counter` in closure
