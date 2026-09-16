@@ -1,6 +1,4 @@
-use std::sync::Mutex;
-use std::thread;
-use std::time::Duration;
+use std::{sync::Mutex, thread, time::Duration};
 
 // Crossed lock order: thread 1 holds 0 and waits for 1, thread 2 holds 1 and waits for 0
 #[allow(dead_code)]
@@ -17,13 +15,9 @@ fn transfer(cells: &[Mutex<f64>], from: usize, to: usize, amount: f64) {
     let (first, second) = (from.min(to), from.max(to));
     let mut g1 = cells[first].lock().unwrap();
     let mut g2 = cells[second].lock().unwrap();
-    let (src, dst) = if from == first {
-        (&mut *g1, &mut *g2)
-    } else {
-        (&mut *g2, &mut *g1)
-    };
-    *src -= amount;
-    *dst += amount;
+    let delta = if from == first { amount } else { -amount };
+    *g1 -= delta;
+    *g2 += delta;
 }
 
 fn main() {
