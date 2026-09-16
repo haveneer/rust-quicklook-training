@@ -1,15 +1,15 @@
-// declare f3.rs as a module and allow to navigate into in from outside
+// public module: mylib1::f3::f3()
 pub mod f3;
-// declare f4.rs as a _private_ module
+// private module: mylib1::f4::f4() is refused
 mod f4;
 
-// allows using f4::f4 as this_crate::f4 from outside
+// ...but its content can be re-exported: mylib1::f4()
 pub use f4::f4;
-// allows using f4::f4 as this_crate::f5 from outside
+// ...possibly renamed: mylib1::f5()
 pub use f4::f4 as f5;
 
-// declare f6x.rs as a _private_ module and
+// private module
 mod f6x;
 
-// export all public symbols from f6x as this_crate:: symbols
+// re-export all its public symbols: mylib1::f6a()
 pub use f6x::*;

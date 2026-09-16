@@ -1,3 +1,3 @@
-pub(crate) type Type = bool; // ouverture partielle réduite aux membres du crate courant
+pub(crate) type Type = bool; // whole crate only
 
-pub fn f1() {} // pub is required to be used outside
+pub fn f1() {} // visible outside

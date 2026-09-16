@@ -25,6 +25,11 @@ fn main() {
     }
 
     {
+        dir1::run();
+        // dir1::f2::f2_helper(); // error: restricted to dir1 with pub(super)
+    }
+
+    {
         // use f7 as it is directly in dir2 (was forwarded in the module)
         dir2::f7();
     }

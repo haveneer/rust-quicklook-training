@@ -1,15 +1,11 @@
 [package]
 name = "full-tree"
 version = "0.1.0"
-authors = ["Pascal HAVÉ <hpwxf@haveneer.com>"]
-edition = "2018"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+edition = "2024"
 
 [dependencies]
-mylib1 = { path = "libs/mylib1" }
+mylib1 = { path = "libs/mylib1" } # a local package
 
-# If full-tree was not already inside root project 
-# its sub-packages should have been declared here like this
+# Outside code/rs, members would be listed here:
 # [workspace]
-# members = [ "libs/mylib1" ]
+# members = ["libs/mylib1"]

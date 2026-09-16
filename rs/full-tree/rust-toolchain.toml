@@ -1,0 +1,4 @@
+# Read by rustup in this directory and below
+[toolchain]
+channel = "stable" # or e.g. "1.90"
+components = ["clippy", "rustfmt"]
