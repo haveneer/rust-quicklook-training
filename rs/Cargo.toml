@@ -7,7 +7,6 @@ edition = "2021"
 [dependencies]
 lazy_static = "1.4.0"
 strum = { version = "0.22", features = ["derive"] }
-auto_ops = "0.3.0"
 futures = "0.3"
 futures-timer = "3.0.2"
 rand = "0.8.3"
