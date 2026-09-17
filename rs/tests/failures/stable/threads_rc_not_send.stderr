@@ -1,27 +1,27 @@
-error[E0277]: `Rc<Mutex<i32>>` cannot be sent between threads safely
-  --> tests/failures/stable/threads_rc_not_send.rs:8:32
-   |
-8  |       let handle = thread::spawn(move || {
-   |                    ------------- ^------
-   |                    |             |
-   |  __________________|_____________within this `{closure@$DIR/tests/failures/stable/threads_rc_not_send.rs:8:32: 8:39}`
-   | |                  |
-   | |                  required by a bound introduced by this call
-9  | |         *cloned.lock().unwrap() += 1;
-10 | |     });
-   | |_____^ `Rc<Mutex<i32>>` cannot be sent between threads safely
-   |
-   = help: within `{closure@$DIR/tests/failures/stable/threads_rc_not_send.rs:8:32: 8:39}`, the trait `Send` is not implemented for `Rc<Mutex<i32>>`
+error[E0277]: `Rc<std::sync::Mutex<i32>>` cannot be sent between threads safely
+ --> tests/failures/stable/threads_rc_not_send.rs:8:32
+  |
+  8 |       let handle = thread::spawn(move || {
+    |                    ------------- ^------
+    |                    |             |
+    |  __________________|_____________within this `{closure@$DIR/tests/failures/stable/threads_rc_not_send.rs:8:32: 8:39}`
+    | |                  |
+    | |                  required by a bound introduced by this call
+  9 | |         *cloned.lock().unwrap() += 1;
+ 10 | |     });
+    | |_____^ `Rc<std::sync::Mutex<i32>>` cannot be sent between threads safely
+    |
+    = help: within `{closure@$DIR/tests/failures/stable/threads_rc_not_send.rs:8:32: 8:39}`, the trait `Send` is not implemented for `Rc<std::sync::Mutex<i32>>`
 note: required because it's used within this closure
-  --> tests/failures/stable/threads_rc_not_send.rs:8:32
-   |
-8  |     let handle = thread::spawn(move || {
-   |                                ^^^^^^^
+   --> tests/failures/stable/threads_rc_not_send.rs:8:32
+    |
+  8 |     let handle = thread::spawn(move || {
+    |                                ^^^^^^^
 note: required by a bound in `spawn`
-  --> $RUST/std/src/thread/mod.rs
-   |
-   | pub fn spawn<F, T>(f: F) -> JoinHandle<T>
-   |        ----- required by a bound in this function
+   --> $RUST/std/src/thread/mod.rs
+    |
+    | pub fn spawn<F, T>(f: F) -> JoinHandle<T>
+    |        ----- required by a bound in this function
 ...
-   |     F: Send + 'static,
-   |        ^^^^ required by this bound in `spawn`
+    |     F: Send + 'static,
+    |        ^^^^ required by this bound in `spawn`

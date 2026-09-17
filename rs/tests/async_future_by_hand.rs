@@ -1,3 +1,5 @@
+#![allow(clippy::new_without_default)]
+
 use std::future::Future;
 use std::pin::Pin;
 use std::sync::atomic::{AtomicBool, Ordering};
@@ -11,7 +13,7 @@ pub struct ManualFuture {
 }
 
 struct ManualInner {
-    // Indicates whether the future is ready (completed).
+    // Indicates whether the future is ready (completed)
     ready: AtomicBool,
     // Option<Waker> protected by a Mutex to store the pending waker.
     waker: Mutex<Option<Waker>>,

@@ -52,7 +52,7 @@ fn with_pin_box() -> impl FnOnce() {
     // (Pin::new requires Unpin on the value)
     let pin_box: Pin<Box<MyPinnedStruct>> = Box::pin(MyPinnedStruct::new());
     details::show(&pin_box);
-    let mut pin_box = pin_box; // move variable not content
+    let pin_box = pin_box; // move variable not content
     details::show(&pin_box); // variable moved but not the context
     details::ref_access(&pin_box.data); // can be used by simple immutable reference
 

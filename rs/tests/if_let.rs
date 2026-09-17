@@ -31,7 +31,7 @@ fn test_it_let_nested() {
 
 #[test]
 fn test_while_let() {
-    let mut v = (1..8).into_iter().map(|i| Some(i)).collect::<Vec<_>>();
+    let mut v = (1..8).map(Some).collect::<Vec<_>>();
     v.insert(3, None);
 
     while let Some(Some(i)) = v.pop() {
@@ -40,6 +40,7 @@ fn test_while_let() {
 }
 
 #[test]
+#[allow(clippy::redundant_pattern_matching, clippy::collapsible_else_if)]
 fn test_if_let_scope() {
     mod hints {
         // The behavior changes after edition 2024

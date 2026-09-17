@@ -5,7 +5,7 @@ fn main() {
     #[allow(clippy::if_same_then_else)]
     if rust_toolchain.starts_with("stable") {
         // do nothing
-    } else if rust_toolchain.starts_with("1.85") {
+    } else if rust_toolchain.starts_with("1.90") {
         // do nothing
     } else if rust_toolchain.starts_with("nightly") {
         //enable the 'nightly' feature flag

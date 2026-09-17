@@ -43,7 +43,6 @@ fn f3(n: Option<i64>) -> Result<i64, MyError2> {
         param1: "Fixed string",
         param2: 666,
     })
-    .and_then(|n| Ok(n))
 }
 
 impl error::Error for MyError2 {}

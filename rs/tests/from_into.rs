@@ -24,9 +24,8 @@ impl Foo {
         Foo: From<T>,
     {
         println!("{:?}", v);
-        // let result = v.into();  // equivalent
-        let result = Foo::from(v); //    forms
-        result
+        // v.into();  // equivalent
+        Foo::from(v) //    forms
     }
 }
 
