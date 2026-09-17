@@ -1,11 +1,13 @@
 // WARNING: this code is Work in progress
-// Even if STACK and HEAP sections seem well detected,
-// TEXT, DATA, BSS are not yet well detected. Should be improved/fixed
+// macOS: TEXT, RODATA, DATA, BSS, STACK and HEAP are detected
+// (see `examples/locate_pointer.rs`).
+// Linux: STACK and HEAP seem well detected; TEXT, RODATA, DATA, BSS still to be checked.
 
 #[derive(Debug)]
 pub enum MemorySection {
     Text,   // Executable code segment
-    Data,   // Static initialized data (or read-only data)
+    Rodata, // Static read-only data
+    Data,   // Static initialized (writable) data
     Bss,    // Static uninitialized data
     Heap,   // Heap
     Stack,  // Stack
@@ -102,8 +104,8 @@ fn identify_memory_section_linux<T>(obj_ref: &T) -> Option<MemorySection> {
                     }
                     return Some(MemorySection::Data);
                 } else {
-                    // Read-only => .rodata (treat as Data)
-                    return Some(MemorySection::Data);
+                    // Neither executable nor writable => .rodata
+                    return Some(MemorySection::Rodata);
                 }
             } else {
                 unimplemented!()
@@ -167,13 +169,16 @@ pub fn identify_memory_section_macos<T>(obj_ref: &T) -> Option<MemorySection> {
         )
     };
 
-    if kr != KERN_SUCCESS {
+    // `mach_vm_region` returns the first region at or *after* the address:
+    // if it starts beyond, the address is not mapped at all.
+    if kr != KERN_SUCCESS || query_addr as usize > addr {
         return None;
     }
 
     // Deduce the region type based on the info fields.
-    const VM_MEMORY_STACK: u32 = 4;
-    if info.user_tag == VM_MEMORY_STACK || info.user_tag == 255 {
+    // Tags from <mach/vm_statistics.h>
+    const VM_MEMORY_STACK: u32 = 30;
+    if info.user_tag == VM_MEMORY_STACK {
         return Some(MemorySection::Stack);
     }
     // Define the shared mode constant.
@@ -234,9 +239,42 @@ fn match_address_in_mach_header(
             let seg_start = seg_cmd.vmaddr as usize + slide;
             let seg_end = seg_start + seg_cmd.vmsize as usize;
             if addr >= seg_start && addr < seg_end {
+                // Read-only segment: `__TEXT` (r-x) or `__DATA_CONST` (made read-only
+                // by dyld after relocation, flagged SG_READ_ONLY).
+                let seg_read_only =
+                    seg_cmd.initprot & VM_PROT_WRITE == 0 || seg_cmd.flags & SG_READ_ONLY != 0;
+                // Refine using the sections (`__text`, `__const`, `__data`, `__bss`...):
+                // they immediately follow their segment_command_64.
+                let sections = unsafe {
+                    std::slice::from_raw_parts(
+                        (seg_cmd as *const segment_command_64).add(1) as *const section_64,
+                        seg_cmd.nsects as usize,
+                    )
+                };
+                for sect in sections {
+                    let sect_start = sect.addr as usize + slide;
+                    let sect_end = sect_start + sect.size as usize;
+                    if addr >= sect_start && addr < sect_end {
+                        return Some(if sect.flags & S_ATTR_INSTRUCTIONS != 0 {
+                            MemorySection::Text
+                        } else if matches!(
+                            sect.flags & SECTION_TYPE,
+                            S_ZEROFILL | S_GB_ZEROFILL | S_THREAD_LOCAL_ZEROFILL
+                        ) {
+                            MemorySection::Bss
+                        } else if seg_read_only {
+                            MemorySection::Rodata // e.g. `__TEXT,__const`
+                        } else {
+                            MemorySection::Data // e.g. `__DATA,__data`
+                        });
+                    }
+                }
+                // Not inside a section (padding): fall back to the segment name
                 let segname_str = segment_name_to_str(&seg_cmd.segname);
                 if segname_str.starts_with("__TEXT") {
                     return Some(MemorySection::Text);
+                } else if segname_str.starts_with("__DATA_CONST") {
+                    return Some(MemorySection::Rodata);
                 } else if segname_str.starts_with("__DATA") {
                     return Some(MemorySection::Data);
                 }
@@ -303,5 +341,30 @@ mod mach_o {
             pub flags: u32,
         }
         pub const LC_SEGMENT_64: u32 = 0x19;
+        pub const VM_PROT_WRITE: i32 = 0x2;
+        pub const SG_READ_ONLY: u32 = 0x10;
+
+        #[repr(C)]
+        pub struct section_64 {
+            pub sectname: [i8; 16],
+            pub segname: [i8; 16],
+            pub addr: u64,
+            pub size: u64,
+            pub offset: u32,
+            pub align: u32,
+            pub reloff: u32,
+            pub nreloc: u32,
+            pub flags: u32,
+            pub reserved1: u32,
+            pub reserved2: u32,
+            pub reserved3: u32,
+        }
+        // Section flags, from <mach-o/loader.h>
+        pub const SECTION_TYPE: u32 = 0x0000_00ff;
+        pub const S_ZEROFILL: u32 = 0x1;
+        pub const S_GB_ZEROFILL: u32 = 0xc;
+        pub const S_THREAD_LOCAL_ZEROFILL: u32 = 0x12;
+        // S_ATTR_PURE_INSTRUCTIONS | S_ATTR_SOME_INSTRUCTIONS
+        pub const S_ATTR_INSTRUCTIONS: u32 = 0x8000_0000 | 0x0000_0400;
     }
 }
