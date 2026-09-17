@@ -1,8 +1,6 @@
 #![cfg_attr(feature = "nightly", feature(bigint_helper_methods))]
 // Ref: https://huonw.github.io/blog/2016/04/myths-and-legends-about-integer-overflow-in-rust/
 
-use std::ops::Add;
-
 fn main() {
     let x: u8 = 200;
     let y: u8 = 155;
@@ -25,6 +23,8 @@ fn test() {
 #[test]
 #[should_panic]
 fn test_add_with_overflow() {
+    use std::ops::Add;
+
     let x: u8 = 200;
     let y: u8 = 155;
 
