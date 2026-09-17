@@ -1,7 +1,7 @@
 error[E0038]: the trait `MyTrait` is not dyn compatible
  --> tests/failures/stable/object_safety.rs:23:34
   |
- 9 |     fn with_invalid_receiver(self: Arc<Box<Self>>); // object-safety: invalid receiver
+ 8 |     fn with_invalid_receiver(self: Arc<Box<Self>>); // object-safety: invalid receiver
    |                                    -------------- help: consider changing method `with_invalid_receiver`'s `self` parameter to be `&self`: `&Self`
 ...
 23 |     let make_one = || -> Box<dyn MyTrait> { Box::new(MyType) };
@@ -9,15 +9,14 @@ error[E0038]: the trait `MyTrait` is not dyn compatible
    |
 note: for a trait to be dyn compatible it needs to allow building a vtable
       for more information, visit <https://doc.rust-lang.org/reference/items/traits.html#dyn-compatibility>
-  --> tests/failures/stable/object_safety.rs:7:34
+  --> tests/failures/stable/object_safety.rs:7:35
    |
  3 | trait MyTrait {
    |       ------- this trait is not dyn compatible...
 ...
- 7 |     fn with_self_return(self) -> Self; // object-safety: Self in return
-   |                                  ^^^^ ...because method `with_self_return` references the `Self` type in its return type
- 8 |     fn with_self_receiver(self); // object-safety: invalid receiver
- 9 |     fn with_invalid_receiver(self: Arc<Box<Self>>); // object-safety: invalid receiver
+ 7 |     fn with_self_return(&self) -> Self; // object-safety: Self outside receiver type
+   |                                   ^^^^ ...because method `with_self_return` references the `Self` type in its return type
+ 8 |     fn with_invalid_receiver(self: Arc<Box<Self>>); // object-safety: invalid receiver
    |                                    ^^^^^^^^^^^^^^ ...because method `with_invalid_receiver`'s `self` parameter cannot be dispatched on
    = help: consider moving `with_self_return` to another trait
    = help: only type `MyType` implements `MyTrait`; consider using it directly instead.
