@@ -36,7 +36,7 @@ phf = { version = "0.11", features = ["macros"] }
 
 # benchmark !
 criterion = { version = "0.5", features = ["html_reports"] }
-iai-callgrind = "0.14.0"
+gungraun = "0.18.2" # ex iai-callgrind (0.19 requires rustc >= 1.85.1)
 
 # other demos
 #serde = "1"

@@ -1,5 +1,5 @@
 # Rust stable basé sur Debian bullseye
-FROM rust:1.85-bookworm
+FROM rust:1.90-bookworm
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
@@ -13,8 +13,8 @@ RUN cargo install cargo-expand
 # Installer criterion (pour cargo bench)
 RUN cargo install cargo-criterion
 
-# Installer iai-callgrind
-RUN cargo install iai-callgrind-runner
+# Installer gungraun (ex iai-callgrind)
+RUN cargo install gungraun-runner --version 0.18.2 --locked # must match the gungraun crate version
 
 
 # (Optionnel) Installer Miri

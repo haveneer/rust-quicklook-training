@@ -5,7 +5,7 @@ use block_parser::block_iter::BlockViewIterator;
 use block_parser::{
     make_test_block, Block, FromBytes, OwnedBlock, RefBlock, ToBytes, Transaction, Transactions,
 };
-use iai_callgrind::library_benchmark;
+use gungraun::library_benchmark;
 use std::hint::black_box;
 
 const N: usize = 10;
@@ -119,7 +119,7 @@ criterion_group!(
 #[cfg(not(feature = "iai"))]
 criterion_main!(benches);
 
-// setup/teardown: https://iai-callgrind.github.io/iai-callgrind/latest/html/benchmarks/library_benchmarks/setup_and_teardown.html
+// setup/teardown: https://gungraun.github.io/gungraun/latest/html/benchmarks/library_benchmarks/setup_and_teardown.html
 
 #[library_benchmark]
 #[bench::one_block(setup = make_block_bytes)]
@@ -156,6 +156,6 @@ fn iai_block_iter_from_bytes(buf: Vec<u8>) {
 }
 
 #[cfg(feature = "iai")]
-iai_callgrind::library_benchmark_group!(name = bench_parser_group; benchmarks = iai_owned_block_from_bytes, iai_ref_block_from_bytes, iai_block_iter_from_bytes);
+gungraun::library_benchmark_group!(name = bench_parser_group; benchmarks = iai_owned_block_from_bytes, iai_ref_block_from_bytes, iai_block_iter_from_bytes);
 #[cfg(feature = "iai")]
-iai_callgrind::main!(library_benchmark_groups = bench_parser_group);
+gungraun::main!(library_benchmark_groups = bench_parser_group);

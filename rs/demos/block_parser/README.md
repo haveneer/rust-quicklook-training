@@ -1,7 +1,7 @@
 # tokio block producer/consumer with a zero-copy block parser
 
 * `cargo bench` show comparison between 3 parsing methods (naive, zero-copy, iterator only)
-* `cargo bench --features iai` benches the same methods using iai-callgrind (don't forget to [install tools](../../benches/environment))
+* `cargo bench --features iai` benches the same methods using gungraun (ex iai-callgrind) (don't forget to [install tools](../../benches/README.md))
 
 ## Testing tools
 

@@ -4,7 +4,7 @@
 use std::hint::black_box; // Use black_box from std (re-exported by Criterion and Iai as well)
 
 use criterion::{criterion_group, criterion_main, Criterion};
-use iai_callgrind::{library_benchmark, library_benchmark_group, main};
+use gungraun::{library_benchmark, library_benchmark_group, main};
 
 trait Shape {
     fn area(&self) -> f64;
