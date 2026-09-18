@@ -108,3 +108,15 @@ harness = false
 [[bench]]
 name = "allocations_inner_loop"
 harness = false
+
+[[bench]]
+name = "subfold"
+harness = false
+
+[[bench]]
+name = "iteration_style"
+harness = false
+
+[[bench]]
+name = "adapter_internal_iteration"
+harness = false
