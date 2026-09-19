@@ -6,6 +6,15 @@ use std::hint::black_box; // Use black_box from std (re-exported by Criterion an
 use criterion::{criterion_group, criterion_main, Criterion};
 use gungraun::{library_benchmark, library_benchmark_group, main};
 
+/// Calls per measured iteration.
+///
+/// The fastest variants (`static_no_box`, `enum_dispatch`) land around 0.5-0.7 ns per call
+/// and criterion reports ~20 % standard deviation on them: at that scale the loop is folded
+/// by LLVM and the timing measures core placement more than dispatch. Raising this to 10_000
+/// was tried and changes nothing (the dispersion follows ns/call, not loop length), so the
+/// slides use the callgrind instruction counts instead — see benches/README.md.
+const ROUNDS: usize = 1_000;
+
 trait Shape {
     fn area(&self) -> f64;
     fn name(&self) -> &'static str;
@@ -52,7 +61,7 @@ fn static_no_box_dispatch(bencher: &mut Criterion) {
     let circle: Circle = Circle { radius: 1.0 };
     bencher.bench_function("static_no_box_dispatch", |b| {
         b.iter(|| {
-            for _ in 0..1000 {
+            for _ in 0..ROUNDS {
                 black_box(black_box(&square).diameter());
                 black_box(black_box(&circle).diameter());
             }
@@ -66,7 +75,7 @@ fn static_in_box_dispatch(bencher: &mut Criterion) {
     let circle: Box<Circle> = Box::new(Circle { radius: 1.0 }); // to make fair comparisons
     bencher.bench_function("static_in_box_dispatch", |b| {
         b.iter(|| {
-            for _ in 0..1000 {
+            for _ in 0..ROUNDS {
                 black_box(black_box(&square).diameter());
                 black_box(black_box(&circle).diameter());
             }
@@ -80,7 +89,7 @@ fn dynamic_no_box_dispatch(bencher: &mut Criterion) {
     let circle: &dyn Shape = &Circle { radius: 1.0 };
     bencher.bench_function("dynamic_no_box_dispatch", |b| {
         b.iter(|| {
-            for _ in 0..1000 {
+            for _ in 0..ROUNDS {
                 black_box(black_box(&square).diameter());
                 black_box(black_box(&circle).diameter());
             }
@@ -94,7 +103,7 @@ fn dynamic_in_box_dispatch(bencher: &mut Criterion) {
     let circle: Box<dyn Shape> = Box::new(Circle { radius: 1.0 }); // to make fair comparisons
     bencher.bench_function("dynamic_in_box_dispatch", |b| {
         b.iter(|| {
-            for _ in 0..1000 {
+            for _ in 0..ROUNDS {
                 black_box(black_box(&square).diameter());
                 black_box(black_box(&circle).diameter());
             }
@@ -120,7 +129,7 @@ fn enum_dispatch(bencher: &mut Criterion) {
     let circle = EnumShape::Circle { radius: 1.0 };
     bencher.bench_function("enum_dispatch", |b| {
         b.iter(|| {
-            for _ in 0..1000 {
+            for _ in 0..ROUNDS {
                 black_box(enum_dispatcher_diameter(black_box(&square)));
                 black_box(enum_dispatcher_diameter(black_box(&circle)));
             }
@@ -144,7 +153,7 @@ criterion_main!(benches);
 fn iai_static_no_box_dispatch() {
     let square: Square = Square { side: 1.0 };
     let circle: Circle = Circle { radius: 1.0 };
-    for _ in 0..1000 {
+    for _ in 0..ROUNDS {
         black_box(black_box(&square).diameter());
         black_box(black_box(&circle).diameter());
     }
@@ -154,7 +163,7 @@ fn iai_static_no_box_dispatch() {
 fn iai_static_in_box_dispatch() {
     let square: Box<Square> = Box::new(Square { side: 1.0 }); // both in Box
     let circle: Box<Circle> = Box::new(Circle { radius: 1.0 }); // to make fair comparisons
-    for _ in 0..1000 {
+    for _ in 0..ROUNDS {
         black_box(black_box(&square).diameter());
         black_box(black_box(&circle).diameter());
     }
@@ -164,7 +173,7 @@ fn iai_static_in_box_dispatch() {
 fn iai_dynamic_no_box_dispatch() {
     let square: &dyn Shape = &Square { side: 1.0 };
     let circle: &dyn Shape = &Circle { radius: 1.0 };
-    for _ in 0..1000 {
+    for _ in 0..ROUNDS {
         black_box(black_box(&square).diameter());
         black_box(black_box(&circle).diameter());
     }
@@ -174,7 +183,7 @@ fn iai_dynamic_no_box_dispatch() {
 fn iai_dynamic_in_box_dispatch() {
     let square: Box<dyn Shape> = Box::new(Square { side: 1.0 }); // both in Box
     let circle: Box<dyn Shape> = Box::new(Circle { radius: 1.0 }); // to make fair comparisons
-    for _ in 0..1000 {
+    for _ in 0..ROUNDS {
         black_box(black_box(&square).diameter());
         black_box(black_box(&circle).diameter());
     }
@@ -184,7 +193,7 @@ fn iai_dynamic_in_box_dispatch() {
 fn iai_enum_dispatch() {
     let square = EnumShape::Square { side: 1.0 };
     let circle = EnumShape::Circle { radius: 1.0 };
-    for _ in 0..1000 {
+    for _ in 0..ROUNDS {
         black_box(enum_dispatcher_diameter(black_box(&square)));
         black_box(enum_dispatcher_diameter(black_box(&circle)));
     }

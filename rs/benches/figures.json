@@ -1,0 +1,319 @@
+{
+  "_": "Figures des slides, tracées par benches/plot_figures.py. Chemins relatifs à code/rs.",
+  "criterion_dir": "target/criterion",
+  "discover_dir": "criterion_plots_by_case",
+  "output_root": "../../images/benchmarks",
+  "data": "instr.txt",
+  "elements": 16384,
+  "repeats": 20,
+  "palette": {
+    "default": "#27ae60",
+    "slow": "#c0392b",
+    "reference": "#7f8c8d"
+  },
+  "curve_styles": {
+    "pull_next": [
+      "-",
+      "o"
+    ],
+    "pull_fold": [
+      "-",
+      "s"
+    ],
+    "push_fold": [
+      "--",
+      "x"
+    ]
+  },
+  "labels": {
+    "next_only": "next() only",
+    "with_fold": "+ fold",
+    "with_fold_find": "+ fold + find",
+    "std_map": "std's .map()",
+    "pull_next": "pull — next() element by element",
+    "pull_fold": "pull — fold() inside the block",
+    "push_fold": "push — fold() inside the block + fold() override",
+    "chunks_ref": "chunks() (reference)",
+    "create-box": "Box",
+    "create-rc": "Rc",
+    "create-arc": "Arc",
+    "create-refcell": "RefCell",
+    "create-arc_mutex": "Arc<Mutex>",
+    "create-arc_rwlock": "Arc<RwLock>",
+    "clone-box": "Box",
+    "clone-rc": "Rc",
+    "clone-arc": "Arc",
+    "clone-refcell": "RefCell",
+    "clone-arc_mutex": "Arc<Mutex>",
+    "clone-arc_rwlock": "Arc<RwLock>",
+    "access-box": "Box",
+    "access-rc": "Rc",
+    "access-arc": "Arc",
+    "access-refcell": "RefCell",
+    "access-mutex": "Mutex",
+    "access-rwlock_read": "RwLock (read)",
+    "access-rwlock_write": "RwLock (write)",
+    "push_pop-on Vec": "bare Vec",
+    "push_pop-RefCell on Vec": "RefCell<Vec>",
+    "push_pop-Mutex on Vec": "Mutex<Vec>",
+    "static_no_box_dispatch": "static, no Box",
+    "static_in_box_dispatch": "static, in Box",
+    "dynamic_no_box_dispatch": "dynamic (&dyn)",
+    "dynamic_in_box_dispatch": "dynamic (Box<dyn>)",
+    "enum_dispatch": "enum dispatch",
+    "Box allocation for many small objects": "Box allocation",
+    "Arena allocation for many small objects": "Arena allocation",
+    "Sequential access on Box-allocated objects": "Sequential access on Box",
+    "Sequential access on arena-allocated objects": "Sequential access on arena",
+    "Random access on Box-allocated objects": "Random access on Box",
+    "Random access on arena-allocated objects": "Random access on arena"
+  },
+  "figures": [
+    {
+      "file": "adapter/filter_sum.png",
+      "type": "bars",
+      "case": "adapter_filter_sum",
+      "title": "Filter source, consumed by sum()",
+      "variants": [
+        "next_only",
+        "with_fold",
+        "with_fold_find",
+        "std_map"
+      ]
+    },
+    {
+      "file": "adapter/filter_find.png",
+      "type": "bars",
+      "case": "adapter_filter_find",
+      "title": "Filter source, consumed by find()",
+      "variants": [
+        "next_only",
+        "with_fold",
+        "with_fold_find",
+        "std_map"
+      ]
+    },
+    {
+      "file": "adapter/chain_sum.png",
+      "type": "bars",
+      "case": "adapter_chain_sum",
+      "title": "Chain source, consumed by sum()",
+      "variants": [
+        "next_only",
+        "with_fold",
+        "with_fold_find",
+        "std_map"
+      ]
+    },
+    {
+      "file": "subfold/subfold_chain4.png",
+      "type": "curves",
+      "source": "chain4",
+      "title": "subfold — chain4 source",
+      "series": [
+        "pull_next",
+        "pull_fold",
+        "push_fold"
+      ]
+    },
+    {
+      "file": "subfold/subfold_flatmap.png",
+      "type": "curves",
+      "source": "flatmap",
+      "title": "subfold — flatmap source",
+      "series": [
+        "pull_next",
+        "pull_fold",
+        "push_fold"
+      ]
+    },
+    {
+      "file": "subfold/subfold_filter.png",
+      "type": "curves",
+      "source": "filter",
+      "title": "subfold — filter source",
+      "series": [
+        "pull_next",
+        "pull_fold",
+        "push_fold"
+      ]
+    },
+    {
+      "file": "subfold/subfold_slice.png",
+      "type": "curves",
+      "source": "slice",
+      "title": "subfold — slice source",
+      "series": [
+        "pull_next",
+        "pull_fold",
+        "push_fold"
+      ]
+    },
+    {
+      "_": "benches/allocations_inner_loop.rs — cargo bench --bench allocations_inner_loop",
+      "file": "allocations/allocations_stack_vs_heap.png",
+      "type": "vbars",
+      "benches": [
+        "allocations/Stack allocation (array)",
+        "allocations/Heap allocation (Vec)"
+      ],
+      "y_label": "Mean time ({unit})"
+    },
+    {
+      "file": "allocations/access_stack_vs_heap.png",
+      "type": "vbars",
+      "benches": [
+        "accesses/Sequential access on stack (array)",
+        "accesses/Sequential access on heap (Vec)"
+      ],
+      "y_label": "Mean time ({unit})"
+    },
+    {
+      "_": "benches/allocations_many_small.rs — cargo bench --bench allocations_many_small",
+      "file": "allocations/allocation_of_many_small_objects.png",
+      "type": "vbars",
+      "benches": [
+        "Box allocation for many small objects",
+        "Arena allocation for many small objects"
+      ],
+      "y_label": "Mean time ({unit})"
+    },
+    {
+      "file": "allocations/access_to_many_small_objects.png",
+      "type": "vbars",
+      "rotation": 25,
+      "benches": [
+        "Sequential access on Box-allocated objects",
+        "Sequential access on arena-allocated objects",
+        "Random access on Box-allocated objects",
+        "Random access on arena-allocated objects"
+      ],
+      "y_label": "Mean time ({unit})"
+    },
+    {
+      "_": "benches/smart_pointers.rs — cargo bench --bench smart_pointers",
+      "file": "pointers/create.png",
+      "type": "vbars",
+      "title": "Benchmarks for function 'create'",
+      "benches": [
+        "create-box",
+        "create-rc",
+        "create-arc",
+        "create-refcell",
+        "create-arc_mutex",
+        "create-arc_rwlock"
+      ],
+      "y_label": "Average time (ns)",
+      "unit": "ns"
+    },
+    {
+      "file": "pointers/clone.png",
+      "type": "vbars",
+      "title": "Benchmarks for function 'clone'",
+      "benches": [
+        "clone-box",
+        "clone-rc",
+        "clone-arc",
+        "clone-refcell",
+        "clone-arc_mutex",
+        "clone-arc_rwlock"
+      ],
+      "y_label": "Average time (ns)",
+      "unit": "ns"
+    },
+    {
+      "file": "pointers/access.png",
+      "type": "vbars",
+      "title": "Benchmarks for function 'access'",
+      "rotation": 25,
+      "benches": [
+        "access-box",
+        "access-rc",
+        "access-arc",
+        "access-refcell",
+        "access-mutex",
+        "access-rwlock_read",
+        "access-rwlock_write"
+      ],
+      "y_label": "Average time (ns)",
+      "unit": "ns"
+    },
+    {
+      "_": "benches/refcell.rs — cargo bench --bench refcell",
+      "file": "refcell/push_pop.png",
+      "type": "vbars",
+      "title": "push/pop: cost of access control",
+      "benches": [
+        "push_pop-on Vec",
+        "push_pop-RefCell on Vec",
+        "push_pop-Mutex on Vec"
+      ]
+    },
+    {
+      "_": "benches/dispatch.rs en criterion — cargo bench --bench dispatch",
+      "file": "dispatch/static_vs_dynamic_time.png",
+      "type": "vbars",
+      "title": "Static, dynamic and enum dispatch (time)",
+      "y_label": "Mean time (ns)",
+      "unit": "ns",
+      "rotation": 25,
+      "benches": [
+        "static_no_box_dispatch",
+        "static_in_box_dispatch",
+        "dynamic_no_box_dispatch",
+        "dynamic_in_box_dispatch",
+        "enum_dispatch"
+      ]
+    },
+    {
+      "_": "benches/dispatch.rs via gungraun — voir benches/README.md pour produire dispatch_instr.txt",
+      "file": "dispatch/static_vs_dynamic_instructions.png",
+      "type": "vbars",
+      "data": "dispatch_instr.txt",
+      "title": "Static, dynamic and enum dispatch (instructions)",
+      "y_label": "instructions (callgrind)",
+      "rotation": 25,
+      "series": [
+        "static_no_box_dispatch",
+        "static_in_box_dispatch",
+        "dynamic_no_box_dispatch",
+        "dynamic_in_box_dispatch",
+        "enum_dispatch"
+      ]
+    }
+  ],
+  "series_colors": {
+    "_": "une couleur par structure mesurée, réutilisée dans toutes les figures",
+    "box": "#1f77b4",
+    "rc": "#ff7f0e",
+    "arc": "#2ca02c",
+    "refcell": "#d62728",
+    "arc_mutex": "#9467bd",
+    "arc_rwlock": "#8c564b",
+    "mutex": "#9467bd",
+    "rwlock_read": "#8c564b",
+    "rwlock_write": "#e377c2",
+    "on Vec": "#1f77b4",
+    "RefCell on Vec": "#d62728",
+    "Mutex on Vec": "#9467bd",
+    "allocations/Stack allocation (array)": "#ff7f0e",
+    "allocations/Heap allocation (Vec)": "#1f77b4",
+    "accesses/Sequential access on stack (array)": "#ff7f0e",
+    "accesses/Sequential access on heap (Vec)": "#1f77b4",
+    "Box allocation for many small objects": "#1f77b4",
+    "Arena allocation for many small objects": "#2ca02c",
+    "Sequential access on Box-allocated objects": "#1f77b4",
+    "Sequential access on arena-allocated objects": "#2ca02c",
+    "Random access on Box-allocated objects": "#1f77b4",
+    "Random access on arena-allocated objects": "#2ca02c",
+    "static_no_box_dispatch": "#d62728",
+    "static_in_box_dispatch": "#2ca02c",
+    "dynamic_no_box_dispatch": "#ff7f0e",
+    "dynamic_in_box_dispatch": "#1f77b4",
+    "enum_dispatch": "#9467bd",
+    "next_only": "#1f77b4",
+    "with_fold": "#ff7f0e",
+    "with_fold_find": "#2ca02c",
+    "std_map": "#d62728"
+  }
+}

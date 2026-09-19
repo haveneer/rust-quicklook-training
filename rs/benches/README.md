@@ -7,6 +7,81 @@
 * `cargo bench --features iai` runs the gungraun (ex iai-callgrind) benches (instruction counts via Valgrind);
   benches with a gungraun variant: `iai_demo` (always gungraun), `dispatch`, `block_parser`'s `parser`
 
+## Figures
+
+Toutes les figures passent par un seul script, `benches/plot_figures.py`, décrit par
+`benches/figures.json` (type de graphe, cas criterion ou relevé callgrind, ordre des variantes,
+libellés, titres, couleurs, fichier de sortie) :
+
+```shell
+venv/bin/python benches/plot_figures.py                  # toutes les figures des slides
+venv/bin/python benches/plot_figures.py --only adapter   # un sous-ensemble (filtre sur le chemin)
+venv/bin/python benches/plot_figures.py --skip-missing   # ignore les figures sans mesures
+venv/bin/python benches/plot_figures.py --discover       # vue d'inspection, sans configuration
+```
+
+Trois types de figures :
+
+| type | source | utilisé par |
+|---|---|---|
+| `bars` | criterion, cas `<case>-<variante>` | `adapter/` (barres horizontales, lisibles en projection) |
+| `vbars` | criterion (`benches`: chemins sous `target/criterion`) ou relevé `<nom> <valeur>` (`data`) | `allocations/`, `pointers/`, `refcell/`, `dispatch/` |
+| `curves` | relevé callgrind `<source> <n> <variante> <instructions>` | `subfold/` |
+
+Les couleurs suivent `series_colors` : **une teinte par structure mesurée, réutilisée d'une figure
+à l'autre** (`box`, `rc`, `arc`… gardent la leur dans `create`, `clone` et `access`). La clé est le
+nom du bench, ou la partie après le premier `-`. Toutes les figures puisent dans la même gamme
+(tab10), y compris `adapter/`. À défaut de correspondance, la figure retombe sur `palette` +
+`roles` (rouge « lent », gris « référence »).
+
+Un `vbars` adresse chaque bench par **le répertoire que criterion a créé** : `create-box` pour un
+`bench_function("create-box")`, `allocations/Heap allocation (Vec)` dans un
+`benchmark_group("allocations")`. Criterion assainit les identifiants (`/` → `_`, espaces de fin
+supprimés) : `push/pop-on Vec ` devient `push_pop-on Vec`. En cas d'erreur, le script liste les
+benchs réellement disponibles.
+
+Une exécution complète suppose que **tous** les benchs ont tourné :
+
+```shell
+cargo bench --bench adapter_internal_iteration   # adapter/
+cargo bench --bench allocations_inner_loop       # allocations/*_stack_vs_heap
+cargo bench --bench allocations_many_small       # allocations/*_many_small_objects
+cargo bench --bench smart_pointers               # pointers/
+cargo bench --bench refcell                      # refcell/
+# subfold/ et dispatch/ : relevés callgrind, voir plus bas
+```
+
+`dispatch/` porte deux figures : `static_vs_dynamic_time.png` (criterion) et
+`static_vs_dynamic_instructions.png` (gungraun, compte d'instructions). **Ce sont les
+instructions que les slides montrent** : les variantes les plus rapides tournent à ~0,5 ns par
+appel, régime où criterion rapporte ~20 % d'écart-type — allonger la boucle (`ROUNDS`) n'y change
+rien, la dispersion suit le temps par appel, pas la longueur de la boucle.
+Le relevé d'instructions, lui, rejoue à l'instruction près.
+
+Produire `dispatch_instr.txt` (deux colonnes `<variante> <instructions>`) depuis la sortie du
+bench, dans le conteneur décrit ci-dessous :
+
+```shell
+cargo bench --bench dispatch --features iai |
+  awk '/iai_/ { name = $0; sub(/.*iai_/, "", name); sub(/[^a-z_].*/, "", name) }
+       /Instructions/ { v = $2; sub(/\|.*/, "", v); gsub(/[^0-9]/, "", v);
+                        if (name != "" && v != "") { print name, v; name = "" } }' \
+  > dispatch_instr.txt
+venv/bin/python benches/plot_figures.py --only dispatch
+```
+
+`--discover` remplace l'ancien `plot_benches.py` : il balaie `target/criterion` et sort un graphe
+par cas dans `criterion_plots_by_case/` (barres verticales, écart-type), pour lire ses résultats.
+Les figures versionnées dans `images/benchmarks/`, elles, sont décrites dans `figures.json` — voir
+aussi `images/benchmarks/subfold/README.md` et `images/benchmarks/adapter/README.md`.
+
+`matplotlib` est requis. Un virtualenv est déjà en place dans `code/rs/venv` (non versionné,
+ignoré par `.gitignore`) — d'où le `venv/bin/python` ci-dessus. Pour le recréer :
+
+```shell
+python3 -m venv venv && venv/bin/pip install -r requirements.txt
+```
+
 ## Running gungraun benches with Docker
 
 gungraun needs Valgrind and `gungraun-runner` (same version as the `gungraun` crate), provided by
@@ -59,14 +134,8 @@ docker run --rm --security-opt seccomp=unconfined \
         done
       done
     done' > instr.txt
-python3 benches/plot_subfold_instr.py instr.txt   # -> criterion_plots_by_case/subfold_<source>.png
+python3 benches/plot_figures.py --only subfold   # -> images/benchmarks/subfold/*.png
 ```
-
-Les figures versionnées pour les slides, et leurs commandes de régénération exactes, sont
-décrites dans `images/benchmarks/subfold/README.md` et `images/benchmarks/adapter/README.md`.
-Trois scripts de tracé cohabitent : `plot_benches.py` (vue d'inspection de tous les cas
-criterion), `plot_slide_bars.py` (même source, vue lisible en projection pour un cas donné) et
-`plot_subfold_instr.py` (courbes d'instructions callgrind, source de données différente).
 
 `baseline` mesure la seule génération des données et se déduit des autres mesures.
 

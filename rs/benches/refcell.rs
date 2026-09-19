@@ -3,7 +3,7 @@ use std::cell::RefCell;
 use std::sync::Mutex;
 
 fn bench_vec(c: &mut Criterion) {
-    c.bench_function("push/pop-on Vec ", |b| {
+    c.bench_function("push_pop-on Vec", |b| {
         let mut vec = Vec::with_capacity(1000);
         b.iter(|| {
             vec.push(black_box(1));
@@ -13,7 +13,7 @@ fn bench_vec(c: &mut Criterion) {
 }
 
 fn bench_refcell_vec(c: &mut Criterion) {
-    c.bench_function("push/pop-RefCell on Vec", |b| {
+    c.bench_function("push_pop-RefCell on Vec", |b| {
         let vec = RefCell::new(Vec::with_capacity(1000));
         b.iter(|| {
             let mut ref_mut = vec.borrow_mut();
@@ -24,7 +24,7 @@ fn bench_refcell_vec(c: &mut Criterion) {
 }
 
 fn bench_mutex_vec(c: &mut Criterion) {
-    c.bench_function("push/pop-Mutex on Vec", |b| {
+    c.bench_function("push_pop-Mutex on Vec", |b| {
         let vec = Mutex::new(Vec::with_capacity(1000));
         b.iter(|| {
             let mut ref_mut = vec.lock().unwrap();
