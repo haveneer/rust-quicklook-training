@@ -71,7 +71,7 @@ impl Stack {
         // println!("DATA AFTER => {:?}\n", self.data);
     }
 
-    pub fn result(&self) -> Option<StackResult> {
+    pub fn result(&self) -> Option<StackResult<'_>> {
         if self.len() != 1 {
             None
         } else {
