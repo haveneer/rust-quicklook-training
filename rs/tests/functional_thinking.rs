@@ -1,12 +1,18 @@
 // But : garder les mots de plus de 4 lettres, en majuscules.
+/* Shell version
+   echo chat rust programmation vec fonctionnel
+   | tr ' ' '\n'
+   | awk 'length($0) > 4'
+   | tr '[:lower:]' '[:upper:]'
+*/
 
 #[test]
 fn long_words_imperative() {
-    let words = vec!["chat", "rust", "programmation", "vec", "fonctionnel"];
+    let words = "chat rust programmation vec fonctionnel";
 
     // Impératif : on décrit COMMENT construire le résultat, pas à pas.
     let mut result = Vec::new();
-    for w in &words {
+    for w in words.split_whitespace() {
         if w.len() > 4 {
             result.push(w.to_uppercase());
         }
@@ -17,11 +23,11 @@ fn long_words_imperative() {
 
 #[test]
 fn long_words_declarative() {
-    let words = vec!["chat", "rust", "programmation", "vec", "fonctionnel"];
+    let words = "chat rust programmation vec fonctionnel";
 
     // Déclaratif : on décrit QUOI obtenir ; la boucle et l'accumulateur disparaissent.
     let result: Vec<String> = words
-        .iter()
+        .split_whitespace()
         .filter(|w| w.len() > 4)
         .map(|w| w.to_uppercase())
         .collect();
