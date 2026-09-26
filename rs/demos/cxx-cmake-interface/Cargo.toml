@@ -1,0 +1,16 @@
+[package]
+name = "cxx-cmake-interface"
+version = "0.1.0"
+edition = "2021"
+
+# Built by CMake (through Corrosion): see CMakeLists.txt.
+[lib]
+name = "sim_rs"
+crate-type = ["staticlib"]
+
+[dependencies]
+autocxx = "0.30"
+cxx = "1.0"
+
+[build-dependencies]
+autocxx-build = "0.30"
