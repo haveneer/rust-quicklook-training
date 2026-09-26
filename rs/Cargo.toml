@@ -120,3 +120,7 @@ harness = false
 [[bench]]
 name = "adapter_internal_iteration"
 harness = false
+
+[[bench]]
+name = "functional_collect"
+harness = false
