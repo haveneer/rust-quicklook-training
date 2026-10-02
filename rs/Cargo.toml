@@ -129,3 +129,7 @@ harness = false
 [[bench]]
 name = "concurrent_real_scenarios"
 harness = false
+
+[[bench]]
+name = "collections_lookup"
+harness = false

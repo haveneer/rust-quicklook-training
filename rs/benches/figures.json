@@ -313,6 +313,26 @@
       "rotation": 0,
       "y_label": "Temps moyen ({unit})"
     }
+,
+    {
+      "_": "benches/collections_lookup.rs — cargo bench --bench collections_lookup",
+      "file": "collections/lookup_by_size.png",
+      "type": "criterion_curves",
+      "title": "Test d'appartenance (50 % de succès)",
+      "group": "collections_lookup",
+      "sizes": [8, 64, 512, 4096, 32768],
+      "per": 1000,
+      "series": ["vec_contains", "vec_binary_search", "hashmap", "btreemap"],
+      "labels": {
+        "vec_contains": "Vec::contains (linéaire)",
+        "vec_binary_search": "Vec trié + binary_search",
+        "hashmap": "HashMap::contains_key",
+        "btreemap": "BTreeMap::contains_key"
+      },
+      "y_scale": "log",
+      "x_label": "nombre d'éléments n",
+      "y_label": "ns par recherche"
+    }
   ],
   "series_colors": {
     "_": "une couleur par structure mesurée, réutilisée dans toutes les figures",
