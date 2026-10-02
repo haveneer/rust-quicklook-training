@@ -37,6 +37,7 @@ phf = { version = "0.11", features = ["macros"] }
 # benchmark !
 criterion = { version = "0.5", features = ["html_reports"] }
 gungraun = "0.18.2" # ex iai-callgrind (0.19 requires rustc >= 1.85.1)
+crossbeam-channel = "0.5"
 
 # other demos
 #serde = "1"
@@ -123,4 +124,8 @@ harness = false
 
 [[bench]]
 name = "functional_collect"
+harness = false
+
+[[bench]]
+name = "concurrent_real_scenarios"
 harness = false

@@ -280,6 +280,38 @@
         "dynamic_in_box_dispatch",
         "enum_dispatch"
       ]
+    },
+    {
+      "_": "benches/concurrent_real_scenarios.rs — cargo bench --bench concurrent_real_scenarios",
+      "file": "concurrency/read_arc_vs_mutex.png",
+      "type": "vbars",
+      "title": "4 threads lisent 1M d'entiers (spawn + join inclus)",
+      "benches": [
+        "scenario-1-concurrent-read/concurrent_read_arc_vec",
+        "scenario-1-concurrent-read/concurrent_read_arc_mutex_vec"
+      ],
+      "labels": {
+        "scenario-1-concurrent-read/concurrent_read_arc_vec": "Arc<Vec>",
+        "scenario-1-concurrent-read/concurrent_read_arc_mutex_vec": "Arc<Mutex<Vec>>"
+      },
+      "roles": {"scenario-1-concurrent-read/concurrent_read_arc_mutex_vec": "slow"},
+      "rotation": 0,
+      "y_label": "Temps moyen ({unit})"
+    },
+    {
+      "file": "concurrency/increment_atomic_vs_mutex.png",
+      "type": "vbars",
+      "title": "4 threads × 100k incréments du même compteur",
+      "benches": [
+        "scenario-3-lockfree-vs-mutex/arc_atomic_increment",
+        "scenario-3-lockfree-vs-mutex/arc_mutex_increment"
+      ],
+      "labels": {
+        "scenario-3-lockfree-vs-mutex/arc_atomic_increment": "AtomicUsize (SeqCst)",
+        "scenario-3-lockfree-vs-mutex/arc_mutex_increment": "Mutex<usize>"
+      },
+      "rotation": 0,
+      "y_label": "Temps moyen ({unit})"
     }
   ],
   "series_colors": {
