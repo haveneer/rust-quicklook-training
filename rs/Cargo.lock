@@ -3474,6 +3474,7 @@ dependencies = [
  "bumpalo",
  "chrono",
  "criterion",
+ "crossbeam-channel",
  "enum_dispatch",
  "futures",
  "futures-timer",
