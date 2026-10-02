@@ -1,0 +1,9 @@
+error[E0502]: cannot borrow `cells` as mutable because it is also borrowed as immutable
+ --> tests/failures/stable/borrowck_e0502.rs:4:5
+  |
+3 |     let first = &cells[0];
+  |                  ----- immutable borrow occurs here
+4 |     cells.push(3.0);
+  |     ^^^^^^^^^^^^^^^ mutable borrow occurs here
+5 |     println!("{first}");
+  |                ----- immutable borrow later used here

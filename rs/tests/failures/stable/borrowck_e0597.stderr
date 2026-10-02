@@ -1,0 +1,11 @@
+error[E0597]: `name` does not live long enough
+ --> tests/failures/stable/borrowck_e0597.rs:5:16
+  |
+4 |         let name = String::from("naca0012");
+  |             ---- binding `name` declared here
+5 |         best = &name;
+  |                ^^^^^ borrowed value does not live long enough
+6 |     }
+  |     - `name` dropped here while still borrowed
+7 |     println!("{best}");
+  |                ---- borrow later used here

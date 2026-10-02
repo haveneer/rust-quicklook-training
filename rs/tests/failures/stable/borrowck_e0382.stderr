@@ -1,0 +1,21 @@
+error[E0382]: borrow of moved value: `data`
+ --> tests/failures/stable/borrowck_e0382.rs:8:36
+  |
+6 |     let data = vec![1.0, 2.0, 3.0];
+  |         ---- move occurs because `data` has type `Vec<f64>`, which does not implement the `Copy` trait
+7 |     let t = total(data);
+  |                   ---- value moved here
+8 |     println!("{t} over {} values", data.len());
+  |                                    ^^^^ value borrowed here after move
+  |
+note: consider changing this parameter type in function `total` to borrow instead if owning the value isn't necessary
+ --> tests/failures/stable/borrowck_e0382.rs:1:13
+  |
+1 | fn total(v: Vec<f64>) -> f64 {
+  |    -----    ^^^^^^^^ this parameter takes ownership of the value
+  |    |
+  |    in this function
+help: consider cloning the value if the performance cost is acceptable
+  |
+7 |     let t = total(data.clone());
+  |                       ++++++++

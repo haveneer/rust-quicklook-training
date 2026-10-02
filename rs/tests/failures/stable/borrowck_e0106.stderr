@@ -1,0 +1,11 @@
+error[E0106]: missing lifetime specifier
+ --> tests/failures/stable/borrowck_e0106.rs:1:33
+  |
+1 | fn longest(a: &str, b: &str) -> &str {
+  |               ----     ----     ^ expected named lifetime parameter
+  |
+  = help: this function's return type contains a borrowed value, but the signature does not say whether it is borrowed from `a` or `b`
+help: consider introducing a named lifetime parameter
+  |
+1 | fn longest<'a>(a: &'a str, b: &'a str) -> &'a str {
+  |           ++++     ++          ++          ++
