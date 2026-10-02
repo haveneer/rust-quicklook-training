@@ -333,6 +333,39 @@
       "x_label": "nombre d'éléments n",
       "y_label": "ns par recherche"
     }
+,
+    {
+      "_": "benches/optimisations.rs — cargo bench --bench optimisations",
+      "file": "optimisations/branch_prediction.png",
+      "type": "vbars",
+      "title": "65 536 octets, branche prise si v ≥ 128",
+      "benches": [
+        "branch_prediction/random",
+        "branch_prediction/sorted",
+        "branch_prediction/random_branchless"
+      ],
+      "labels": {
+        "branch_prediction/random": "aléatoire",
+        "branch_prediction/sorted": "trié",
+        "branch_prediction/random_branchless": "aléatoire, sans branche"
+      },
+      "roles": {"branch_prediction/random": "slow"},
+      "rotation": 0,
+      "y_label": "Temps moyen ({unit})"
+    },
+    {
+      "file": "optimisations/inlining.png",
+      "type": "vbars",
+      "title": "Somme de 65 536 u32 via une fonction d'addition",
+      "benches": ["inlining/inlined", "inlining/inline_never"],
+      "labels": {
+        "inlining/inlined": "#[inline] (vectorisé)",
+        "inlining/inline_never": "#[inline(never)]"
+      },
+      "roles": {"inlining/inline_never": "slow"},
+      "rotation": 0,
+      "y_label": "Temps moyen ({unit})"
+    }
   ],
   "series_colors": {
     "_": "une couleur par structure mesurée, réutilisée dans toutes les figures",
