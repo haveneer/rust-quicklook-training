@@ -292,7 +292,39 @@ def draw_vbars(fig_cfg, cfg, output):
     plt.close(fig)
 
 
-DRAW = {"bars": draw_bars, "curves": draw_curves, "vbars": draw_vbars}
+def draw_criterion_curves(fig_cfg, cfg, output):
+    """Criterion time vs size, one curve per function of a `BenchmarkId` sweep
+
+    Reads `<group>/<series>/<size>` measurements; `per` divides each time (e.g. the number
+    of operations in one iteration) to plot a cost per operation.
+    """
+    labels = {**cfg.get("labels", {}), **fig_cfg.get("labels", {})}
+    styles = cfg.get("curve_styles", {})
+    group, sizes, per = fig_cfg["group"], fig_cfg["sizes"], fig_cfg.get("per", 1)
+
+    fig, ax = plt.subplots(figsize=(7, 4.5))
+    for series in fig_cfg["series"]:
+        style, marker = styles.get(series, ["-", "o"])
+        ys = [read_criterion_bench(cfg["criterion_dir"], f"{group}/{series}/{n}")[0] / per
+              for n in sizes]
+        ax.plot(sizes, ys, style, marker=marker, markersize=7, label=labels.get(series, series))
+
+    ax.set_xscale("log", base=2)
+    ax.set_yscale(fig_cfg.get("y_scale", "linear"))
+    ax.set_xticks(sizes, [str(n) for n in sizes])
+    ax.set_xlabel(fig_cfg.get("x_label", "n"))
+    ax.set_ylabel(fig_cfg.get("y_label", "ns"))
+    if fig_cfg.get("title"):
+        ax.set_title(fig_cfg["title"])
+    ax.grid(alpha=0.3)
+    ax.legend(fontsize=8)
+    fig.tight_layout()
+    fig.savefig(output, dpi=150)
+    plt.close(fig)
+
+
+DRAW = {"bars": draw_bars, "curves": draw_curves, "vbars": draw_vbars,
+        "criterion_curves": draw_criterion_curves}
 
 
 # ------------------------------------------------------------ inspection view (no configuration)
