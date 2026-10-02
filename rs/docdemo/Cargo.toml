@@ -1,0 +1,15 @@
+[package]
+name = "docdemo"
+version = "0.1.0"
+edition = "2024"
+description = "A tiny documented crate: public API, rustdoc and lint configuration"
+
+[lints.rust]
+missing_docs = "warn" # every public item must be documented
+
+[lints.rustdoc]
+broken_intra_doc_links = "deny" # a [`Link`] to nothing is an error
+
+[lints.clippy]
+pedantic = { level = "warn", priority = -1 } # a whole group, below specific settings
+must_use_candidate = "allow" # ...then exceptions
