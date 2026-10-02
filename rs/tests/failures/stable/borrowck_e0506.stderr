@@ -1,0 +1,9 @@
+error[E0506]: cannot assign to `dt` because it is borrowed
+ --> tests/failures/stable/borrowck_e0506.rs:4:5
+  |
+3 |     let r = &dt;
+  |             --- `dt` is borrowed here
+4 |     dt = 0.05;
+  |     ^^^^^^^^^ `dt` is assigned to here but it was already borrowed
+5 |     println!("{r} {dt}");
+  |                - borrow later used here

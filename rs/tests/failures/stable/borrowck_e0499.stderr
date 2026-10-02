@@ -1,0 +1,11 @@
+error[E0499]: cannot borrow `v[_]` as mutable more than once at a time
+ --> tests/failures/stable/borrowck_e0499.rs:4:16
+  |
+3 |     let first = &mut v[0];
+  |                 --------- first mutable borrow occurs here
+4 |     let last = &mut v[2];
+  |                ^^^^^^^^^ second mutable borrow occurs here
+5 |     *first += *last;
+  |     --------------- first borrow later used here
+  |
+  = help: use `.split_at_mut(position)` to obtain two mutable non-overlapping sub-slices

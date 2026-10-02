@@ -5,7 +5,7 @@
 //! venv/bin/python benches/plot_figures.py --only collections
 use criterion::measurement::WallTime;
 use criterion::{
-    BenchmarkGroup, BenchmarkId, Criterion, black_box, criterion_group, criterion_main,
+    black_box, criterion_group, criterion_main, BenchmarkGroup, BenchmarkId, Criterion,
 };
 use std::collections::{BTreeMap, HashMap};
 
