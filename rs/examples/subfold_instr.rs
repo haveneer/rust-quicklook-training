@@ -176,7 +176,6 @@ mod src {
     }
 }
 
-
 fn run(source: &str, variant: &str, v: &[u64], n: usize) -> u64 {
     macro_rules! dispatch_variant {
         ($mk:expr) => {
@@ -204,7 +203,12 @@ fn main() {
     let v = black_box(data());
     let mut acc = 0u64;
     for _ in 0..black_box(20) {
-        acc = acc.wrapping_add(black_box(run(&args[1], &args[2], black_box(&v), black_box(n))));
+        acc = acc.wrapping_add(black_box(run(
+            &args[1],
+            &args[2],
+            black_box(&v),
+            black_box(n),
+        )));
     }
     println!("{acc}");
 }

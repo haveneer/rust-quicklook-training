@@ -30,7 +30,10 @@ fn smooth(mut field: UniquePtr<Field>, passes: usize) -> Result<UniquePtr<Field>
     for _ in 0..passes {
         let prev = values.to_vec();
         // 3-point moving average, boundaries kept
-        for (v, w) in values[1..n.saturating_sub(1)].iter_mut().zip(prev.windows(3)) {
+        for (v, w) in values[1..n.saturating_sub(1)]
+            .iter_mut()
+            .zip(prev.windows(3))
+        {
             *v = w.iter().sum::<f64>() / 3.0;
         }
     }
@@ -71,5 +74,10 @@ fn stats(field: &Field) -> Result<Stats, String> {
         .fold((f64::INFINITY, f64::NEG_INFINITY), |(lo, hi), &x| {
             (lo.min(x), hi.max(x))
         });
-    Ok(Stats { mean, stddev: var.sqrt(), min, max })
+    Ok(Stats {
+        mean,
+        stddev: var.sqrt(),
+        min,
+        max,
+    })
 }

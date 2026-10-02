@@ -135,13 +135,5 @@ macro_rules! bench_pipeline {
 
 pipelines!(bench_pipeline);
 
-criterion_group!(
-    iteration_style,
-    map,
-    filter,
-    chain,
-    zip,
-    zip_chain,
-    flatmap
-);
+criterion_group!(iteration_style, map, filter, chain, zip, zip_chain, flatmap);
 criterion_main!(iteration_style);

@@ -111,7 +111,6 @@ mod src {
     }
 }
 
-
 /// Valeur absente : `find` parcourt donc tout le flux
 const ABSENT: u32 = u32::MAX;
 
@@ -121,12 +120,12 @@ fn run(source: &str, variant: &str, consumer: &str, d: &Data) -> u64 {
             match (variant, consumer) {
                 ("next_only", "sum") => next_only::Scale::new($mk, K).sum::<u32>() as u64,
                 ("with_fold", "sum") => with_fold::Scale::new($mk, K).sum::<u32>() as u64,
-                ("next_only", "find") => {
-                    next_only::Scale::new($mk, K).find(|x| *x == ABSENT).unwrap_or(0) as u64
-                }
-                ("with_fold", "find") => {
-                    with_fold::Scale::new($mk, K).find(|x| *x == ABSENT).unwrap_or(0) as u64
-                }
+                ("next_only", "find") => next_only::Scale::new($mk, K)
+                    .find(|x| *x == ABSENT)
+                    .unwrap_or(0) as u64,
+                ("with_fold", "find") => with_fold::Scale::new($mk, K)
+                    .find(|x| *x == ABSENT)
+                    .unwrap_or(0) as u64,
                 ("baseline", _) => d.a.len() as u64,
                 other => panic!("combinaison inconnue: {other:?}"),
             }

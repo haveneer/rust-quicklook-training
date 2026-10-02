@@ -25,5 +25,5 @@ mod ffi {
     }
 }
 
-pub use ffi::Stats;
 use crate::{gradient, smooth, stats};
+pub use ffi::Stats;

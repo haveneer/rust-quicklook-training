@@ -61,4 +61,6 @@ fn test_if_let_scope() {
     }; // ; required for edition <2024
 }
 
-fn main() { test_if_let_scope(); }
+fn main() {
+    test_if_let_scope();
+}
