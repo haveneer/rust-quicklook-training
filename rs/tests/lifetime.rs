@@ -164,11 +164,6 @@ fn lifetime_drop_copy_is_not_drop() {
     println!("After drop x={x} and still alive!");
 }
 
-struct Line<'a> {
-    text: &'a str,
-    sep: &'a str,
-}
-
 fn find_sep<'a, 'b>(text: &'a str, sep: &'b str) -> &'a str {
     let idx = text.find(sep).unwrap_or(text.len());
     &text[..idx]
@@ -176,6 +171,9 @@ fn find_sep<'a, 'b>(text: &'a str, sep: &'b str) -> &'a str {
 
 #[test]
 fn lifetime_annotations() {
+    #[rustfmt::skip]
+    struct Line<'a> { text: &'a str, sep: &'a str }
+
     let text = "Hier, au zoo, j'ai vu dix guépards, cinq zébus, un yak et le wapiti fumer.";
     let line: Line<'_> = Line {
         text,
@@ -200,6 +198,9 @@ where
 
 #[test]
 fn lifetime_with_explicit_bounds() {
+    #[rustfmt::skip]
+    struct Line<'a> { text: &'a str, sep: &'a str }
+
     let text = "Hier, au zoo, j'ai vu dix guépards, cinq zébus, un yak et le wapiti fumer.";
     let line: Line<'_> = Line {
         text,
