@@ -63,6 +63,7 @@ members = [
   "demos/*",
   "demos/proc_macros/*",
   "doclib",
+  "docdemo",
 ]
 
 [workspace.dependencies]

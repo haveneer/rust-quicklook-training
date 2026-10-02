@@ -1300,6 +1300,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "docdemo"
+version = "0.1.0"
+
+[[package]]
 name = "doclib"
 version = "0.1.0"
 
