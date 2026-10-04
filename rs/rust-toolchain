@@ -1,3 +1,6 @@
 # see https://rust-lang.github.io/rustup/overrides.html#the-toolchain-file
 [toolchain]
 channel = "1.90.0" # Sept. 18, 2025
+# rust-src: rustc then prints std source snippets in diagnostics, which the
+# trybuild .stderr files expect (otherwise CI output differs from local)
+components = ["rust-src"]

@@ -33,7 +33,7 @@ jobs:
             toolchain: stable
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           submodules: true
 
@@ -42,9 +42,6 @@ jobs:
           toolchain: ${{ matrix.toolchain }}
           override: true
           default: true
-          # rust-src: rustc prints std source snippets in diagnostics; trybuild
-          # .stderr files expect them (installed locally)
-          components: rust-src
 
       - name: Setup Python
         uses: actions/setup-python@v4
