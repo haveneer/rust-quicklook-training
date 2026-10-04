@@ -20,10 +20,10 @@ jobs:
       matrix:
         include:
           - name: Linux
-            os: ubuntu-22.04
+            os: ubuntu-26.04
             toolchain: stable
           - name: Linux
-            os: ubuntu-22.04
+            os: ubuntu-26.04
             toolchain: nightly
           - name: macOS
             os: macOS-latest
@@ -42,6 +42,9 @@ jobs:
           toolchain: ${{ matrix.toolchain }}
           override: true
           default: true
+          # rust-src: rustc prints std source snippets in diagnostics; trybuild
+          # .stderr files expect them (installed locally)
+          components: rust-src
 
       - name: Setup Python
         uses: actions/setup-python@v4
