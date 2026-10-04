@@ -66,6 +66,15 @@ jobs:
           cd rs
           cargo run --bin quick-hash --manifest-path demos/quick-hash/Cargo.toml
           cargo run --bin cxx-interface --manifest-path demos/cxx-interface/Cargo.toml
+      - name: demo cxx-cmake-interface (CMake + Corrosion + autocxx)
+        # needs libclang (autocxx) and network (Corrosion, cxxbridge-cmd); not tried on Windows
+        if: runner.os != 'Windows'
+        shell: bash
+        run: |
+          cd rs/demos/cxx-cmake-interface
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+          cmake --build build
+          ./build/demo
       - name: examples
         run: |
           cd rs
