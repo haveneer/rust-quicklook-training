@@ -40,9 +40,9 @@ mod details {
         let mut writer = BufferWriter::new(&mut stack_buf);
 
         // We format the message into this buffer (without allocating on the heap)
-        let _ = core::write!(
+        let _ = core::writeln!(
             writer,
-            "{context} {} bytes with {}-alignment at {ptr:p}\n",
+            "{context} {} bytes with {}-alignment at {ptr:p}",
             layout.size(),
             layout.align()
         );
@@ -50,8 +50,9 @@ mod details {
         // Retrieve the used portion
         let bytes = writer.as_bytes();
         // Then write directly to file descriptor 2 (stderr) using libc
+        // (`as _`: the length is `size_t` on Unix but `c_uint` on Windows)
         unsafe {
-            write(2, bytes.as_ptr() as *const c_void, bytes.len());
+            write(2, bytes.as_ptr() as *const c_void, bytes.len() as _);
         }
     }
 }
