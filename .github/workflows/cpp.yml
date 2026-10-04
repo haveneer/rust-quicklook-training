@@ -16,40 +16,33 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - name: Linux GCC 11
-            os: ubuntu-20.04
-            c-compiler: gcc-11
-            cxx-compiler: g++-11
-          - name: Linux Clang 12
-            os: ubuntu-20.04
-            c-compiler: clang-12
-            cxx-compiler: clang++-12
-          - name: macOS 12
-            os: macOS-12
+          - name: Linux GCC (distro default)
+            os: ubuntu-26.04
+            c-compiler: gcc
+            cxx-compiler: g++
+          - name: Linux Clang (distro default)
+            os: ubuntu-26.04
+            c-compiler: clang
+            cxx-compiler: clang++
+          - name: macOS (AppleClang)
+            os: macos-latest
 
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           submodules: true
-      - name: install GCC-11
-        run: |
-          sudo apt install -qy software-properties-common
-          sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
-          sudo apt install -qy gcc-11 g++-11
-        if: matrix.c-compiler == 'gcc-11' && runner.os == 'Linux'
-      - name: install Clang-12
-        run: |
-          # for sources, see https://apt.llvm.org
-          curl -Ls https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
-          sudo apt-add-repository 'deb http://apt.llvm.org/focal/ llvm-toolchain-focal-12 main'
-          sudo apt update && sudo apt install -qy clang-12 libc++-12-dev libc++abi-12-dev
-        if: matrix.c-compiler == 'clang-12' && runner.os == 'Linux'
+      - name: install GCC
+        run: sudo apt-get install -qy gcc g++
+        if: matrix.c-compiler == 'gcc' && runner.os == 'Linux'
+      - name: install Clang (with libc++, required by CMakeLists.txt)
+        run: sudo apt-get install -qy clang libc++-dev libc++abi-dev
+        if: matrix.c-compiler == 'clang' && runner.os == 'Linux'
       - name: install additional tools and libs
         run: |
           if [ "${{runner.os}}" == "Linux" ]; then
             # libunwind-dev sometimes required to work around cxx_feature_check(STD_REGEX) for Google Benchmark 
-            sudo apt install -y libtbb-dev ninja-build libunwind-dev
+            sudo apt-get install -y libtbb-dev ninja-build libunwind-dev
           fi
           if [ "${{runner.os}}" == "macOS" ]; then
             brew install ninja
@@ -70,7 +63,7 @@ jobs:
         os: [ windows-latest ]
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           submodules: true
       - name: configure
