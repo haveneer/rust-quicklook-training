@@ -13,6 +13,11 @@ fn maps_and_sets_operations() {
         *v += 1; // modification sur place
     }
 
+    // entry() : lire-ou-créer / modifier en une seule recherche
+    *hm.entry("a").or_insert(0) += 1; // "a" existe déjà -> modifié
+    hm.entry("d").or_insert(4); // "d" n'existe pas -> créé
+    assert_eq!((hm["a"], hm["d"]), (12, 4));
+
     // Retirer : rend la valeur retirée ; retain filtre en place
     assert_eq!(hm.remove("b"), Some(2));
     assert_eq!(hm.remove("z"), None);
