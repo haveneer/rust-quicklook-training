@@ -188,7 +188,8 @@ fn bench_refcell_vs_mutex(c: &mut Criterion) {
         b.iter(|| {
             let cell = RefCell::new(0_usize);
             for _ in 0..ITERATIONS {
-                *cell.borrow_mut() += 1;
+                // black_box per iteration: otherwise the whole loop folds into a constant
+                *black_box(&cell).borrow_mut() += 1;
             }
             black_box(cell.into_inner());
         });
