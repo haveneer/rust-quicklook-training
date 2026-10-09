@@ -322,15 +322,268 @@
       "group": "collections_lookup",
       "sizes": [8, 64, 512, 4096, 32768],
       "per": 1000,
-      "series": ["vec_contains", "vec_binary_search", "hashmap", "btreemap"],
+      "series": ["vec_contains", "vec_binary_search", "hashmap", "hashmap_fx", "hashbrown", "indexmap",
+                 "btreemap"],
       "labels": {
         "vec_contains": "Vec::contains (linéaire)",
         "vec_binary_search": "Vec trié + binary_search",
         "hashmap": "HashMap::contains_key",
+        "hashmap_fx": "FxHashMap::contains_key",
+        "hashbrown": "hashbrown (foldhash)",
+        "indexmap": "IndexMap::contains_key",
         "btreemap": "BTreeMap::contains_key"
       },
       "y_scale": "log",
       "x_label": "nombre d'éléments n",
+      "y_label": "ns par recherche"
+    },
+    {
+      "_": "benches/collections_lookup.rs (groupe collections_iterate)",
+      "file": "collections/iterate_by_size.png",
+      "type": "criterion_curves",
+      "title": "Somme de toutes les valeurs (parcours complet)",
+      "group": "collections_iterate",
+      "sizes": [
+        8,
+        64,
+        512,
+        4096,
+        32768
+      ],
+      "per_size": true,
+      "series": [
+        "vec",
+        "hashmap",
+        "indexmap",
+        "btreemap"
+      ],
+      "labels": {
+        "vec": "Vec<(K, V)>",
+        "hashmap": "HashMap::values",
+        "indexmap": "IndexMap::values",
+        "btreemap": "BTreeMap::values"
+      },
+      "y_scale": "log",
+      "x_label": "nombre d'éléments n",
+      "y_label": "ns par élément"
+    },
+    {
+      "_": "benches/collections_entry.rs — cargo bench --bench collections_entry",
+      "file": "collections/entry_u64.png",
+      "type": "criterion_curves",
+      "title": "Compter 10 000 clés u64 tirées parmi V",
+      "group": "entry_u64",
+      "sizes": [
+        16,
+        256,
+        4096,
+        65536
+      ],
+      "per": 10000,
+      "series": [
+        "hashmap_contains_then",
+        "hashmap_get_mut_else_insert",
+        "hashmap_entry",
+        "btreemap_contains_then",
+        "btreemap_get_mut_else_insert",
+        "btreemap_entry"
+      ],
+      "labels": {
+        "hashmap_contains_then": "HashMap : contains_key puis get_mut / insert",
+        "hashmap_get_mut_else_insert": "HashMap : get_mut, sinon insert",
+        "hashmap_entry": "HashMap : entry",
+        "btreemap_contains_then": "BTreeMap : contains_key puis get_mut / insert",
+        "btreemap_get_mut_else_insert": "BTreeMap : get_mut, sinon insert",
+        "btreemap_entry": "BTreeMap : entry"
+      },
+      "curve_styles": {
+        "hashmap_contains_then": ["-", "o"],
+        "hashmap_get_mut_else_insert": ["-", "s"],
+        "hashmap_entry": ["-", "^"],
+        "btreemap_contains_then": ["--", "o"],
+        "btreemap_get_mut_else_insert": ["--", "s"],
+        "btreemap_entry": ["--", "^"]
+      },
+      "colors": {
+        "hashmap_contains_then": "#d62728",
+        "hashmap_get_mut_else_insert": "#ff7f0e",
+        "hashmap_entry": "#2ca02c",
+        "btreemap_contains_then": "#d62728",
+        "btreemap_get_mut_else_insert": "#ff7f0e",
+        "btreemap_entry": "#2ca02c"
+      },
+      "x_label": "taille du vocabulaire V",
+      "y_label": "ns par mot compté"
+    },
+    {
+      "file": "collections/entry_str.png",
+      "type": "criterion_curves",
+      "title": "Compter 10 000 mots (&str → String) tirés parmi V",
+      "group": "entry_str",
+      "sizes": [
+        16,
+        256,
+        4096,
+        65536
+      ],
+      "per": 10000,
+      "series": [
+        "get_mut_else_insert",
+        "entry_to_owned",
+        "hashbrown_entry_ref"
+      ],
+      "labels": {
+        "get_mut_else_insert": "get_mut(w), sinon insert(w.to_owned())",
+        "entry_to_owned": "entry(w.to_owned())",
+        "hashbrown_entry_ref": "hashbrown : entry_ref(w)"
+      },
+      "x_label": "taille du vocabulaire V",
+      "y_label": "ns par mot compté"
+    },
+    {
+      "_": "benches/collections_sequences.rs — cargo bench --bench collections_sequences",
+      "file": "collections/seq_fifo.png",
+      "type": "criterion_curves",
+      "title": "File FIFO de n éléments : push en fin + pop en tête",
+      "group": "seq_fifo",
+      "sizes": [
+        64,
+        512,
+        4096,
+        32768
+      ],
+      "per_size": true,
+      "series": [
+        "vec_remove0",
+        "vecdeque",
+        "linkedlist"
+      ],
+      "labels": {
+        "vec_remove0": "Vec : push + remove(0)",
+        "vecdeque": "VecDeque : push_back + pop_front",
+        "linkedlist": "LinkedList : push_back + pop_front"
+      },
+      "y_scale": "log",
+      "x_label": "nombre d'éléments n",
+      "y_label": "ns par opération"
+    },
+    {
+      "file": "collections/seq_traverse.png",
+      "type": "criterion_curves",
+      "title": "Somme des n éléments",
+      "group": "seq_traverse",
+      "sizes": [
+        64,
+        512,
+        4096,
+        32768
+      ],
+      "per_size": true,
+      "series": [
+        "vec",
+        "vecdeque",
+        "linkedlist"
+      ],
+      "labels": {
+        "vec": "Vec",
+        "vecdeque": "VecDeque",
+        "linkedlist": "LinkedList"
+      },
+      "y_scale": "log",
+      "x_label": "nombre d'éléments n",
+      "y_label": "ns par élément"
+    },
+    {
+      "file": "collections/seq_priority.png",
+      "type": "criterion_curves",
+      "title": "File de priorité : n insertions puis n extractions",
+      "group": "seq_priority",
+      "sizes": [
+        64,
+        512,
+        4096,
+        32768
+      ],
+      "per_size": true,
+      "series": [
+        "binaryheap",
+        "sorted_vec_insert"
+      ],
+      "labels": {
+        "binaryheap": "BinaryHeap : push / pop",
+        "sorted_vec_insert": "Vec trié : insert à sa place / pop"
+      },
+      "y_scale": "log",
+      "x_label": "nombre d'éléments n",
+      "y_label": "ns par élément"
+    },
+    {
+      "_": "benches/collections_smallvec.rs — cargo bench --bench collections_smallvec",
+      "file": "collections/smallvec.png",
+      "type": "criterion_curves",
+      "title": "10 000 petits vecteurs créés, remplis de k éléments, sommés, détruits",
+      "group": "smallvec",
+      "sizes": [
+        1,
+        2,
+        4,
+        8,
+        16,
+        32
+      ],
+      "per": 10000,
+      "sparse": true,
+      "series": [
+        "vec",
+        "smallvec_8",
+        "arrayvec_8"
+      ],
+      "labels": {
+        "vec": "Vec<u32>",
+        "smallvec_8": "SmallVec<[u32; 8]>",
+        "arrayvec_8": "ArrayVec<u32, 8> (k ≤ 8)"
+      },
+      "x_label": "nombre d'éléments k par vecteur",
+      "y_label": "ns par vecteur"
+    },
+    {
+      "_": "benches/collections_hashers.rs — cargo bench --bench collections_hashers",
+      "file": "collections/hashers.png",
+      "type": "grouped_vbars",
+      "title": "1000 recherches dans une HashMap de 4096 clés (50 % de succès)",
+      "per": 1000,
+      "groups": [
+        "hashers_u64",
+        "hashers_short",
+        "hashers_long"
+      ],
+      "group_labels": {
+        "hashers_u64": "clés u64",
+        "hashers_short": "String de 8 octets",
+        "hashers_long": "String de 256 octets"
+      },
+      "series": [
+        "siphash",
+        "foldhash",
+        "fxhash",
+        "fnv",
+        "ahash",
+        "xxh3",
+        "rapidhash",
+        "nohash"
+      ],
+      "labels": {
+        "siphash": "SipHash 1-3 (std)",
+        "foldhash": "foldhash",
+        "fxhash": "FxHash",
+        "fnv": "FNV-1a",
+        "ahash": "aHash",
+        "xxh3": "XXH3",
+        "rapidhash": "rapidhash",
+        "nohash": "nohash (identité)"
+      },
+      "legend_columns": 2,
+      "y_scale": "log",
       "y_label": "ns par recherche"
     }
 ,
