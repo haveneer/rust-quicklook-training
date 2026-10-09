@@ -8,6 +8,8 @@ Two kinds of figures, two data sources:
 * `vbars`  — vertical bars + standard deviation, one bar per bench addressed by its
              `target/criterion` path; or, with `data`, from a `<name> <value>` text report
              (gungraun instruction counts, which do not go through criterion)
+* `criterion_curves` — time vs size, one curve per function of a criterion `BenchmarkId` sweep
+* `grouped_vbars` — vertical bars clustered by criterion group (one bar per function)
 * `curves` — instructions-per-element curves, read from the text report produced by
              callgrind (`<source> <n> <variant> <instructions>`, see `benches/README.md`)
 
@@ -299,15 +301,23 @@ def draw_criterion_curves(fig_cfg, cfg, output):
     of operations in one iteration) to plot a cost per operation.
     """
     labels = {**cfg.get("labels", {}), **fig_cfg.get("labels", {})}
-    styles = cfg.get("curve_styles", {})
+    # per-figure `curve_styles` / `colors` override the global ones (e.g. dashed lines
+    # for a second family of series, same colour for the same method)
+    styles = {**cfg.get("curve_styles", {}), **fig_cfg.get("curve_styles", {})}
+    colors = fig_cfg.get("colors", {})
     group, sizes, per = fig_cfg["group"], fig_cfg["sizes"], fig_cfg.get("per", 1)
 
     fig, ax = plt.subplots(figsize=(7, 4.5))
     for series in fig_cfg["series"]:
         style, marker = styles.get(series, ["-", "o"])
+        # `sparse`: a series may only be measured for some sizes (e.g. a fixed capacity)
+        xs = [n for n in sizes if not fig_cfg.get("sparse") or os.path.exists(
+            os.path.join(cfg["criterion_dir"], group, series, str(n), "new", "estimates.json"))]
+        # `per_size`: also divide by the swept size, for a cost per element
         ys = [read_criterion_bench(cfg["criterion_dir"], f"{group}/{series}/{n}")[0] / per
-              for n in sizes]
-        ax.plot(sizes, ys, style, marker=marker, markersize=7, label=labels.get(series, series))
+              / (n if fig_cfg.get("per_size") else 1) for n in xs]
+        ax.plot(xs, ys, style, marker=marker, markersize=7, label=labels.get(series, series),
+                color=colors.get(series))
 
     ax.set_xscale("log", base=2)
     ax.set_yscale(fig_cfg.get("y_scale", "linear"))
@@ -323,8 +333,44 @@ def draw_criterion_curves(fig_cfg, cfg, output):
     plt.close(fig)
 
 
+def draw_grouped_vbars(fig_cfg, cfg, output):
+    """Vertical bars grouped by criterion group: one cluster per group, one bar per series
+
+    Reads `<group>/<series>` measurements; a series absent from a group (e.g. only meaningful
+    for one key type) leaves a gap. `per` divides each time to plot a cost per operation.
+    """
+    labels = {**cfg.get("labels", {}), **fig_cfg.get("labels", {})}
+    groups, series, per = fig_cfg["groups"], fig_cfg["series"], fig_cfg.get("per", 1)
+    width = 0.8 / len(series)
+
+    fig, ax = plt.subplots(figsize=(9, 4.5))
+    for i, name in enumerate(series):
+        xs, ys = [], []
+        for g, group in enumerate(groups):
+            path = os.path.join(cfg["criterion_dir"], group, name, "new", "estimates.json")
+            if os.path.exists(path):
+                xs.append(g - 0.4 + width * (i + 0.5))
+                ys.append(read_criterion_bench(cfg["criterion_dir"], f"{group}/{name}")[0] / per)
+        bars = ax.bar(xs, ys, width * 0.92, label=labels.get(name, name),
+                      color=cfg.get("series_colors", {}).get(name))
+        ax.bar_label(bars, fmt="%.1f", padding=2, fontsize=7)
+    ax.set_yscale(fig_cfg.get("y_scale", "linear"))
+    ax.set_xticks(range(len(groups)), [fig_cfg.get("group_labels", {}).get(g, g) for g in groups])
+    ax.set_ylabel(fig_cfg.get("y_label", "ns"))
+    if fig_cfg.get("title"):
+        ax.set_title(fig_cfg["title"])
+    for side in ("top", "right"):
+        ax.spines[side].set_visible(False)
+    ax.grid(axis="y", alpha=0.25)
+    ax.set_axisbelow(True)
+    ax.legend(fontsize=8, ncol=fig_cfg.get("legend_columns", 1))
+    fig.tight_layout()
+    fig.savefig(output, dpi=150)
+    plt.close(fig)
+
+
 DRAW = {"bars": draw_bars, "curves": draw_curves, "vbars": draw_vbars,
-        "criterion_curves": draw_criterion_curves}
+        "criterion_curves": draw_criterion_curves, "grouped_vbars": draw_grouped_vbars}
 
 
 # ------------------------------------------------------------ inspection view (no configuration)

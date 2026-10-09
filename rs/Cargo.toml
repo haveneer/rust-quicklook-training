@@ -28,7 +28,7 @@ libc = "0.2.169"
 pin-project = "1.1.9"
 thiserror = "2"
 ouroboros = "0.18"
-hashbrown = "0.15"
+hashbrown = "0.17"
 bumpalo = "3.17"
 arcstr = "1.2"
 enum_dispatch = "0.3"
@@ -39,6 +39,18 @@ criterion = { version = "0.5", features = ["html_reports"] }
 gungraun = "0.18.2" # ex iai-callgrind (0.19 requires rustc >= 1.85.1)
 crossbeam-channel = "0.5"
 dhat = "0.3"
+# collections: popular non-std structures and hash functions
+indexmap = "2"
+smallvec = { version = "1", features = ["union", "const_generics"] }
+arrayvec = "0.7"
+petgraph = "0.8"
+rustc-hash = "2"
+foldhash = "0.2"
+ahash = "0.8"
+fnv = "1"
+twox-hash = "2"
+rapidhash = "4"
+nohash-hasher = "0.2"
 
 # other demos
 #serde = "1"
@@ -134,6 +146,22 @@ harness = false
 
 [[bench]]
 name = "collections_lookup"
+harness = false
+
+[[bench]]
+name = "collections_entry"
+harness = false
+
+[[bench]]
+name = "collections_sequences"
+harness = false
+
+[[bench]]
+name = "collections_smallvec"
+harness = false
+
+[[bench]]
+name = "collections_hashers"
 harness = false
 
 [[bench]]

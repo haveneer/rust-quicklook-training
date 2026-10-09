@@ -1,12 +1,12 @@
-use hashbrown::HashMap;
 use rand::{thread_rng, Rng};
+use std::collections::HashMap;
 
 fn main() {
     let mut map: HashMap<&str, Vec<_>> = HashMap::new();
     map.insert("a", vec![0u8; 10]);
     map.insert("b", vec![0u8; 10]);
 
-    if let [Some(val_a), Some(val_b)] = map.get_many_mut(["a", "b"]) {
+    if let [Some(val_a), Some(val_b)] = map.get_disjoint_mut(["a", "b"]) {
         std::thread::scope(|scope| {
             // Requires Rust 1.63+
             scope.spawn(|| {
