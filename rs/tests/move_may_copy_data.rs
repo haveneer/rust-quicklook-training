@@ -1,3 +1,4 @@
+// Do you need to see LargeData content ?
 struct LargeData {
     buffer: [u8; 1024], // Big buffer with 1024 octets, non-Copy type since Copy trait is not implemented
                         // buffer: Vec<u8>, // TODO What happens if this is a Vec?
