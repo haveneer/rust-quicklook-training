@@ -82,6 +82,26 @@ ignoré par `.gitignore`) — d'où le `venv/bin/python` ci-dessus. Pour le recr
 python3 -m venv venv && venv/bin/pip install -r requirements.txt
 ```
 
+## `std::sync` vs `parking_lot` (benches/concurrent_std_vs_parking_lot.rs)
+
+La figure `concurrency/std_vs_parking_lot.png` compare deux plateformes : `std` délègue à l'OS
+(futex sous Linux), le classement n'est donc pas le même partout. Criterion range les deux
+implémentations sous `<groupe>/std` et `<groupe>/parking_lot` ; `figures.json` lit des copies
+suffixées `_macos` (hôte) et `_linux` (conteneur ci-dessous). Depuis `code/rs` :
+
+```shell
+cargo bench --bench concurrent_std_vs_parking_lot
+for g in target/criterion/lock_*; do for s in std parking_lot; do
+  rm -rf $g/${s}_macos && cp -r $g/$s $g/${s}_macos; done; done
+docker run --rm -v "$PWD":/work -v rq-target:/target -v rq-cargo:/usr/local/cargo/registry \
+  -e CARGO_TARGET_DIR=/target -w /work rust-quicklook-bench \
+  bash -c 'cargo bench --bench concurrent_std_vs_parking_lot &&
+           for g in /target/criterion/lock_*; do for s in std parking_lot; do
+             rm -rf /work/target/criterion/$(basename $g)/${s}_linux &&
+             cp -r $g/$s /work/target/criterion/$(basename $g)/${s}_linux; done; done'
+venv/bin/python benches/plot_figures.py --only std_vs_parking_lot
+```
+
 ## Running gungraun benches with Docker
 
 gungraun needs Valgrind and `gungraun-runner` (same version as the `gungraun` crate), provided by
