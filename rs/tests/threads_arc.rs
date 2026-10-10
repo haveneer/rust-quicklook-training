@@ -1,5 +1,6 @@
-use std::sync::{Arc, Mutex};
+use std::sync::Arc;
 // use std::rc::Rc as Arc; // try it: Rc is not Send
+use std::sync::Mutex;
 use std::thread;
 
 fn main() {

@@ -657,6 +657,8 @@
     "mutex": "#9467bd",
     "rwlock_read": "#8c564b",
     "rwlock_write": "#e377c2",
+    "scenario-3-lockfree-vs-mutex/arc_atomic_increment": "#17becf",
+    "scenario-3-lockfree-vs-mutex/arc_mutex_increment": "#9467bd",
     "on Vec": "#1f77b4",
     "RefCell on Vec": "#d62728",
     "Mutex on Vec": "#9467bd",
