@@ -25,7 +25,7 @@ fn main() {
     thread::scope(|s| {
         s.spawn(|| (0..100).for_each(|_| transfer(&cells, 0, 1, 1.0)));
         s.spawn(|| (0..100).for_each(|_| transfer(&cells, 1, 0, 1.0)));
-    }); // TODO with transfer_deadlock instead: the program hangs
+    }); // TODO try with transfer_deadlock instead: the program hangs
     let total: f64 = cells.iter().map(|c| *c.lock().unwrap()).sum();
     println!("total = {total}");
     assert_eq!(total, 200.0);

@@ -16,7 +16,7 @@ fn main() {
     // The Mutex is now poisoned: the data may break an invariant
     assert!(results.is_poisoned());
     match results.lock() {
-        Ok(_) => unreachable!(),
+        Ok(_) => unreachable!("or my example is broken"),
         Err(poisoned) => {
             // Deliberate choice: take the data anyway, then repair it
             let mut v = poisoned.into_inner();
