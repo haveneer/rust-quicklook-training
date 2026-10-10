@@ -3614,7 +3614,6 @@ dependencies = [
  "image",
  "indexmap 2.9.0",
  "itertools 0.14.0",
- "lazy_static",
  "libc",
  "mach2",
  "memoffset",
