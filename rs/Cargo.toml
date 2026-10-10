@@ -38,6 +38,7 @@ phf = { version = "0.11", features = ["macros"] }
 criterion = { version = "0.5", features = ["html_reports"] }
 gungraun = "0.18.2" # ex iai-callgrind (0.19 requires rustc >= 1.85.1)
 crossbeam-channel = "0.5"
+parking_lot = "0.12"
 dhat = "0.3"
 # collections: popular non-std structures and hash functions
 indexmap = "2"
@@ -142,6 +143,10 @@ harness = false
 
 [[bench]]
 name = "concurrent_real_scenarios"
+harness = false
+
+[[bench]]
+name = "concurrent_std_vs_parking_lot"
 harness = false
 
 [[bench]]

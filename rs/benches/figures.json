@@ -315,6 +315,32 @@
     }
 ,
     {
+      "_": "benches/concurrent_std_vs_parking_lot.rs — séries *_macos : cargo bench sur l'hôte ; séries *_linux : même bench dans le conteneur benches/environment (voir README)",
+      "file": "concurrency/std_vs_parking_lot.png",
+      "type": "grouped_vbars",
+      "title": "Coût moyen d'une prise de verrou (section critique triviale)",
+      "per": 400000,
+      "groups": ["lock_mutex_1t", "lock_mutex_4t", "lock_mutex_8t", "lock_rwlock_read_only_4t",
+                 "lock_rwlock_read_mostly_4t"],
+      "group_labels": {
+        "lock_mutex_1t": "Mutex\n1 thread",
+        "lock_mutex_4t": "Mutex\n4 threads",
+        "lock_mutex_8t": "Mutex\n8 threads",
+        "lock_rwlock_read_only_4t": "RwLock, 4 threads\n100 % lectures",
+        "lock_rwlock_read_mostly_4t": "RwLock, 4 threads\n90 % lectures"
+      },
+      "series": ["std_linux", "parking_lot_linux", "std_macos", "parking_lot_macos"],
+      "labels": {
+        "std_linux": "std (Linux)",
+        "parking_lot_linux": "parking_lot (Linux)",
+        "std_macos": "std (macOS)",
+        "parking_lot_macos": "parking_lot (macOS)"
+      },
+      "legend_columns": 2,
+      "y_label": "ns par prise de verrou"
+    }
+,
+    {
       "_": "benches/collections_lookup.rs — cargo bench --bench collections_lookup",
       "file": "collections/lookup_by_size.png",
       "type": "criterion_curves",
@@ -652,6 +678,10 @@
     "next_only": "#1f77b4",
     "with_fold": "#ff7f0e",
     "with_fold_find": "#2ca02c",
-    "std_map": "#d62728"
+    "std_map": "#d62728",
+    "std_linux": "#1f77b4",
+    "parking_lot_linux": "#ff7f0e",
+    "std_macos": "#aec7e8",
+    "parking_lot_macos": "#ffbb78"
   }
 }
