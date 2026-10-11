@@ -1,3 +1,4 @@
+use criterion::{criterion_group, criterion_main, Criterion};
 use std::cell::RefCell;
 use std::hint::black_box;
 
@@ -24,8 +25,15 @@ fn increments_measured() -> usize {
     cell.into_inner()
 }
 
-#[test]
-fn test() {
+fn bench_black_box_pitfall(c: &mut Criterion) {
     assert_eq!(increments_folded(), ITERATIONS);
     assert_eq!(increments_measured(), ITERATIONS);
+
+    let mut group = c.benchmark_group("black-box-pitfall");
+    group.bench_function("increments_folded", |b| b.iter(increments_folded));
+    group.bench_function("increments_measured", |b| b.iter(increments_measured));
+    group.finish();
 }
+
+criterion_group!(benches, bench_black_box_pitfall);
+criterion_main!(benches);
