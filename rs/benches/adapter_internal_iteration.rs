@@ -13,7 +13,8 @@
 //!
 //! La `std` surcharge aussi `try_fold` (ce qui accélère `find`, `any`, `position`…), mais ce
 //! trait est instable : un adapter écrit à la main ne peut pas le faire sur stable.
-use criterion::{black_box, criterion_group, criterion_main, Criterion};
+use criterion::{criterion_group, criterion_main, Criterion};
+use std::hint::black_box;
 
 const SIZE: usize = 1 << 14;
 const K: u32 = 2_654_435_761;

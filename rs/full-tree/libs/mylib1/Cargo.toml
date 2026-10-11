@@ -11,3 +11,10 @@ edition = "2024"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+
+[dev-dependencies]
+criterion = "0.8"
+
+[[bench]]
+name = "bench_f4"  # benches/bench_f4.rs
+harness = false    # criterion provides its own main

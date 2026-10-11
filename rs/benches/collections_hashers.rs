@@ -4,9 +4,10 @@
 //! cargo bench --bench collections_hashers
 //! venv/bin/python benches/plot_figures.py --only collections
 use criterion::measurement::WallTime;
-use criterion::{black_box, criterion_group, criterion_main, BenchmarkGroup, Criterion};
+use criterion::{criterion_group, criterion_main, BenchmarkGroup, Criterion};
 use std::collections::HashMap;
 use std::hash::{BuildHasher, BuildHasherDefault, Hash, RandomState};
+use std::hint::black_box;
 
 const KEYS: usize = 4096;
 const QUERIES: usize = 1000;
