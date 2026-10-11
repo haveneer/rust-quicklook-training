@@ -13,7 +13,7 @@ edition = "2024"
 [dependencies]
 
 [dev-dependencies]
-criterion = "0.8"
+criterion = { version = "0.8", features = ["html_reports"] }
 
 [[bench]]
 name = "bench_f4"  # benches/bench_f4.rs

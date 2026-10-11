@@ -93,7 +93,7 @@ name = "sort"
 harness = false
 
 [[bench]]
-name = "criterion_demo"
+name = "criterion_advanced"
 harness = false
 
 [[bench]]
