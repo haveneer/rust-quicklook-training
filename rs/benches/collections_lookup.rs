@@ -5,9 +5,7 @@
 //! cargo bench --bench collections_lookup
 //! venv/bin/python benches/plot_figures.py --only collections
 use criterion::measurement::WallTime;
-use criterion::{
-    criterion_group, criterion_main, BenchmarkGroup, BenchmarkId, Criterion,
-};
+use criterion::{criterion_group, criterion_main, BenchmarkGroup, BenchmarkId, Criterion};
 use indexmap::IndexMap;
 use rustc_hash::FxHashMap;
 use std::collections::{BTreeMap, HashMap};

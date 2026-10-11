@@ -6,14 +6,14 @@ const M: usize = 1000; // Size of each array
 
 /// Benchmark 1: Allocation time for multiple small arrays.
 fn bench_allocation(c: &mut Criterion) {
-    let mut group = c.benchmark_group("allocations");
+    let mut group = c.benchmark_group("allocations"); // the variants to compare
 
     // Stack allocation: Allocate N arrays of size M on the stack (each inside the loop)
     group.bench_function("Stack allocation (array)", |b| {
         b.iter(|| {
             for _ in 0..N {
                 let arr = [0i32; M];
-                black_box(&arr);
+                black_box(&arr); // else the unused array may be optimized away
             }
         })
     });
