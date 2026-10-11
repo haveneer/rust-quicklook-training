@@ -109,6 +109,10 @@ name = "refcell"
 harness = false
 
 [[bench]]
+name = "black_box_pitfall"
+harness = false
+
+[[bench]]
 name = "dispatch"
 harness = false
 
