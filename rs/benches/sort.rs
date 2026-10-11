@@ -1,6 +1,7 @@
-use criterion::{black_box, criterion_group, criterion_main, Criterion};
+use criterion::{criterion_group, criterion_main, Criterion};
 use rand::{distributions::Uniform, Rng};
 use rayon::prelude::*;
+use std::hint::black_box;
 
 pub fn sort_benchmark(c: &mut Criterion) {
     let mut rng = rand::thread_rng();

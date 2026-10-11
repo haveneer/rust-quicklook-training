@@ -5,8 +5,9 @@
 //! cargo bench --bench collections_smallvec
 //! venv/bin/python benches/plot_figures.py --only collections
 use arrayvec::ArrayVec;
-use criterion::{black_box, criterion_group, criterion_main, BenchmarkId, Criterion};
+use criterion::{criterion_group, criterion_main, BenchmarkId, Criterion};
 use smallvec::SmallVec;
+use std::hint::black_box;
 
 const VECTORS: u32 = 10_000;
 const LENGTHS: [u32; 6] = [1, 2, 4, 8, 16, 32];

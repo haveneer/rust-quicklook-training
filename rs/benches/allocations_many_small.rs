@@ -1,7 +1,8 @@
 use bumpalo::Bump;
-use criterion::{black_box, criterion_group, criterion_main, Criterion};
+use criterion::{criterion_group, criterion_main, Criterion};
 use rand::seq::SliceRandom;
 use rand::thread_rng;
+use std::hint::black_box;
 
 const N: usize = 1_000_000; // Total number of objects
 const M: usize = 2; // Number of fields

@@ -4,8 +4,9 @@
 //!
 //! cargo bench --bench collections_entry
 //! venv/bin/python benches/plot_figures.py --only collections
-use criterion::{black_box, criterion_group, criterion_main, BenchmarkId, Criterion};
+use criterion::{criterion_group, criterion_main, BenchmarkId, Criterion};
 use std::collections::{BTreeMap, HashMap};
+use std::hint::black_box;
 
 const WORDS: usize = 10_000;
 const VOCABULARY: [usize; 4] = [16, 256, 4096, 65536];

@@ -2,7 +2,8 @@
 //!
 //! cargo bench --bench optimisations
 //! venv/bin/python benches/plot_figures.py --only optimisations
-use criterion::{black_box, criterion_group, criterion_main, Criterion};
+use criterion::{criterion_group, criterion_main, Criterion};
+use std::hint::black_box;
 
 const N: usize = 1 << 16;
 

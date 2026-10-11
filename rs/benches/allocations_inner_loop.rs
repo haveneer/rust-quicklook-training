@@ -1,4 +1,5 @@
-use criterion::{black_box, criterion_group, criterion_main, Criterion};
+use criterion::{criterion_group, criterion_main, Criterion};
+use std::hint::black_box;
 
 const N: usize = 1000; // Number of small arrays
 const M: usize = 1000; // Size of each array
@@ -7,7 +8,7 @@ const M: usize = 1000; // Size of each array
 fn bench_allocation(c: &mut Criterion) {
     let mut group = c.benchmark_group("allocations");
 
-    // Stack allocation: Allocate P arrays of size M on the stack (each inside the loop)
+    // Stack allocation: Allocate N arrays of size M on the stack (each inside the loop)
     group.bench_function("Stack allocation (array)", |b| {
         b.iter(|| {
             for _ in 0..N {
@@ -17,7 +18,7 @@ fn bench_allocation(c: &mut Criterion) {
         })
     });
 
-    // Heap allocation: Allocate P Vecs of size M on the heap.
+    // Heap allocation: Allocate N Vecs of size M on the heap.
     group.bench_function("Heap allocation (Vec)", |b| {
         b.iter(|| {
             for _ in 0..N {

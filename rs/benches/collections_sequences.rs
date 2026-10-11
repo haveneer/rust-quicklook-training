@@ -3,8 +3,9 @@
 //!
 //! cargo bench --bench collections_sequences
 //! venv/bin/python benches/plot_figures.py --only collections
-use criterion::{black_box, criterion_group, criterion_main, BenchmarkId, Criterion};
+use criterion::{criterion_group, criterion_main, BenchmarkId, Criterion};
 use std::collections::{BinaryHeap, LinkedList, VecDeque};
+use std::hint::black_box;
 
 const SIZES: [usize; 4] = [64, 512, 4096, 32768];
 

@@ -19,8 +19,9 @@
 //! (ou `cargo test --benches`) exécute la démonstration et chaque mesure une fois.
 //! Les écarts de temps sont petits et très sensibles au codegen: pour un chiffre reproductible,
 //! compter les instructions avec `examples/subfold_instr.rs` (cf `benches/README.md`).
-use criterion::{black_box, criterion_group, criterion_main, Criterion};
+use criterion::{criterion_group, criterion_main, Criterion};
 use rand::prelude::*;
+use std::hint::black_box;
 
 // ─────────────────────────────── le matériel du cours ───────────────────────────────
 

@@ -1,4 +1,5 @@
-use criterion::{black_box, criterion_group, criterion_main, Criterion};
+use criterion::{Criterion, criterion_group, criterion_main};
+use std::hint::black_box;
 
 const UPPER_BOUND: u64 = 17;
 
@@ -18,33 +19,25 @@ fn recursive_factorial(n: u64) -> u64 {
     }
 }
 
+#[allow(clippy::unnecessary_fold)] // on purpose: product() would do the same
 fn fold_factorial(n: u64) -> u64 {
     (1..=n).fold(1, |acc, i| acc * i)
 }
 
-pub fn imperative_factorial_benchmark(c: &mut Criterion) {
-    c.bench_function("imperative_factorial", |b| {
+// One group: criterion compares its functions (summary and violin plot)
+pub fn factorial_benchmark(c: &mut Criterion) {
+    let mut group = c.benchmark_group("factorial");
+    group.bench_function("imperative", |b| {
         b.iter(|| imperative_factorial(black_box(UPPER_BOUND)))
     });
-}
-
-pub fn recursive_factorial_benchmark(c: &mut Criterion) {
-    c.bench_function("recursive_factorial", |b| {
+    group.bench_function("recursive", |b| {
         b.iter(|| recursive_factorial(black_box(UPPER_BOUND)))
     });
-}
-
-pub fn fold_factorial_benchmark(c: &mut Criterion) {
-    c.bench_function("fold_factorial", |b| {
+    group.bench_function("fold", |b| {
         b.iter(|| fold_factorial(black_box(UPPER_BOUND)))
     });
+    group.finish();
 }
 
-criterion_group!(
-    factorial,
-    imperative_factorial_benchmark,
-    recursive_factorial_benchmark,
-    fold_factorial_benchmark
-);
-
+criterion_group!(factorial, factorial_benchmark);
 criterion_main!(factorial);

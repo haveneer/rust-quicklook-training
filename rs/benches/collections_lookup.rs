@@ -6,11 +6,12 @@
 //! venv/bin/python benches/plot_figures.py --only collections
 use criterion::measurement::WallTime;
 use criterion::{
-    black_box, criterion_group, criterion_main, BenchmarkGroup, BenchmarkId, Criterion,
+    criterion_group, criterion_main, BenchmarkGroup, BenchmarkId, Criterion,
 };
 use indexmap::IndexMap;
 use rustc_hash::FxHashMap;
 use std::collections::{BTreeMap, HashMap};
+use std::hint::black_box;
 
 const QUERIES: usize = 1000;
 const SIZES: [usize; 5] = [8, 64, 512, 4096, 32768];
