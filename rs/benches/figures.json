@@ -346,7 +346,7 @@
       "type": "criterion_curves",
       "title": "Test d'appartenance (50 % de succès)",
       "group": "collections_lookup",
-      "sizes": [8, 64, 512, 4096, 32768],
+      "sizes": [8, 32, 128, 512, 2048, 8192, 32768],
       "per": 1000,
       "series": ["vec_contains", "vec_binary_search", "hashmap", "hashmap_fx", "hashbrown", "indexmap",
                  "btreemap"],
@@ -369,22 +369,24 @@
       "type": "criterion_curves",
       "title": "Somme de toutes les valeurs (parcours complet)",
       "group": "collections_iterate",
-      "sizes": [
-        8,
-        64,
-        512,
-        4096,
-        32768
-      ],
+      "sizes": [8, 32, 128, 512, 2048, 8192, 32768],
       "per_size": true,
       "series": [
         "vec",
-        "hashmap",
+        "vecdeque",
         "indexmap",
-        "btreemap"
+        "btreemap",
+        "hashmap",
+        "linkedlist",
+        "vec_values"
       ],
+      "curve_styles": {"vec_values": ["--", "s"]},
+      "colors": {"vec_values": "#7f8c8d"},
       "labels": {
         "vec": "Vec<(K, V)>",
+        "vecdeque": "VecDeque<(K, V)>",
+        "linkedlist": "LinkedList<(K, V)>",
+        "vec_values": "Vec<V> (valeurs seules, référence)",
         "hashmap": "HashMap::values",
         "indexmap": "IndexMap::values",
         "btreemap": "BTreeMap::values"
@@ -472,12 +474,7 @@
       "type": "criterion_curves",
       "title": "File FIFO de n éléments : push en fin + pop en tête",
       "group": "seq_fifo",
-      "sizes": [
-        64,
-        512,
-        4096,
-        32768
-      ],
+      "sizes": [8, 32, 128, 512, 2048, 8192, 32768],
       "per_size": true,
       "series": [
         "vec_remove0",
@@ -494,49 +491,20 @@
       "y_label": "ns par opération"
     },
     {
-      "file": "collections/seq_traverse.png",
-      "type": "criterion_curves",
-      "title": "Somme des n éléments",
-      "group": "seq_traverse",
-      "sizes": [
-        64,
-        512,
-        4096,
-        32768
-      ],
-      "per_size": true,
-      "series": [
-        "vec",
-        "vecdeque",
-        "linkedlist"
-      ],
-      "labels": {
-        "vec": "Vec",
-        "vecdeque": "VecDeque",
-        "linkedlist": "LinkedList"
-      },
-      "y_scale": "log",
-      "x_label": "nombre d'éléments n",
-      "y_label": "ns par élément"
-    },
-    {
       "file": "collections/seq_priority.png",
       "type": "criterion_curves",
       "title": "File de priorité : n insertions puis n extractions",
       "group": "seq_priority",
-      "sizes": [
-        64,
-        512,
-        4096,
-        32768
-      ],
+      "sizes": [8, 32, 128, 512, 2048, 8192, 32768],
       "per_size": true,
       "series": [
         "binaryheap",
+        "btreeset",
         "sorted_vec_insert"
       ],
       "labels": {
         "binaryheap": "BinaryHeap : push / pop",
+        "btreeset": "BTreeSet : insert / pop_last",
         "sorted_vec_insert": "Vec trié : insert à sa place / pop"
       },
       "y_scale": "log",

@@ -15,22 +15,20 @@ fn main() {
     let xxh3: HashMap<u64, u64, BuildHasherDefault<twox_hash::XxHash3_64>> = build(1000);
     let rapid: rapidhash::RapidHashMap<u64, u64> = build(1000);
     let id: nohash_hasher::IntMap<u64, u64> = build(1000); // hash(k) = k
-    for map in [sip.get(&42), fx.get(&42), fold.get(&42), a.get(&42)] {
-        assert_eq!(map, Some(&1764));
-    }
-    for map in [fnv.get(&42), xxh3.get(&42), rapid.get(&42), id.get(&42)] {
+    #[rustfmt::skip]
+    let hits = [sip.get(&42), fx.get(&42),   fold.get(&42),  a.get(&42),
+                fnv.get(&42), xxh3.get(&42), rapid.get(&42), id.get(&42)];
+    for map in hits {
         assert_eq!(map, Some(&1764));
     }
 
     // Seeded hashers (SipHash, foldhash, ahash, rapidhash) draw a random key per
     // table: an attacker cannot precompute colliding keys. FxHash, FNV are fixed:
-    let siphash = |s: RandomState| s.hash_one("mesh");
+    let siphash = |s: RandomState| s.hash_one("word");
     let (k1, k2) = (siphash(RandomState::new()), siphash(RandomState::new()));
     println!("SipHash, 2 tables: {k1:x} {k2:x}");
-    println!(
-        "FxHash, always   : {:x}",
-        rustc_hash::FxBuildHasher.hash_one("mesh")
-    );
+    #[rustfmt::skip]
+    println!("FxHash, always   : {:x}", rustc_hash::FxBuildHasher.hash_one("word"));
 }
 
 #[test]

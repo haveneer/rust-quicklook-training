@@ -1,6 +1,7 @@
 //! Membership lookups depending on the collection size: linear scan of a Vec,
 //! binary search in a sorted Vec, HashMap (std SipHash, FxHash), hashbrown
-//! (foldhash), IndexMap and BTreeMap. Then a full iteration over the same tables.
+//! (foldhash), IndexMap and BTreeMap. Then a full iteration over the same tables, plus
+//! VecDeque and LinkedList (same (key, value) pairs) and a values-only Vec as reference.
 //!
 //! cargo bench --bench collections_lookup
 //! venv/bin/python benches/plot_figures.py --only collections
@@ -8,11 +9,11 @@ use criterion::measurement::WallTime;
 use criterion::{criterion_group, criterion_main, BenchmarkGroup, BenchmarkId, Criterion};
 use indexmap::IndexMap;
 use rustc_hash::FxHashMap;
-use std::collections::{BTreeMap, HashMap};
+use std::collections::{BTreeMap, HashMap, LinkedList, VecDeque};
 use std::hint::black_box;
 
 const QUERIES: usize = 1000;
-const SIZES: [usize; 5] = [8, 64, 512, 4096, 32768];
+const SIZES: [usize; 7] = [8, 32, 128, 512, 2048, 8192, 32768];
 
 /// Scrambled but deterministic keys (no rand: reproducible measurements)
 fn key(i: usize) -> u64 {
@@ -77,8 +78,20 @@ fn bench_lookup(c: &mut Criterion) {
 fn bench_iterate(c: &mut Criterion) {
     let mut group = c.benchmark_group("collections_iterate");
     for n in SIZES {
+        // (key, value) pairs everywhere: the sequences carry an unused key so that
+        // every collection moves as many bytes as the maps
         let pairs: Vec<(u64, u64)> = (0..n).map(|i| (key(i), i as u64)).collect();
         let vec = pairs.clone();
+        let deque: VecDeque<(u64, u64)> = pairs.iter().copied().collect();
+        // Nodes allocated while other allocations interleave: closer to a real program
+        let mut list = LinkedList::new();
+        let mut noise = Vec::new();
+        for &pair in &pairs {
+            list.push_back(pair);
+            noise.push(Box::new([pair.0; 4]));
+        }
+        // Reference: values only, the index is the key
+        let values: Vec<u64> = pairs.iter().map(|&(_, v)| v).collect();
         let hash: HashMap<u64, u64> = pairs.iter().copied().collect();
         let index: IndexMap<u64, u64> = pairs.iter().copied().collect();
         let btree: BTreeMap<u64, u64> = pairs.iter().copied().collect();
@@ -86,6 +99,15 @@ fn bench_iterate(c: &mut Criterion) {
         let id = |name| BenchmarkId::new(name, n);
         group.bench_function(id("vec"), |b| {
             b.iter(|| black_box(&vec).iter().map(|(_, v)| v).sum::<u64>())
+        });
+        group.bench_function(id("vecdeque"), |b| {
+            b.iter(|| black_box(&deque).iter().map(|(_, v)| v).sum::<u64>())
+        });
+        group.bench_function(id("linkedlist"), |b| {
+            b.iter(|| black_box(&list).iter().map(|(_, v)| v).sum::<u64>())
+        });
+        group.bench_function(id("vec_values"), |b| {
+            b.iter(|| black_box(&values).iter().sum::<u64>())
         });
         group.bench_function(id("hashmap"), |b| {
             b.iter(|| black_box(&hash).values().sum::<u64>())
@@ -96,6 +118,7 @@ fn bench_iterate(c: &mut Criterion) {
         group.bench_function(id("btreemap"), |b| {
             b.iter(|| black_box(&btree).values().sum::<u64>())
         });
+        drop(noise);
     }
     group.finish();
 }
