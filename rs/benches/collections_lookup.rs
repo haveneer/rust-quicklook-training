@@ -74,6 +74,17 @@ fn bench_lookup(c: &mut Criterion) {
     group.finish();
 }
 
+/// Fisher-Yates with a fixed xorshift seed (no rand: reproducible measurements)
+fn shuffle<T>(items: &mut [T]) {
+    let mut x = 0x2545_F491_4F6C_DD1D_u64;
+    for i in (1..items.len()).rev() {
+        x ^= x << 13;
+        x ^= x >> 7;
+        x ^= x << 17;
+        items.swap(i, (x % (i as u64 + 1)) as usize);
+    }
+}
+
 /// Sum of all the values: what a full traversal costs, per element
 fn bench_iterate(c: &mut Criterion) {
     let mut group = c.benchmark_group("collections_iterate");
@@ -90,9 +101,22 @@ fn bench_iterate(c: &mut Criterion) {
             list.push_back(pair);
             noise.push(Box::new([pair.0; 4]));
         }
+        // Same nodes, linked in a random order: the list no longer follows the addresses,
+        // as after insertions and removals in a real program
+        let mut parts: Vec<LinkedList<(u64, u64)>> =
+            pairs.iter().map(|&pair| LinkedList::from([pair])).collect();
+        shuffle(&mut parts);
+        let shuffled = parts.into_iter().fold(LinkedList::new(), |mut list, mut part| {
+            list.append(&mut part); // O(1): relinks, does not move the node
+            list
+        });
         // Reference: values only, the index is the key
         let values: Vec<u64> = pairs.iter().map(|&(_, v)| v).collect();
         let hash: HashMap<u64, u64> = pairs.iter().copied().collect();
+        // n is a power of two, so `hash` has just doubled: half of its buckets are empty.
+        // 7n/8 elements fill n buckets to the maximum load factor (87.5 %)
+        let full: HashMap<u64, u64> = pairs[..n * 7 / 8].iter().copied().collect();
+        assert_eq!(full.capacity(), n * 7 / 8);
         let index: IndexMap<u64, u64> = pairs.iter().copied().collect();
         let btree: BTreeMap<u64, u64> = pairs.iter().copied().collect();
 
@@ -106,11 +130,18 @@ fn bench_iterate(c: &mut Criterion) {
         group.bench_function(id("linkedlist"), |b| {
             b.iter(|| black_box(&list).iter().map(|(_, v)| v).sum::<u64>())
         });
+        group.bench_function(id("linkedlist_shuffled"), |b| {
+            b.iter(|| black_box(&shuffled).iter().map(|(_, v)| v).sum::<u64>())
+        });
         group.bench_function(id("vec_values"), |b| {
             b.iter(|| black_box(&values).iter().sum::<u64>())
         });
         group.bench_function(id("hashmap"), |b| {
             b.iter(|| black_box(&hash).values().sum::<u64>())
+        });
+        // timed over 7n/8 elements: the figure divides by n * 7/8 (size_factor)
+        group.bench_function(id("hashmap_full"), |b| {
+            b.iter(|| black_box(&full).values().sum::<u64>())
         });
         group.bench_function(id("indexmap"), |b| {
             b.iter(|| black_box(&index).values().sum::<u64>())
