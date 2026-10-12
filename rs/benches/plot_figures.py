@@ -314,20 +314,26 @@ def draw_criterion_curves(fig_cfg, cfg, output):
         xs = [n for n in sizes if not fig_cfg.get("sparse") or os.path.exists(
             os.path.join(cfg["criterion_dir"], group, series, str(n), "new", "estimates.json"))]
         # `per_size`: also divide by the swept size, for a cost per element
+        # `size_factor`: a series measured on n * factor elements (e.g. a table filled to
+        # 7/8): plotted at that size and divided by it
+        factor = fig_cfg.get("size_factor", {}).get(series, 1)
         ys = [read_criterion_bench(cfg["criterion_dir"], f"{group}/{series}/{n}")[0] / per
-              / (n if fig_cfg.get("per_size") else 1) for n in xs]
-        ax.plot(xs, ys, style, marker=marker, markersize=7, label=labels.get(series, series),
-                color=colors.get(series))
+              / (n * factor if fig_cfg.get("per_size") else 1) for n in xs]
+        ax.plot([n * factor for n in xs], ys, style, marker=marker, markersize=7,
+                label=labels.get(series, series), color=colors.get(series))
 
     ax.set_xscale("log", base=2)
     ax.set_yscale(fig_cfg.get("y_scale", "linear"))
+    if "y_max" in fig_cfg:  # headroom, e.g. to keep the legend clear of the curves
+        ax.set_ylim(top=fig_cfg["y_max"])
     ax.set_xticks(sizes, [str(n) for n in sizes])
     ax.set_xlabel(fig_cfg.get("x_label", "n"))
     ax.set_ylabel(fig_cfg.get("y_label", "ns"))
     if fig_cfg.get("title"):
         ax.set_title(fig_cfg["title"])
     ax.grid(alpha=0.3)
-    ax.legend(fontsize=8)
+    # `legend`: extra matplotlib legend arguments (e.g. its location)
+    ax.legend(fontsize=8, **fig_cfg.get("legend", {}))
     fig.tight_layout()
     fig.savefig(output, dpi=150)
     plt.close(fig)
