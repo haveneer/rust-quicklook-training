@@ -1,13 +1,13 @@
-//! Sequences: FIFO queue, traversal and priority queue on Vec, VecDeque,
-//! LinkedList and BinaryHeap, depending on the number of elements n.
+//! Sequences: FIFO queue and priority queue on Vec, VecDeque,
+//! LinkedList, BinaryHeap and BTreeSet, depending on the number of elements n.
 //!
 //! cargo bench --bench collections_sequences
 //! venv/bin/python benches/plot_figures.py --only collections
 use criterion::{criterion_group, criterion_main, BenchmarkId, Criterion};
-use std::collections::{BinaryHeap, LinkedList, VecDeque};
+use std::collections::{BTreeSet, BinaryHeap, LinkedList, VecDeque};
 use std::hint::black_box;
 
-const SIZES: [usize; 4] = [64, 512, 4096, 32768];
+const SIZES: [usize; 7] = [8, 32, 128, 512, 2048, 8192, 32768];
 
 /// Deterministic pseudo-random priorities
 fn prio(i: usize) -> u64 {
@@ -50,34 +50,6 @@ fn bench_fifo(c: &mut Criterion) {
     group.finish();
 }
 
-/// Sum of all the elements
-fn bench_traverse(c: &mut Criterion) {
-    let mut group = c.benchmark_group("seq_traverse");
-    for n in SIZES {
-        let id = |name| BenchmarkId::new(name, n);
-        let vec: Vec<u64> = (0..n as u64).collect();
-        let deque: VecDeque<u64> = (0..n as u64).collect();
-        // Nodes allocated while other allocations interleave: closer to a real program
-        let mut list = LinkedList::new();
-        let mut noise = Vec::new();
-        for i in 0..n as u64 {
-            list.push_back(i);
-            noise.push(Box::new([i; 4]));
-        }
-        group.bench_function(id("vec"), |b| {
-            b.iter(|| black_box(&vec).iter().sum::<u64>())
-        });
-        group.bench_function(id("vecdeque"), |b| {
-            b.iter(|| black_box(&deque).iter().sum::<u64>())
-        });
-        group.bench_function(id("linkedlist"), |b| {
-            b.iter(|| black_box(&list).iter().sum::<u64>())
-        });
-        drop(noise);
-    }
-    group.finish();
-}
-
 /// Priority queue: push n priorities, then pop them all in order
 fn bench_priority(c: &mut Criterion) {
     let mut group = c.benchmark_group("seq_priority");
@@ -92,6 +64,20 @@ fn bench_priority(c: &mut Criterion) {
                 }
                 let mut last = 0;
                 while let Some(p) = heap.pop() {
+                    last = p;
+                }
+                last
+            })
+        });
+        group.bench_function(id("btreeset"), |b| {
+            b.iter(|| {
+                // (priority, rank): a set would merge equal priorities otherwise
+                let mut set = BTreeSet::new();
+                for (rank, &p) in black_box(&input).iter().enumerate() {
+                    set.insert((p, rank));
+                }
+                let mut last = 0;
+                while let Some((p, _)) = set.pop_last() {
                     last = p;
                 }
                 last
@@ -115,5 +101,5 @@ fn bench_priority(c: &mut Criterion) {
     group.finish();
 }
 
-criterion_group!(benches, bench_fifo, bench_traverse, bench_priority);
+criterion_group!(benches, bench_fifo, bench_priority);
 criterion_main!(benches);
