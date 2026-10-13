@@ -36,5 +36,6 @@ mod tests {
 
         3.15.moon();
         f64::moon(&3.15);
+        <f64 as Moon>::moon(&3.15); // fully qualified syntax
     }
 }
