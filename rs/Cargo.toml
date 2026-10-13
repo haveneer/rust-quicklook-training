@@ -43,7 +43,6 @@ dhat = "0.3"
 indexmap = "2"
 smallvec = { version = "1", features = ["union", "const_generics"] }
 arrayvec = "0.7"
-petgraph = "0.8"
 rustc-hash = "2"
 foldhash = "0.2"
 ahash = "0.8"
