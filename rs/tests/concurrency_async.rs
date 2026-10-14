@@ -46,7 +46,7 @@ mod tests {
 
     async fn do_exclusive_job_async(_id: i8, shared_data: &Mutex<&mut SharedData>) {
         let mut data = shared_data.lock().unwrap(); // unwrap without no guard: we are sure to be not poisoned
-                                                    // example of poisoning: the other 'task' panics while it has locked the resource.
+        // example of poisoning: the other 'task' panics while it has locked the resource.
         data.data += 1;
     }
 

@@ -1,4 +1,4 @@
-use phf::{phf_map, Map};
+use phf::{Map, phf_map};
 
 /// Perfect hash table generated at compile time (address -> rank u8)
 static ADDRESS_MAP: Map<&'static str, u8> = phf_map! {

@@ -1,13 +1,13 @@
 mod options;
 
 use actix_web::{
-    error, get, middleware, post, web, App, Error, HttpResponse, HttpServer, Responder,
+    App, Error, HttpResponse, HttpServer, Responder, error, get, middleware, post, web,
 };
 use clap::Parser;
 use futures::StreamExt;
 use options::Options;
-use rand::prelude::{IteratorRandom, StdRng};
 use rand::SeedableRng;
+use rand::prelude::{IteratorRandom, StdRng};
 use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 use std::net::{IpAddr, Ipv4Addr, SocketAddr};

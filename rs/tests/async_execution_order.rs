@@ -1,4 +1,4 @@
-use tokio::time::{sleep, Duration};
+use tokio::time::{Duration, sleep};
 
 #[tokio::test] // Proc-macro to define the Tokio runtime
 async fn main() {

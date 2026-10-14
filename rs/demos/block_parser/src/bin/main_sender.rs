@@ -1,12 +1,12 @@
-use axum::{extract::State, response::Json, routing::get, Router};
-use block_parser::{make_test_transactions_with_seed, Block, OwnedBlock, ToBytes};
+use axum::{Router, extract::State, response::Json, routing::get};
+use block_parser::{Block, OwnedBlock, ToBytes, make_test_transactions_with_seed};
 use chrono::Utc;
 use serde_json::json;
 use sha2::digest::FixedOutput;
 use sha2::{Digest, Sha256};
 use std::sync::{
-    atomic::{AtomicUsize, Ordering},
     Arc,
+    atomic::{AtomicUsize, Ordering},
 };
 use tokio::io::AsyncWriteExt;
 use tokio::net::TcpListener;

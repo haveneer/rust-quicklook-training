@@ -1,5 +1,5 @@
-use criterion::{criterion_group, criterion_main, Criterion};
-use rand::{distributions::Uniform, Rng};
+use criterion::{Criterion, criterion_group, criterion_main};
+use rand::{Rng, distributions::Uniform};
 use rayon::prelude::*;
 use std::hint::black_box;
 

@@ -13,11 +13,7 @@ fn maybe_tailrec1(n: u64, acc: u64) -> u64 {
 
 // This example is not explicitly tailrec and nevertheless it is optimized by Rust
 fn maybe_tailrec2(n: u64) -> u64 {
-    if n == 0 {
-        0
-    } else {
-        1 + maybe_tailrec2(n - 1)
-    }
+    if n == 0 { 0 } else { 1 + maybe_tailrec2(n - 1) }
 }
 
 fn main() {

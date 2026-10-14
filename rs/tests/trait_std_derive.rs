@@ -42,7 +42,7 @@ fn main() {
     #[allow(clippy::eq_op)] // comparaison réflexive volontaire: c'est justement le propos
     let reflexive = nan == nan;
     println!("{reflexive}"); // false
-                             // => pas de HashMap<f64, _>, et pas de .sort() car pas Ord non plus
+    // => pas de HashMap<f64, _>, et pas de .sort() car pas Ord non plus
     let mut xs = vec![3.0, nan, 1.0];
     // xs.sort();               // ne compile pas: `f64: Ord` non satisfait
     xs.sort_by(f64::total_cmp); // ordre total explicite, à la charge de l'appelant

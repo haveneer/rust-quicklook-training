@@ -206,7 +206,7 @@ impl<'a> Iterator for TransactionViewIterator<'a> {
 mod tests {
     use super::*;
     use crate::block_interfaces::Transactions;
-    use crate::{make_test_block, Block, ToBytes, Transaction};
+    use crate::{Block, ToBytes, Transaction, make_test_block};
 
     #[test]
     fn test_single_block_parsing() {

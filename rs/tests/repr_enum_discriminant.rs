@@ -8,7 +8,7 @@ enum Case {
 
 mod details {
     use super::Case;
-    use rand::{thread_rng, Rng};
+    use rand::{Rng, thread_rng};
     use std::mem::Discriminant;
 
     impl Case {

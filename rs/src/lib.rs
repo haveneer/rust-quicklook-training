@@ -191,7 +191,7 @@ pub fn identify_memory_section_macos<T>(obj_ref: &T) -> Option<MemorySection> {
 }
 
 #[cfg(target_os = "macos")]
-extern "C" {
+unsafe extern "C" {
     fn _dyld_get_image_header(image_index: u32) -> *const mach_o::header::mach_header_64;
     fn _dyld_get_image_vmaddr_slide(image_index: u32) -> isize;
     fn _dyld_image_count() -> u32;

@@ -5,7 +5,7 @@
 //! cargo bench --bench collections_smallvec
 //! venv/bin/python benches/plot_figures.py --only collections
 use arrayvec::ArrayVec;
-use criterion::{criterion_group, criterion_main, BenchmarkId, Criterion};
+use criterion::{BenchmarkId, Criterion, criterion_group, criterion_main};
 use smallvec::SmallVec;
 use std::hint::black_box;
 

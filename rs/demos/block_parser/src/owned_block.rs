@@ -146,10 +146,10 @@ pub fn make_test_block() -> OwnedBlock {
 pub fn make_test_block_with_seed(seed: u64) -> OwnedBlock {
     let mut r = StdRng::seed_from_u64(seed);
     OwnedBlock {
-        id: r.gen(),
-        timestamp: r.gen(),
+        id: r.r#gen(),
+        timestamp: r.r#gen(),
         transactions: make_test_transactions_with_seed(seed),
-        prev_hash: r.gen(),
+        prev_hash: r.r#gen(),
     }
 }
 
@@ -160,7 +160,7 @@ pub fn make_test_transactions_with_seed(seed: u64) -> Vec<OwnedTransaction> {
     for _ in 0..r.gen_range(0..10) {
         let n = r.gen_range(0..20);
         let mut data = vec![0; n];
-        data.iter_mut().for_each(|x| *x = r.gen());
+        data.iter_mut().for_each(|x| *x = r.r#gen());
         transactions.push(OwnedTransaction { data })
     }
     transactions

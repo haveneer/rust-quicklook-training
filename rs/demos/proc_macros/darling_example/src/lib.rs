@@ -1,12 +1,12 @@
 use proc_macro::TokenStream;
 use quote::{format_ident, quote};
-use syn::{parse_macro_input, DeriveInput};
+use syn::{DeriveInput, parse_macro_input};
 
 // This example demonstrates using `darling` to parse container and field attributes
 // for a derive macro, with error aggregation, compile-time warnings, and an
 // optional debug mode printing parsed metadata and generated code.
 
-use darling::{ast, util, FromDeriveInput, FromField};
+use darling::{FromDeriveInput, FromField, ast, util};
 
 // The fields are mainly named as they are from parse_macro_input!(input as DeriveInput)
 // + custom attributes (e.g. `env_prefix`)

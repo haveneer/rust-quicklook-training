@@ -1,5 +1,5 @@
-use crate::block_interfaces::{Block, FromBytes, Transaction, Transactions};
 use crate::ParseError;
+use crate::block_interfaces::{Block, FromBytes, Transaction, Transactions};
 use std::convert::TryInto;
 
 #[derive(Debug, PartialEq, Eq)]
@@ -141,7 +141,7 @@ impl<'a> FromBytes<'a> for RefBlock<'a> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{make_test_block, ToBytes};
+    use crate::{ToBytes, make_test_block};
     use memmap2::MmapOptions;
     use std::io::Write;
     use tempfile::NamedTempFile;

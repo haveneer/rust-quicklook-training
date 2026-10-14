@@ -3,7 +3,7 @@
 //!
 //! cargo bench --bench criterion_advanced -- --save-baseline before
 //! cargo bench --bench criterion_advanced -- --baseline before   (after a change)
-use criterion::{criterion_group, criterion_main, BatchSize, BenchmarkId, Criterion, Throughput};
+use criterion::{BatchSize, BenchmarkId, Criterion, Throughput, criterion_group, criterion_main};
 use std::time::Duration;
 
 /// Deterministic pseudo-random values (no rand: reproducible measurements)

@@ -1,4 +1,4 @@
-use hashbrown::{hash_map::Entry, HashMap};
+use hashbrown::{HashMap, hash_map::Entry};
 use std::hash::Hash;
 
 // Natural version, rejected by the current borrow checker (NLL "problem case #3"):

@@ -3,7 +3,7 @@
 
 use std::hint::black_box; // Use black_box from std (re-exported by Criterion and Iai as well)
 
-use criterion::{criterion_group, criterion_main, Criterion};
+use criterion::{Criterion, criterion_group, criterion_main};
 use gungraun::{library_benchmark, library_benchmark_group, main};
 
 /// Calls per measured iteration.

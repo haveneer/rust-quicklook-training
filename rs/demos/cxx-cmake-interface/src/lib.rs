@@ -2,7 +2,7 @@
 // cpp/field.hpp (no declaration by hand, unlike ../cxx-interface).
 // Rust -> C++: see src/bridge.rs.
 use autocxx::prelude::*;
-use cxx::{let_cxx_string, UniquePtr};
+use cxx::{UniquePtr, let_cxx_string};
 
 include_cpp! {
     #include "field.hpp"

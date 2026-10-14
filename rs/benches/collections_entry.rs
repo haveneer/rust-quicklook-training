@@ -4,7 +4,7 @@
 //!
 //! cargo bench --bench collections_entry
 //! venv/bin/python benches/plot_figures.py --only collections
-use criterion::{criterion_group, criterion_main, BenchmarkId, Criterion};
+use criterion::{BenchmarkId, Criterion, criterion_group, criterion_main};
 use std::collections::{BTreeMap, HashMap};
 use std::hint::black_box;
 

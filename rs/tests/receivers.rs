@@ -1,6 +1,6 @@
 #![cfg_attr(feature = "nightly", feature(arbitrary_self_types))]
 
-use std::pin::{pin, Pin};
+use std::pin::{Pin, pin};
 use std::rc::Rc;
 use std::sync::Arc;
 

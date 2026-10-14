@@ -35,10 +35,11 @@ fn derives_and_exposes_names() {
 
 #[test]
 fn from_env_builds() {
-    std::env::set_var("APP_NAME", "MyApp");
-    std::env::set_var("APP_PORT", "8080");
-    std::env::set_var("APP_DEBUG", "true");
-    std::env::remove_var("APP_OLD_FEATURE"); // -> defaults to false
+    // SAFETY: edition 2024 makes env mutation unsafe (not thread-safe)
+    unsafe { std::env::set_var("APP_NAME", "MyApp") };
+    unsafe { std::env::set_var("APP_PORT", "8080") };
+    unsafe { std::env::set_var("APP_DEBUG", "true") };
+    unsafe { std::env::remove_var("APP_OLD_FEATURE") }; // -> defaults to false
 
     let cfg = AppConfig::from_env().expect("from_env should succeed");
     assert_eq!(cfg.app_name, "MyApp");
