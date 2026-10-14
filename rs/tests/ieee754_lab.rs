@@ -110,8 +110,8 @@ fn to_hexfloat(x: f64) -> String {
         // Pour obtenir une représentation normalisée de la forme "0x1[.frac]p<exp>",
         // on "normalise" le nombre en décalant la mantisse.
         let f = frac; // f est non nul ici puisque x != 0
-                      // Calculer le nombre de bits utilisés dans f.
-                      // f est contenu dans 52 bits ; la longueur effective est :
+        // Calculer le nombre de bits utilisés dans f.
+        // f est contenu dans 52 bits ; la longueur effective est :
         let bit_length = 64 - f.leading_zeros();
         // On souhaite obtenir une mantisse de 53 bits (1 implicite + 52 bits)
         // On décale donc f à gauche d'un certain nombre s tel que (f << s) ait exactement 53 bits.

@@ -8,7 +8,7 @@ fn object_safety_failures() {
     t.compile_fail(format!("tests/failures/{version_path}/object_safety.rs"));
 }
 
-use std::pin::{pin, Pin};
+use std::pin::{Pin, pin};
 use std::rc::Rc;
 use std::sync::Arc;
 

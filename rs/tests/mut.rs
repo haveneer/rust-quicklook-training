@@ -8,7 +8,7 @@ mod tests {
     fn test_moved_no_change() {
         let v1 = vec![1, 2, 3];
         let v2 = f1(v1); // v1 moved into f1
-                         // println!("v1 has length {} content `{:?}`", v1.len(), v1); // v1 no more available
+        // println!("v1 has length {} content `{:?}`", v1.len(), v1); // v1 no more available
         println!("v2 has length {} content `{:?}`", v2.len(), v2);
     }
 

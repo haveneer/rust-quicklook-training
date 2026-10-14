@@ -76,7 +76,7 @@ impl<T> Stream for ManualStream<T> {
 }
 
 use futures::stream::StreamExt; // To use .next() on the stream.
-use tokio::time::{sleep, Duration};
+use tokio::time::{Duration, sleep};
 
 #[tokio::test]
 async fn main() {

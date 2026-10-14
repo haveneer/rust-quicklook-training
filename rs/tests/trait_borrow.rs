@@ -44,7 +44,7 @@ fn main() {
     let map = MyHashMap::<String, ()>::new();
     let s = String::from("String");
     map.get(&s); // both possible due to String: Borrow<str>
-                 // internally <String as Borrow<str>>::borrow(&s);
+    // internally <String as Borrow<str>>::borrow(&s);
     map.get("toto"); // both possible
 
     map.funky(&RawString);

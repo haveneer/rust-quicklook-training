@@ -1,5 +1,5 @@
 use bumpalo::Bump;
-use criterion::{criterion_group, criterion_main, Criterion};
+use criterion::{Criterion, criterion_group, criterion_main};
 use rand::seq::SliceRandom;
 use rand::thread_rng;
 use std::hint::black_box;

@@ -1,10 +1,6 @@
 /// Tail-recursive: the recursive call is the last operation...
 fn sum_rec(n: u64, acc: u64) -> u64 {
-    if n == 0 {
-        acc
-    } else {
-        sum_rec(n - 1, acc + n)
-    }
+    if n == 0 { acc } else { sum_rec(n - 1, acc + n) }
 }
 
 /// ...but Rust does not guarantee that it becomes a loop: write the loop

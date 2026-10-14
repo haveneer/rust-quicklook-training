@@ -16,11 +16,7 @@ fn lifetime0() {
 }
 
 fn max1(x: i32, y: i32) -> i32 {
-    if x > y {
-        x
-    } else {
-        y
-    }
+    if x > y { x } else { y }
 }
 
 #[test]
@@ -42,11 +38,7 @@ fn lifetime1() {
 }
 
 fn max2<'a>(x: &'a i32, y: &'a i32) -> &'a i32 {
-    if *x > *y {
-        x
-    } else {
-        y
-    }
+    if *x > *y { x } else { y }
 }
 
 #[test]
@@ -72,11 +64,7 @@ struct W {
 fn max3<'a>(x: &'a W, y: &'a W) -> &'a W {
     println!("x is {:?}", x.v);
     println!("y is {:?}", y.v);
-    if x.v > y.v {
-        x
-    } else {
-        y
-    }
+    if x.v > y.v { x } else { y }
 }
 
 #[test]

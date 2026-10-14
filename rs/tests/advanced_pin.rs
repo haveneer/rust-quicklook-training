@@ -1,7 +1,7 @@
 #![allow(dead_code)]
 #![allow(clippy::redundant_locals)]
 use std::marker::PhantomPinned;
-use std::pin::{pin, Pin};
+use std::pin::{Pin, pin};
 
 // #[derive(Clone, Copy)] // Be careful: default implementation will break the inner invariant
 // Pin doesn't protect your from yourself

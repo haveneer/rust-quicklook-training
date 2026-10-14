@@ -1,5 +1,5 @@
-use futures::future::try_join_all;
 use futures::FutureExt;
+use futures::future::try_join_all;
 use std::hash::{DefaultHasher, Hash, Hasher};
 
 async fn process<Reader>(files: &[&str], reader: Reader) -> Result<String, std::io::Error>

@@ -1,5 +1,5 @@
 use arrayvec::ArrayVec;
-use smallvec::{smallvec, SmallVec};
+use smallvec::{SmallVec, smallvec};
 
 fn main() {
     // Up to 4 elements stored inline (in the value itself), beyond that on the heap

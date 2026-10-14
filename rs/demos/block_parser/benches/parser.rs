@@ -1,9 +1,9 @@
 #[cfg(not(feature = "iai"))]
-use criterion::{criterion_group, criterion_main, Criterion};
+use criterion::{Criterion, criterion_group, criterion_main};
 
 use block_parser::block_iter::BlockViewIterator;
 use block_parser::{
-    make_test_block, Block, FromBytes, OwnedBlock, RefBlock, ToBytes, Transaction, Transactions,
+    Block, FromBytes, OwnedBlock, RefBlock, ToBytes, Transaction, Transactions, make_test_block,
 };
 use gungraun::library_benchmark;
 use std::hint::black_box;

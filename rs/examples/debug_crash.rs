@@ -3,11 +3,7 @@
 // cargo run --example debug_crash -- abort      (explicit abort: SIGABRT)
 fn depth(n: u64) -> u64 {
     let frame = std::hint::black_box([n; 64]); // 512 bytes per call
-    if n == 0 {
-        0
-    } else {
-        1 + depth(frame[0] - 1)
-    }
+    if n == 0 { 0 } else { 1 + depth(frame[0] - 1) }
 }
 
 fn main() {

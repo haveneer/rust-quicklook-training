@@ -19,19 +19,11 @@ pub trait Operator {
 
     fn prepare(&self, x: (String, Rc<dyn Operator>)) -> String {
         let protect = x.1.priority() > self.priority();
-        if protect {
-            format!("({})", x.0)
-        } else {
-            x.0
-        }
+        if protect { format!("({})", x.0) } else { x.0 }
     }
 
     fn prepare_extended(&self, x: (String, Rc<dyn Operator>)) -> String {
         let protect = x.1.priority() >= self.priority();
-        if protect {
-            format!("({})", x.0)
-        } else {
-            x.0
-        }
+        if protect { format!("({})", x.0) } else { x.0 }
     }
 }

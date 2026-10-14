@@ -42,12 +42,10 @@ fn main() {
     println!("{:p}", &LOCAL_CONST_VALUE);
 
     println!("{:p}", unsafe {
-        // optional raw pointer conversion {:p} will do it
-        &GLOBAL_STATIC_VALUE /* as *const _ */
+        // &raw const: no reference to a static mut (2024)
+        &raw const GLOBAL_STATIC_VALUE
     });
-    println!("{:p}", unsafe {
-        &LOCAL_STATIC_VALUE /* as *const _ */
-    });
+    println!("{:p}", unsafe { &raw const LOCAL_STATIC_VALUE });
 
     let data = Data { field: [0u8; 64] };
     data.foo();

@@ -13,7 +13,7 @@
 //! let mut acc = 0;                        pipeline().fold(0, wrapping_add)
 //! for x in pipeline() { acc += x; }
 //! ```
-use criterion::{criterion_group, criterion_main, Criterion};
+use criterion::{Criterion, criterion_group, criterion_main};
 use std::hint::black_box;
 
 const SIZE: usize = 1 << 14;

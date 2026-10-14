@@ -17,7 +17,7 @@
 //! La source est reclonée hors mesure (`iter_batched`) pour chaque itération, et les sorties
 //! sont libérées hors mesure. La libération de la source, elle, est mesurée : elle fait partie du
 //! coût réel de la version qui ne la réutilise pas.
-use criterion::{criterion_group, criterion_main, BatchSize, BenchmarkId, Criterion};
+use criterion::{BatchSize, BenchmarkId, Criterion, criterion_group, criterion_main};
 use std::hint::black_box;
 
 const SIZES: [usize; 2] = [1 << 10, 1 << 20];

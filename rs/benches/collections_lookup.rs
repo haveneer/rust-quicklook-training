@@ -6,7 +6,7 @@
 //! cargo bench --bench collections_lookup
 //! venv/bin/python benches/plot_figures.py --only collections
 use criterion::measurement::WallTime;
-use criterion::{criterion_group, criterion_main, BenchmarkGroup, BenchmarkId, Criterion};
+use criterion::{BenchmarkGroup, BenchmarkId, Criterion, criterion_group, criterion_main};
 use indexmap::IndexMap;
 use rustc_hash::FxHashMap;
 use std::collections::{BTreeMap, HashMap, LinkedList, VecDeque};
@@ -106,10 +106,12 @@ fn bench_iterate(c: &mut Criterion) {
         let mut parts: Vec<LinkedList<(u64, u64)>> =
             pairs.iter().map(|&pair| LinkedList::from([pair])).collect();
         shuffle(&mut parts);
-        let shuffled = parts.into_iter().fold(LinkedList::new(), |mut list, mut part| {
-            list.append(&mut part); // O(1): relinks, does not move the node
-            list
-        });
+        let shuffled = parts
+            .into_iter()
+            .fold(LinkedList::new(), |mut list, mut part| {
+                list.append(&mut part); // O(1): relinks, does not move the node
+                list
+            });
         // Reference: values only, the index is the key
         let values: Vec<u64> = pairs.iter().map(|&(_, v)| v).collect();
         let hash: HashMap<u64, u64> = pairs.iter().copied().collect();

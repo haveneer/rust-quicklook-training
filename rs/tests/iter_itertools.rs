@@ -1,4 +1,4 @@
-use itertools::{iproduct, izip, Itertools, MinMaxResult};
+use itertools::{Itertools, MinMaxResult, iproduct, izip};
 
 fn main() {
     let v = [3, 1, 4, 1, 5, 9, 2, 6];

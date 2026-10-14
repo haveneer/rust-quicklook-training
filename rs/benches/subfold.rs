@@ -19,7 +19,7 @@
 //! (ou `cargo test --benches`) exécute la démonstration et chaque mesure une fois.
 //! Les écarts de temps sont petits et très sensibles au codegen: pour un chiffre reproductible,
 //! compter les instructions avec `examples/subfold_instr.rs` (cf `benches/README.md`).
-use criterion::{criterion_group, criterion_main, Criterion};
+use criterion::{Criterion, criterion_group, criterion_main};
 use rand::prelude::*;
 use std::hint::black_box;
 
@@ -195,11 +195,7 @@ fn unix_pipeline() -> String {
         .take(15)
         .subfold(3, String::new(), |acc, x| acc + &x.to_string())
         .fold(String::new(), |acc, s| {
-            if acc.is_empty() {
-                s
-            } else {
-                acc + "-" + &s
-            }
+            if acc.is_empty() { s } else { acc + "-" + &s }
         })
     // .collect::<Vec<String>>().join("-") // stable, mais avec une allocation intermédiaire
     // .intersperse("-".into()).collect::<String>() // nightly
@@ -213,9 +209,11 @@ fn unix_pipeline_demo(_c: &mut Criterion) {
 
     let groups: Vec<&str> = result.split('-').collect();
     assert_eq!(groups.len(), 5, "15 caractères repliés par blocs de 3");
-    assert!(groups
-        .iter()
-        .all(|g| g.len() == 3 && g.chars().all(|c| c.is_ascii_hexdigit())));
+    assert!(
+        groups
+            .iter()
+            .all(|g| g.len() == 3 && g.chars().all(|c| c.is_ascii_hexdigit()))
+    );
 }
 
 // ───────────────────────────────────── la mesure ─────────────────────────────────────
