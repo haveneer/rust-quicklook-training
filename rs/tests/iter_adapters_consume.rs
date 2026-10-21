@@ -1,7 +1,7 @@
 fn main() {
     let speeds = [12.0, 48.5, 33.0, 7.5, 48.5];
 
-    // Reductions: sum / product, fold (initial value + step), reduce (no initial value)
+    // Reductions: sum, product, fold (init + step), reduce (no init: Option)
     let total: f64 = speeds.iter().sum();
     assert_eq!(total, 149.5);
     assert_eq!((1..=5).product::<u64>(), 120);
@@ -10,7 +10,7 @@ fn main() {
     let fastest = speeds.iter().copied().reduce(f64::max);
     assert_eq!(fastest, Some(48.5)); // None for an empty iterator
 
-    // min / max need Ord (f64 is only PartialOrd): use the *_by / *_by_key variants
+    // min / max need Ord (f64 is only PartialOrd): use *_by / *_by_key
     let longest = ["wing", "fuselage", "tail"]
         .into_iter()
         .max_by_key(|s| s.len());
