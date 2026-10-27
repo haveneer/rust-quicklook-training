@@ -2,9 +2,9 @@ fn main() {
     let s = [0.1, 0.3, 0.9, 1.4, 0.8, 0.2, 1.1];
 
     // take / skip, take_while / skip_while: cut by count or by predicate
-    let warmup: Vec<f64> = s.iter().copied().take_while(|&x| x < 1.0).collect();
+    let warmup: Vec<_> = s.into_iter().take_while(|&x| x < 1.0).collect();
     assert_eq!(warmup, [0.1, 0.3, 0.9]);
-    let after: Vec<f64> = s.iter().copied().skip_while(|&x| x < 1.0).skip(1).collect();
+    let after: Vec<_> = s.into_iter().skip_while(|&x| x < 1.0).skip(1).collect();
     assert_eq!(after, [0.8, 0.2, 1.1]);
 
     // map_while: map until the first None (stops, unlike filter_map)
