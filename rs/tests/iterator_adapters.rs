@@ -1,6 +1,6 @@
 #[test]
 fn map_filter_collect() {
-    let numbers = vec![1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+    let numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
     // Chaîne d'adaptateurs : filtrer, transformer, puis collecter
     let doubled_evens: Vec<i32> = numbers
@@ -14,7 +14,7 @@ fn map_filter_collect() {
 
 #[test]
 fn fold_sum_of_squares() {
-    let numbers = vec![1, 2, 3, 4];
+    let numbers = [1, 2, 3, 4];
 
     // fold : accumule un résultat au fil de l'itération (somme des carrés)
     let sum_of_squares = numbers.iter().fold(0, |acc, &n| acc + n * n);
@@ -29,6 +29,14 @@ fn lazy_evaluation() {
     let it = (1..=3)
         .inspect(|n| println!("lu {n}")) // voir passer les éléments
         .map(|n| n * n);
+    // le type de it, chemins (core::iter::...) ellipsés
+    let ty = {
+        let full = std::any::type_name_of_val(&it);
+        full.split_inclusive(['<', '>', ',', ' '])
+            .map(|part| part.rsplit("::").next().unwrap())
+            .collect::<String>()
+    };
+    println!("{ty} : {} octets", size_of_val(&it));
 
     println!("adaptateurs construits, rien n'a encore tourné");
 
