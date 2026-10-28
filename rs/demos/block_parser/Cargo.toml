@@ -20,7 +20,7 @@ sha2 = "0.9.8"
 criterion = { version = "0.8", features = ["html_reports"] }
 memmap2 = "0.9.5"
 tempfile = "3.18.0"
-gungraun = "0.18.2" # ex iai-callgrind (0.19 requires rustc >= 1.85.1)
+gungraun = "0.20.0" # ex iai-callgrind; gungraun-runner must be the same version
 
 [features]
 iai = []
