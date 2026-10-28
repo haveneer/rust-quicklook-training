@@ -123,6 +123,49 @@ docker run --rm --security-opt seccomp=unconfined \
   previous one (first run shows `N/A`)
 * instruction counts depend on the architecture (aarch64 on Apple Silicon vs x86_64)
 
+## perf et gdb dans Docker
+
+Pour une vérification rapide depuis macOS ; le banc de référence reste une VM Linux. Sous Docker
+Desktop, le noyau (`linuxkit`) n'expose pas les compteurs matériels (`cycles`, `instructions` :
+`<not supported>`) : perf se rabat sur l'échantillonnage logiciel (`cpu-clock`), suffisant pour un
+profil. samply et `cargo flamegraph` ne sont pas dans l'image.
+
+Shell dans l'image ([environment/Dockerfile](environment/Dockerfile), qui fournit `perf` et `gdb`),
+depuis `code/rs` :
+
+```shell
+docker build -t rust-quicklook-bench benches/environment   # si l'image n'existe pas
+docker run --rm -it --cap-add PERFMON --security-opt seccomp=unconfined \
+  -v "$PWD":/work -v rq-target:/target -v rq-cargo:/usr/local/cargo/registry \
+  -e CARGO_TARGET_DIR=/target -w /work rust-quicklook-bench bash
+```
+
+* `--cap-add PERFMON` : sans elle, le profil seccomp par défaut de Docker interdit `perf_event_open`
+  (`No permission to enable task-clock event`) ; `--privileged` est inutile
+* `--security-opt seccomp=unconfined` : facultatif ; évite sous gdb
+  `warning: Error disabling address space randomization: Operation not permitted` (gdb continue, ASLR actif)
+* `gdb -p` fonctionne tel quel sous Docker Desktop (pas de Yama dans `linuxkit`) ; sur un hôte Linux
+  avec `kernel.yama.ptrace_scope = 1`, ajouter `--cap-add SYS_PTRACE`
+
+Profil perf (`julia` écrit `fractal.png` dans le dossier courant, d'où le `cd /tmp`) ; le profil
+`release` n'a ni informations de débogage ni pointeurs de cadre, d'où `CARGO_PROFILE_RELEASE_DEBUG`
+et `--call-graph dwarf` :
+
+```shell
+CARGO_PROFILE_RELEASE_DEBUG=true cargo build --release --example julia
+cd /tmp && perf record --call-graph dwarf -- /target/release/examples/julia
+perf report --no-children
+```
+
+Débogage (exemples `debug_*`) :
+
+```shell
+cargo build --example debug_crash --example debug_deadlock
+rust-gdb -ex run -ex bt --args /target/debug/examples/debug_crash segfault
+/target/debug/examples/debug_deadlock &
+rust-gdb -p $! -ex 'thread apply all bt'
+```
+
 ## `subfold` : pull vs push (benches/subfold.rs)
 
 Trois écritures du même adaptateur `subfold` (toutes dans `benches/subfold.rs`, qui porte aussi

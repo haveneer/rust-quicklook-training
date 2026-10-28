@@ -35,7 +35,7 @@ phf = { version = "0.11", features = ["macros"] }
 
 # benchmark !
 criterion = { version = "0.8", features = ["html_reports"] }
-gungraun = "0.18.2" # ex iai-callgrind (0.19 requires rustc >= 1.85.1)
+gungraun = "0.20.0" # ex iai-callgrind; gungraun-runner must be the same version
 crossbeam-channel = "0.5"
 parking_lot = "0.12"
 dhat = "0.3"
