@@ -57,6 +57,10 @@ jobs:
             BIN_VENV=./venv/bin
           fi
           echo "BIN_VENV=${BIN_VENV}" >> $GITHUB_ENV
+      - name: install libclang (autocxx in demo cxx-cmake-interface)
+        # libclang-dev, not libclang1 alone: bindgen also needs clang's own headers (stddef.h...)
+        run: sudo apt-get update -q && sudo apt-get install -qy --no-install-recommends libclang-dev
+        if: runner.os == 'Linux'
       - name: build
         run: cd rs && cargo build
       - name: test

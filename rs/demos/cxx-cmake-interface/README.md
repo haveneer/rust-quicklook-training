@@ -55,7 +55,10 @@ How CMake drives it (`CMakeLists.txt`):
 Requirements and caveats:
 
 - network access on first build (Corrosion, `cxxbridge-cmd`);
-- **libclang** (for autocxx; set `LIBCLANG_PATH` if it isn't found);
+- **libclang** (for autocxx; set `LIBCLANG_PATH` if it isn't found), as a
+  parser only: the C++ compiler can be anything (e.g. GCC). On Debian/Ubuntu,
+  install `libclang-dev`, not just `libclang1-NN`, which lacks clang's own
+  headers: bindgen then fails with `'stddef.h' file not found`;
 - the header must be plain C++: a header including `rust/cxx.h` makes
   autocxx's bindgen panic;
 - autocxx 0.30 bug: a constructor taking a `std::string` in a namespaced
