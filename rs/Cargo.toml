@@ -70,7 +70,6 @@ strip = false
 
 [workspace]
 members = [
-  "hello",
   "full-tree",
   "full-tree/libs/mylib1",
   "demos/*",
