@@ -1,0 +1,19 @@
+error[E0502]: cannot borrow `users` as mutable because it is also borrowed as immutable
+ --> tests/failures/stable/borrowck_rpit_capture.rs:8:5
+  |
+7 |     let range = indices(&users);
+  |                         ------ immutable borrow occurs here
+8 |     users.push(String::from("a.martin"));
+  |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ mutable borrow occurs here
+9 |     println!("{}", range.count());
+  |                    ----- immutable borrow later used here
+  |
+note: this call may capture more lifetimes than intended, because Rust 2024 has adjusted the `impl Trait` lifetime capture rules
+ --> tests/failures/stable/borrowck_rpit_capture.rs:7:17
+  |
+7 |     let range = indices(&users);
+  |                 ^^^^^^^^^^^^^^^
+help: use the precise capturing `use<...>` syntax to make the captures explicit
+  |
+1 | fn indices(users: &[String]) -> impl Iterator<Item = usize> + use<> {
+  |                                                             +++++++

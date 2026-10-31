@@ -62,6 +62,18 @@ fn longest<'a>(a: &'a str, b: &'a str) -> &'a str {
     b
 }
 
+// Edition 2024: `impl Trait` captures every lifetime in scope; `use<>` captures none
+fn indices(users: &[String]) -> impl Iterator<Item = usize> + use<> {
+    0..users.len()
+}
+
+fn fix_rpit_capture() {
+    let mut users = vec![String::from("l.roux")];
+    let range = indices(&users); // `range` no longer borrows `users`...
+    users.push(String::from("a.martin")); // ...so it can be modified
+    assert_eq!(range.count(), 1);
+}
+
 #[test]
 fn fixes_compile_and_run() {
     fix_e0382();
@@ -70,6 +82,7 @@ fn fixes_compile_and_run() {
     fix_e0505();
     fix_e0506();
     fix_e0597();
+    fix_rpit_capture();
     assert_eq!(prefix("naca0012"), "NAC");
     assert_eq!(longest("wing", "fuselage"), "fuselage");
 }
@@ -82,4 +95,5 @@ fn borrowck_errors() {
     ] {
         t.compile_fail(format!("tests/failures/stable/borrowck_{code}.rs"));
     }
+    t.compile_fail("tests/failures/stable/borrowck_rpit_capture.rs");
 }
