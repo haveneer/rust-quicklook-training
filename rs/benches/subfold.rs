@@ -119,7 +119,7 @@ mod pull_fold {
 }
 
 /// Ajoute l'opération `subfold` à tout ce qui est `Iterator`
-trait SubFoldable: Iterator {
+trait SubFoldExt: Iterator {
     fn subfold<B, F>(self, n: usize, init: B, f: F) -> pull_fold::SubFold<Self, B, F>
     where
         Self: Sized,
@@ -130,7 +130,7 @@ trait SubFoldable: Iterator {
     }
 }
 
-impl<T> SubFoldable for T where T: Iterator {}
+impl<T> SubFoldExt for T where T: Iterator {}
 
 /// Écriture « push »: `pull_fold` + surcharge de `fold()` (itération interne de bout en bout).
 mod push_fold {
