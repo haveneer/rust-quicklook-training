@@ -1,52 +1,43 @@
-// definitions out of any body
-// const are inlined and don't have fixed memory address
-const GLOBAL_CONST_STRING: &str = "Hello";
-const GLOBAL_CONST_VALUE: usize = 65536;
+use std::sync::atomic::{AtomicUsize, Ordering};
 
-// static are not inlined and have a fixed memory address
-static GLOBAL_STATIC_STRING: &str = "Hello";
-static mut GLOBAL_STATIC_VALUE: usize = 65536; // and could be mut(able)
+// `const`: a value, copied at each use; no address of its own
+const MAX_USERS: usize = 64;
+// `static`: one object, fixed address, alive for the whole program
+static GREETING: &str = "Hello";
 
-// Differences static vs const
-// * https://doc.rust-lang.org/1.30.0/book/first-edition/const-and-static.html
-// * https://doc.rust-lang.org/reference/items/static-items.html
+// Interior mutability makes the difference visible
+#[allow(clippy::declare_interior_mutable_const)]
+const CONST_COUNTER: AtomicUsize = AtomicUsize::new(0);
+static STATIC_COUNTER: AtomicUsize = AtomicUsize::new(0);
 
-struct Data {
-    field: [u8; Self::SIZE],
+struct Buffer {
+    data: [u8; Self::SIZE],
 }
 
-impl Data {
-    const SIZE: usize = 64;
+impl Buffer {
+    const SIZE: usize = 64; // associated const
+}
 
-    pub fn foo(&self) {
-        assert_eq!(self.field.len(), Self::SIZE);
+#[allow(clippy::borrow_interior_mutable_const)]
+fn main() {
+    for _ in 0..3 {
+        CONST_COUNTER.fetch_add(1, Ordering::Relaxed); // a fresh copy
+        STATIC_COUNTER.fetch_add(1, Ordering::Relaxed); // the only one
     }
+    println!("const : {}", CONST_COUNTER.load(Ordering::Relaxed));
+    println!("static: {}", STATIC_COUNTER.load(Ordering::Relaxed));
+
+    println!("static: {:p} {:p}", &STATIC_COUNTER, &STATIC_COUNTER);
+    println!("const : {:p} {:p}", &CONST_COUNTER, &CONST_COUNTER);
+
+    let buffer = Buffer {
+        data: [0; Buffer::SIZE],
+    };
+    assert_eq!(buffer.data.len(), MAX_USERS);
+    println!("{GREETING}, {} users max", MAX_USERS);
 }
 
 #[test]
-fn main() {
-    const LOCAL_CONST_STRING: &str = "Hello"; // same comments as global scope
-    const LOCAL_CONST_VALUE: usize = 65536;
-    static LOCAL_STATIC_STRING: &str = "Hello";
-    static mut LOCAL_STATIC_VALUE: usize = 65536;
-
-    unsafe { GLOBAL_STATIC_VALUE += 1 };
-    unsafe { LOCAL_STATIC_VALUE += 1 };
-
-    assert_eq!(
-        unsafe { GLOBAL_STATIC_VALUE }, // /!\ static variable are always unsafe
-        unsafe { LOCAL_STATIC_VALUE }
-    );
-
-    println!("{:p}", &GLOBAL_CONST_VALUE);
-    println!("{:p}", &LOCAL_CONST_VALUE);
-
-    println!("{:p}", unsafe {
-        // &raw const: no reference to a static mut (2024)
-        &raw const GLOBAL_STATIC_VALUE
-    });
-    println!("{:p}", unsafe { &raw const LOCAL_STATIC_VALUE });
-
-    let data = Data { field: [0u8; 64] };
-    data.foo();
+fn test() {
+    main()
 }
