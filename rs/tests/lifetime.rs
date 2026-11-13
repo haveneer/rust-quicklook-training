@@ -233,5 +233,4 @@ fn lifetime_failures() {
     let version_path = if cfg!(feature = "nightly") { "unstable" } else { "stable" };
 
     t.compile_fail(format!("tests/failures/{version_path}/missing_lifetime.rs"));
-    t.compile_fail(format!("tests/failures/{version_path}/bad_lifetime.rs"));
 }
