@@ -1,9 +1,12 @@
-// WARNING: this code is Work in progress
-// macOS: TEXT, RODATA, DATA, BSS, STACK and HEAP are detected
+// Memory section of an address: TEXT, RODATA, DATA, BSS, STACK and HEAP
 // (see `examples/locate_pointer.rs`).
-// Linux: STACK and HEAP seem well detected; TEXT, RODATA, DATA, BSS still to be checked.
+// - Linux: the mapping of /proc/self/maps that holds the address, refined by
+//   linker-defined symbols (`etext`, `__bss_start`, `end`).
+// - macOS: Mach-O segments/sections of the loaded images, then `mach_vm_region`
+//   (via `mach2`). In debug builds, each answer is cross-checked against a second,
+//   independent detection (`macos_cross_check`), kept as a point of comparison.
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum MemorySection {
     Text,   // Executable code segment
     Rodata, // Static read-only data
@@ -23,7 +26,10 @@ pub fn identify_memory_section<T>(obj_ref: &T) -> Option<MemorySection> {
 
     #[cfg(target_os = "macos")]
     {
-        identify_memory_section_macos(obj_ref)
+        let section = identify_memory_section_macos(obj_ref);
+        #[cfg(debug_assertions)]
+        macos_cross_check::compare(obj_ref as *const T as usize, section);
+        section
     }
 
     #[cfg(not(any(target_os = "linux", target_os = "macos")))]
@@ -38,83 +44,47 @@ pub fn identify_memory_section<T>(obj_ref: &T) -> Option<MemorySection> {
 // ---------------------------------
 #[cfg(target_os = "linux")]
 fn identify_memory_section_linux<T>(obj_ref: &T) -> Option<MemorySection> {
-    use std::fs;
-    use std::path::PathBuf;
-
+    unsafe extern "C" {
+        static etext: u8; // end of the code
+        static __bss_start: u8; // start of .bss
+        static end: u8; // end of .bss
+    }
     let addr = obj_ref as *const T as usize;
 
-    // println!("Looking for pointer: {:x}", addr);
-
-    let maps_content = fs::read_to_string("/proc/self/maps").ok()?;
-    let exe_path: Option<PathBuf> = fs::read_link("/proc/self/exe").ok();
-    let exe_path_str = exe_path.as_ref().map(|p| p.to_string_lossy().into_owned());
-
-    for line in maps_content.lines() {
-        let line = line.trim();
-        if line.is_empty() {
-            continue;
-        }
-        // println!("[Map line]: {}", line);
-
-        let mut parts = line.split_whitespace();
-        let range = parts.next()?;
-        let perms = parts.next()?;
-        let offset_hex = parts.next()?;
-        let _dev = parts.next()?;
-        let _inode = parts.next()?;
-        let path = parts.collect::<Vec<_>>().join(" ");
-
-        let mut addr_range = range.split('-');
-        let start_str = addr_range.next()?;
-        let end_str = addr_range.next()?;
-        let start_addr = usize::from_str_radix(start_str, 16).ok()?;
-        let end_addr = usize::from_str_radix(end_str, 16).ok()?;
-
-        if addr < start_addr || addr >= end_addr {
-            continue;
-        }
-
-        // We found the segment that contains the address
-        if path == "[heap]" {
-            return Some(MemorySection::Heap);
-        } else if path.starts_with("[stack") {
-            return Some(MemorySection::Stack);
-        } else if path.is_empty() {
-            return Some(MemorySection::Mapped);
-        } else if let Some(ref exe) = exe_path_str {
-            if path == *exe {
-                // This segment belongs to the main executable
-                if perms.contains('x') {
-                    return Some(MemorySection::Text);
-                } else if perms.contains('w') {
-                    // This might be .data or .bss
-                    if let Ok(offset) = u64::from_str_radix(offset_hex, 16) {
-                        if let Ok(metadata) = fs::metadata(exe) {
-                            let file_size = metadata.len();
-                            let addr_u64 = addr as u64;
-                            let start_u64 = start_addr as u64;
-                            assert!(addr_u64 >= start_u64);
-                            let offset_in_file = offset + (addr_u64 - start_u64);
-                            if offset_in_file < file_size {
-                                return Some(MemorySection::Data);
-                            } else {
-                                return Some(MemorySection::Bss);
-                            }
-                        }
-                    }
-                    return Some(MemorySection::Data);
-                } else {
-                    // Neither executable nor writable => .rodata
-                    return Some(MemorySection::Rodata);
-                }
-            } else {
-                unimplemented!()
-            }
-        }
-        // Otherwise, it's likely a shared library or file mapping
-        return Some(MemorySection::Mapped);
+    // .bss may spill over an anonymous mapping: rely on the linker bounds first
+    if (&raw const __bss_start as usize..&raw const end as usize).contains(&addr) {
+        return Some(MemorySection::Bss);
     }
 
+    let maps = std::fs::read_to_string("/proc/self/maps").ok()?;
+    let exe = std::fs::read_link("/proc/self/exe").ok()?;
+    for line in maps.lines() {
+        // e.g. "aaaae4000000-aaaae403f000 r-xp 00000000 00:2a 123 /path/to/exe"
+        let fields: Vec<&str> = line.split_whitespace().collect();
+        let (start, stop) = fields.first()?.split_once('-')?;
+        let start = usize::from_str_radix(start, 16).ok()?;
+        let stop = usize::from_str_radix(stop, 16).ok()?;
+        if !(start..stop).contains(&addr) {
+            continue;
+        }
+        let perms = *fields.get(1)?;
+        let path = fields.get(5..).map(|p| p.join(" ")).unwrap_or_default();
+        return Some(match path.as_str() {
+            "[heap]" => MemorySection::Heap,
+            p if p.starts_with("[stack") => MemorySection::Stack,
+            p if exe.as_os_str() == p => {
+                // .rodata may share the executable mapping of .text (GNU ld): use `etext`
+                if perms.contains('x') && addr < &raw const etext as usize {
+                    MemorySection::Text
+                } else if !perms.contains('w') {
+                    MemorySection::Rodata
+                } else {
+                    MemorySection::Data
+                }
+            }
+            _ => MemorySection::Mapped, // shared libraries, anonymous mappings...
+        });
+    }
     None
 }
 
@@ -188,6 +158,79 @@ pub fn identify_memory_section_macos<T>(obj_ref: &T) -> Option<MemorySection> {
         return Some(MemorySection::Heap);
     }
     Some(MemorySection::Mapped)
+}
+
+// ---------------------------------
+// macOS cross-check (debug builds only, not part of the API)
+// ---------------------------------
+// A second detection, written by hand without `mach2`: section bounds defined by
+// the linker (ld64 `section$start$SEG$SECT` symbols), stack of the current thread,
+// malloc zones. Narrower (4 named sections, current thread only) but independent:
+// whenever it gives an answer, the `mach2` detection must agree.
+#[cfg(target_os = "macos")]
+mod macos_cross_check {
+    use super::MemorySection;
+
+    unsafe extern "C" {
+        #[link_name = "\x01section$start$__TEXT$__text"]
+        static TEXT_START: u8;
+        #[link_name = "\x01section$end$__TEXT$__text"]
+        static TEXT_END: u8;
+        #[link_name = "\x01section$start$__TEXT$__const"]
+        static RODATA_START: u8;
+        #[link_name = "\x01section$end$__TEXT$__const"]
+        static RODATA_END: u8;
+        #[link_name = "\x01section$start$__DATA$__data"]
+        static DATA_START: u8;
+        #[link_name = "\x01section$end$__DATA$__data"]
+        static DATA_END: u8;
+        #[link_name = "\x01section$start$__DATA$__bss"]
+        static BSS_START: u8;
+        #[link_name = "\x01section$end$__DATA$__bss"]
+        static BSS_END: u8;
+        fn pthread_self() -> *mut u8;
+        fn pthread_get_stackaddr_np(thread: *mut u8) -> *const u8; // top of the stack
+        fn pthread_get_stacksize_np(thread: *mut u8) -> usize;
+        fn malloc_zone_from_ptr(ptr: *const u8) -> *const u8; // null if not from malloc
+    }
+
+    /// `None` when this narrower detection cannot tell.
+    pub(super) fn by_linker_symbols(addr: usize) -> Option<MemorySection> {
+        let within =
+            |start: *const u8, end: *const u8| (start as usize..end as usize).contains(&addr);
+        let (stack_top, stack_size) = unsafe {
+            let thread = pthread_self();
+            (
+                pthread_get_stackaddr_np(thread),
+                pthread_get_stacksize_np(thread),
+            )
+        };
+        if within(&raw const TEXT_START, &raw const TEXT_END) {
+            Some(MemorySection::Text)
+        } else if within(&raw const RODATA_START, &raw const RODATA_END) {
+            Some(MemorySection::Rodata)
+        } else if within(&raw const DATA_START, &raw const DATA_END) {
+            Some(MemorySection::Data)
+        } else if within(&raw const BSS_START, &raw const BSS_END) {
+            Some(MemorySection::Bss)
+        } else if within(stack_top.wrapping_sub(stack_size), stack_top) {
+            Some(MemorySection::Stack)
+        } else if !unsafe { malloc_zone_from_ptr(addr as *const u8) }.is_null() {
+            Some(MemorySection::Heap)
+        } else {
+            None
+        }
+    }
+
+    pub(super) fn compare(addr: usize, found: Option<MemorySection>) {
+        if let Some(expected) = by_linker_symbols(addr) {
+            debug_assert_eq!(
+                found,
+                Some(expected),
+                "memory section of {addr:#x}: mach2 and linker-symbol detections disagree"
+            );
+        }
+    }
 }
 
 #[cfg(target_os = "macos")]
@@ -366,5 +409,75 @@ mod mach_o {
         pub const S_THREAD_LOCAL_ZEROFILL: u32 = 0x12;
         // S_ATTR_PURE_INSTRUCTIONS | S_ATTR_SOME_INSTRUCTIONS
         pub const S_ATTR_INSTRUCTIONS: u32 = 0x8000_0000 | 0x0000_0400;
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::{MemorySection, identify_memory_section};
+    use std::sync::atomic::AtomicI32;
+
+    static PROBE_RODATA: i32 = 42;
+    static PROBE_DATA: AtomicI32 = AtomicI32::new(42);
+    static PROBE_BSS: AtomicI32 = AtomicI32::new(0); // zero-initialized
+
+    // On macOS (debug), each call also runs the hidden cross-check
+    #[test]
+    fn memory_sections() {
+        let local = 10;
+        let boxed = Box::new(5);
+        let main_ptr = memory_sections as fn() as *const u8;
+        assert_eq!(
+            identify_memory_section(unsafe { &*main_ptr }),
+            Some(MemorySection::Text)
+        );
+        assert_eq!(
+            identify_memory_section(&PROBE_RODATA),
+            Some(MemorySection::Rodata)
+        );
+        assert_eq!(
+            identify_memory_section(&PROBE_DATA),
+            Some(MemorySection::Data)
+        );
+        assert_eq!(
+            identify_memory_section(&PROBE_BSS),
+            Some(MemorySection::Bss)
+        );
+        // The test harness runs this on a secondary thread. On Linux, only the main
+        // thread has `[stack]` / `[heap]` in /proc/self/maps: the stack of this thread,
+        // and often its malloc arena, are anonymous mappings.
+        let expected = |main_thread| {
+            if cfg!(target_os = "linux") {
+                vec![Some(main_thread), Some(MemorySection::Mapped)]
+            } else {
+                vec![Some(main_thread)]
+            }
+        };
+        assert!(expected(MemorySection::Stack).contains(&identify_memory_section(&local)));
+        assert!(expected(MemorySection::Heap).contains(&identify_memory_section(&*boxed)));
+    }
+
+    // The hidden macOS detection must recognise the probes, else the cross-check is vacuous
+    #[cfg(target_os = "macos")]
+    #[test]
+    fn macos_cross_check_is_active() {
+        use super::macos_cross_check::by_linker_symbols;
+        let local = 10;
+        let boxed = Box::new(5);
+        let addr = |r: &dyn std::any::Any| r as *const dyn std::any::Any as *const u8 as usize;
+        assert_eq!(
+            by_linker_symbols(addr(&PROBE_RODATA)),
+            Some(MemorySection::Rodata)
+        );
+        assert_eq!(
+            by_linker_symbols(addr(&PROBE_DATA)),
+            Some(MemorySection::Data)
+        );
+        assert_eq!(
+            by_linker_symbols(addr(&PROBE_BSS)),
+            Some(MemorySection::Bss)
+        );
+        assert_eq!(by_linker_symbols(addr(&local)), Some(MemorySection::Stack));
+        assert_eq!(by_linker_symbols(addr(&*boxed)), Some(MemorySection::Heap));
     }
 }
